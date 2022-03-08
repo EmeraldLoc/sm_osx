@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @State var shell = RomView(patch: .nothing, repo: .sm64ex)
+    @State var shell = RomView(patch: [Patches](), repo: .sm64ex)
     
     var body: some View {
         NavigationView {
@@ -31,9 +31,11 @@ struct ContentView: View {
                     }
                     Spacer()
                     
-                    Button("Install all dependencies") {
-                        print(try? shell.shell("/usr/local/bin/brew install make mingw-w64 gcc gcc@9 sdl2 pkg-config glew glfw3 libusb audiofile coreutils && brew install make mingw-w64 gcc sdl2 pkg-config glew glfw3 libusb audiofile coreutils"))
-                    }
+                    Button(action:{
+                        print(try! shell.shell("/usr/local/bin/brew install make mingw-w64 gcc gcc@9 sdl2 pkg-config glew glfw3 libusb audiofile coreutils && brew install make mingw-w64 gcc sdl2 pkg-config glew glfw3 libusb audiofile coreutils"))
+                    }) {
+                        Text("Install Dependencies")
+                    }.padding(.vertical).buttonStyle(.plain)
                 }
             }
         }

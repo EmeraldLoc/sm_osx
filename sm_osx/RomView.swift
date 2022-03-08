@@ -9,11 +9,13 @@ import SwiftUI
 
 struct RomView: View {
     
-    var patch: Patches
+    var patch: Array<Patches>
     var repo: Repo
     @State var isCompiled = false
     @State var status: CompilationProcess = .nothing
     @State var log = ""
+    @State var betterCamera = 0
+    @State var drawDistance = 0
     
     func shell(_ command: String) throws -> String {
         let task = Process()
@@ -84,7 +86,7 @@ struct RomView: View {
                         status = .compiling
                         
                         do {
-                            log.append(try shell("cd ~/Downloads/sm64ex-coop && gmake OSX_BUILD=1 TARGET_ARCH=x86_64-apple-darwin TARGET_BITS=64"))
+                            log.append(try shell("cd ~/Downloads/sm64ex-coop && gmake OSX_BUILD=1 TARGET_ARCH=x86_64-apple-darwin TARGET_BITS=64 BETTERCAMERA=\(betterCamera) NODRAWDISTANCE=\(drawDistance)"))
                         }
                         catch {
                             status = .error
@@ -95,7 +97,7 @@ struct RomView: View {
                         status = .finishingUp
                         
                         do {
-                            log.append(try shell("cd ~/Downloads && gcp -r sm64ex-coop/build/us_pc/ bin"))
+                            log.append(try shell("cd ~/Downloads && && rm -rf bin && gcp -r sm64ex-coop/build/us_pc/ bin"))
                         }
                         catch {
                             status = .error
@@ -116,7 +118,7 @@ struct RomView: View {
                     }.disabled(isCompiled)
                 }
                 
-                else if patch == .nothing {
+                else if repo == .sm64ex {
                     
                     Button(action:{
                         
@@ -142,6 +144,32 @@ struct RomView: View {
                             return
                         }
                         
+                        if patch.contains(.omm) {
+                            status = .patching
+                            
+                            do {
+                                log.append(try shell("cd ~/Downloads && git clone https://github.com/PeachyPeachSM64/sm64pc-omm.git && cp sm64pc-omm/patch/omm.patch sm64ex && rm -rf sm64pc-omm && cd sm64ex && git apply --reject --ignore-whitespace 'omm.patch'"))
+                            }
+                            catch {
+                                status = .error
+                                
+                                return
+                            }
+                        }
+                        
+                        if patch.contains(.highfps) {
+                            status = .patching
+                            
+                            do {
+                                log.append(try shell("cd ~/Downloads/sm64ex && cp enhancements/60fps_ex.patch 60fps_ex.patch && git apply --reject --ignore-whitespace '60fps_ex.patch'"))
+                            }
+                            catch {
+                                status = .error
+                                
+                                return
+                            }
+                        }
+                        
                         status = .copyingFiles
                         
                         do {
@@ -154,9 +182,9 @@ struct RomView: View {
                         }
                         
                         status = .compiling
-                        
+
                         do {
-                            log.append(try shell("cd ~/Downloads/sm64ex && gmake OSX_BUILD=1 TARGET_ARCH=x86_64-apple-darwin TARGET_BITS=64"))
+                            log.append(try shell("cd ~/Downloads/sm64ex && gmake OSX_BUILD=1 TARGET_ARCH=x86_64-apple-darwin TARGET_BITS=64 BETTERCAMERA=\(betterCamera) NODRAWDISTANCE=\(drawDistance)"))
                         }
                         catch {
                             status = .error
@@ -167,7 +195,7 @@ struct RomView: View {
                         status = .finishingUp
                         
                         do {
-                            log.append(try shell("cd ~/Downloads && gcp -r sm64ex/build/us_pc/ bin"))
+                            log.append(try shell("cd ~/Downloads && rm -rf bin && gcp -r sm64ex/build/us_pc/ bin"))
                         }
                         catch {
                             status = .error
@@ -182,88 +210,6 @@ struct RomView: View {
                             status = .error
                             
                             return
-                        }
-                        
-                        status = .finished
-                        
-                    }) {
-                        Text("Start the Compiler")
-                    }
-                }
-                else if patch == .omm {
-                    Button(action:{
-                        
-                        status = .instDependencies
-                        
-                        do {
-                            log.append(try shell("brew install make mingw-w64 gcc sdl2 pkg-config glew glfw3 libusb audiofile"))
-                        }
-                        catch {
-                            status = .notRosetta
-                            
-                            return
-                        }
-                        
-                        status = .instRepo
-                        
-                        do {
-                            log.append(try shell("cd ~/Downloads && rm -rf sm64pc-omm && rm -rf sm64ex && git clone \(repo.rawValue) && git clone \(patch.rawValue)"))
-                        }
-                        catch {
-                            status = .error
-                            
-                            return
-                        }
-                        
-                        status = .copyingFiles
-                        
-                        do {
-                            log.append(try shell("cd ~/Downloads && cp baserom.us.z64 \(repo) && cp sm64pc-omm/patch/omm.patch sm64ex"))
-                        }
-                        catch {
-                            status = .error
-                            
-                            return
-                        }
-                        
-                        status = .patching
-                        
-                        do {
-                            log.append(try shell("git apply --reject --ignore-whitespace 'omm.patch'"))
-                        }
-                        catch {
-                            status = .error
-                            
-                            return
-                        }
-                        
-                        status = .compiling
-                        
-                        do {
-                            log.append(try shell("cd ~/Downloads/\(repo) && gmake OSX_BUILD=1"))
-                        }
-                        catch {
-                            status = .error
-                            
-                            return
-                        }
-                        
-                        status = .finishingUp
-                        
-                        do {
-                            log.append(try shell("cd ~/Downloads && gcp -r sm64ex/build/us_pc/ bin"))
-                        }
-                        catch {
-                            status = .error
-                            
-                            return
-                        }
-                        
-                        do {
-                            log.append(try shell("cd ~/Downloads && rm -rf sm64ex"))
-                        }
-                        catch {
-                            status = .error
                         }
                         
                         status = .finished
@@ -273,17 +219,32 @@ struct RomView: View {
                     }
                 }
                 
-                Text("The app will freeze until compilation is finished")
+                Text("The app will freeze until compilation is finished. The commpilation may take 5-15 min")
                 
                 Text(status.rawValue)
                 
                 ScrollView {
-                    Text(log)
+                    Text("\(log)")
+                        .frame(width: 550)
                 }
                 
                 Spacer()
                 
                 
+            }.onAppear {
+                if patch.contains(.bettercam) {
+                    betterCamera = 1
+                }
+                else {
+                    betterCamera = 0
+                }
+                
+                if patch.contains(.drawdistance) {
+                    drawDistance = 1
+                }
+                else {
+                    drawDistance = 0
+                }
             }
         }
     }
@@ -291,6 +252,6 @@ struct RomView: View {
 
 struct RomView_Previews: PreviewProvider {
     static var previews: some View {
-        RomView(patch: .nothing, repo: .sm64ex)
+        RomView(patch: [Patches](), repo: .sm64ex)
     }
 }
