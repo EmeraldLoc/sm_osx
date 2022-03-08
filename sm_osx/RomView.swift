@@ -86,7 +86,7 @@ struct RomView: View {
                         status = .compiling
                         
                         do {
-                            log.append(try shell("cd ~/Downloads/sm64ex-coop && gmake OSX_BUILD=1 TARGET_ARCH=x86_64-apple-darwin TARGET_BITS=64 BETTERCAMERA=\(betterCamera) NODRAWDISTANCE=\(drawDistance)"))
+                            log.append(try shell("cd ~/Downloads/sm64ex-coop && gmake OSX_BUILD=1 TARGET_ARCH=x86_64-apple-darwin TARGET_BITS=64 BETTERCAMERA=\(betterCamera) NODRAWDISTANCE=\(drawDistance) -j6"))
                         }
                         catch {
                             status = .error
@@ -184,7 +184,7 @@ struct RomView: View {
                         status = .compiling
 
                         do {
-                            log.append(try shell("cd ~/Downloads/sm64ex && gmake OSX_BUILD=1 TARGET_ARCH=x86_64-apple-darwin TARGET_BITS=64 BETTERCAMERA=\(betterCamera) NODRAWDISTANCE=\(drawDistance)"))
+                            log.append(try shell("cd ~/Downloads/sm64ex && gmake OSX_BUILD=1 TARGET_ARCH=x86_64-apple-darwin TARGET_BITS=64 BETTERCAMERA=\(betterCamera) NODRAWDISTANCE=\(drawDistance) -j6"))
                         }
                         catch {
                             status = .error
