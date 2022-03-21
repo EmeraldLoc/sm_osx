@@ -11,7 +11,7 @@ import SwiftUI
 struct sm_osxApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RepoView()
         }
     }
 }

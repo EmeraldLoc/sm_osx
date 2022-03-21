@@ -14,7 +14,7 @@ enum CompilationProcess: String {
     case copyingFiles = "Copying Files..."
     case compiling = "Compiling, this may take a while, please be patient."
     case finishingUp = "Finishing Up..."
-    case finished = "Finshied!"
+    case finished = "Finshed!"
     case nothing = ""
     case error = "Error!"
     case rosetta = "Make sure you are runing this app with rosetta"

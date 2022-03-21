@@ -1,13 +1,13 @@
 //
-//  ContentView.swift
+//  RepoView.swift
 //  sm_osx
 //
-//  Created by Caleb Elmasri on 3/6/22.
+//  Created by Caleb Elmasri on 3/16/22.
 //
 
 import SwiftUI
 
-struct ContentView: View {
+struct RepoView: View {
     
     @State var shell = RomView(patch: [Patches](), repo: .sm64ex)
     
@@ -28,6 +28,12 @@ struct ContentView: View {
                             Text("sm64ex-coop (Runs via Rosetta)")
                                 .lineLimit(nil)
                         }
+                        
+                        NavigationLink(destination: PatchesView(repo: .render96ex)) {
+                            
+                            Text("Render96ex")
+                                .lineLimit(nil)
+                        }
                     }
                     Spacer()
                     
@@ -42,8 +48,8 @@ struct ContentView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
+struct RepoView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        RepoView()
     }
 }

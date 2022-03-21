@@ -11,9 +11,13 @@ struct PatchesView: View {
     
     var repo: Repo
     @State var isOmm = false
+    @State var isToadStars = false
+    @State var extMoveset = false
     @State var isFPS = false
     @State var isCam = false
     @State var isDist = false
+    @State var extData = false
+    @State var timeTrials = false
     @State var patches = [Patches]()
     
     var body: some View {
@@ -40,6 +44,34 @@ struct PatchesView: View {
                                 }
                             }
                             
+                            Toggle(isOn: $timeTrials) {
+                                Text("Time Trial")
+                            }.onChange(of: timeTrials) { _ in
+                                
+                                if timeTrials {
+                                    patches.append(.timeTrials)
+                                }
+                                else {
+                                    if let i = patches.firstIndex(of: .timeTrials) {
+                                        patches.remove(at: i)
+                                    }
+                                }
+                            }
+                            
+                            Toggle(isOn: $isToadStars) {
+                                Text("\(Patches.captainToadStars.rawValue)")
+                            }.onChange(of: isToadStars) { _ in
+                                
+                                if isToadStars {
+                                    patches.append(.captainToadStars)
+                                }
+                                else {
+                                    if let i = patches.firstIndex(of: .captainToadStars) {
+                                        patches.remove(at: i)
+                                    }
+                                }
+                            }
+                            
                             Toggle(isOn: $isOmm) {
                                 Text("Oddysey Mario Moveset")
                             }.onChange(of: isOmm) { _ in
@@ -53,17 +85,16 @@ struct PatchesView: View {
                                     }
                                 }
                             }
-                        }
-                        if repo == .sm64ex || repo == .sm64ex_coop {
-                            Toggle(isOn: $isCam) {
-                                Text("Better Camera")
-                            }.onChange(of: isCam) { _ in
+                            
+                            Toggle(isOn: $extMoveset) {
+                                Text("External Moveset")
+                            }.onChange(of: extMoveset) { _ in
                                 
-                                if isCam {
-                                    patches.append(.bettercam)
+                                if extMoveset {
+                                    patches.append(.extMoveset)
                                 }
                                 else {
-                                    if let i = patches.firstIndex(of: .bettercam) {
+                                    if let i = patches.firstIndex(of: .extMoveset) {
                                         patches.remove(at: i)
                                     }
                                 }
@@ -83,7 +114,38 @@ struct PatchesView: View {
                                 }
                             }
                         }
-                        
+                        if repo == .sm64ex || repo == .sm64ex_coop || repo == .render96ex {
+                            Toggle(isOn: $isCam) {
+                                Text("Better Camera")
+                            }.onChange(of: isCam) { _ in
+                                
+                                if isCam {
+                                    patches.append(.bettercam)
+                                }
+                                else {
+                                    if let i = patches.firstIndex(of: .bettercam) {
+                                        patches.remove(at: i)
+                                    }
+                                }
+                            }
+                            
+                            Toggle(isOn: $extData) {
+                                Text("External Data")
+                            }.onChange(of: extData) { _ in
+                                
+                                if extData {
+                                    patches.append(.extData)
+                                }
+                                else {
+                                    if let i = patches.firstIndex(of: .extData) {
+                                        patches.remove(at: i)
+                                    }
+                                }
+                            }
+                        }
+                        if repo == .sm64ex || repo == .render96ex {
+                            
+                        }
                         
                         NavigationLink(destination:RomView(patch: patches, repo: repo)) {
                             Text("Next")
