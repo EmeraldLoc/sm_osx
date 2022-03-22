@@ -10,6 +10,9 @@ import SwiftUI
 struct RepoView: View {
     
     @State var shell = RomView(patch: [Patches](), repo: .sm64ex)
+    @State var currentVersion = "v1.0.8\n"
+    @State var updateAlert = false
+    @State var latestVersion = ""
     
     var body: some View {
         NavigationView {
@@ -17,6 +20,11 @@ struct RepoView: View {
                 VStack {
                     Text("What repo would you like to use (More will be added in th future)")
                     List {
+                        
+                        NavigationLink(destination: RomView(patch: [], repo: .sm64port)) {
+                            
+                            Text("sm64port")
+                        }
                         
                         NavigationLink(destination: PatchesView(repo: .sm64ex)) {
                             
@@ -44,6 +52,22 @@ struct RepoView: View {
                     }.padding(.vertical).buttonStyle(.plain)
                 }
             }
+        }.onAppear {
+            latestVersion = try! shell.shell("curl https://github.com/EmeraldLoc/sm_osx/releases/latest -s | grep -o 'v[0-9].[0-9].[0-9]*' | sort -u")
+            
+            print("Latest Version: \(latestVersion), Current Version: \(currentVersion)")
+            
+            if latestVersion != currentVersion {
+                updateAlert = true
+            }
+        }.alert("An Update is Avalible", isPresented: $updateAlert) {
+            Button("Update", role: .none) {
+                print(try! shell.shell("cd ~/Downloads && wget https://github.com/EmeraldLoc/sm_osx/releases/latest/download/sm_osx.zip && unzip sm_osx.zip && rm -rf sm_osx.zip /Applications/sm_osx.app && mv sm_osx.app /Applications"))
+                
+                exit(0)
+            }
+            
+            Button("Not now", role: .cancel) {}
         }
     }
 }

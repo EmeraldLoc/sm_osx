@@ -59,6 +59,8 @@ struct RomView: View {
                 if repo == .sm64ex_coop {
                     Button(action:{
                         
+                        log = ""
+                        
                         isCompiled = true
                         status = .instDependencies
                         
@@ -129,6 +131,8 @@ struct RomView: View {
                 else if repo == .sm64ex || repo == .render96ex {
                     
                     Button(action:{
+                        
+                        log = ""
                         
                         status = .instDependencies
                         
@@ -267,8 +271,84 @@ struct RomView: View {
                         Text("Start the Compiler")
                     }.disabled(!disableCompilation)
                 }
+                else if repo == .sm64port {
+                    Button(action:{
+                        
+                        log = ""
+                        
+                        status = .instDependencies
+                        
+                        do {
+                            log.append(try shell("brew install make mingw-w64 gcc sdl2 pkg-config glew glfw3 libusb audiofile coreutils"))
+                        }
+                        catch {
+                            status = .notRosetta
+                            
+                            return
+                        }
+                        
+                        status = .instRepo
+                        
+                        do {
+                            log.append(try shell("cd ~/Downloads && rm -rf target_osx.zip target_osx __MACOSX && wget \(repo.rawValue) && unzip target_osx.zip && rm -rf target_osx.zip"))
+                        }
+                        catch {
+                            status = .error
+                            
+                            return
+                        }
+
+                        
+                        status = .copyingFiles
+                        
+                        do {
+                            log.append(try shell("cd ~/Downloads && cp baserom.us.z64 target_osx"))
+                        }
+                        catch {
+                            status = .error
+                            
+                            return
+                        }
+                        
+                        status = .compiling
+
+                        do {
+                            log.append(try shell("cd ~/Downloads/target_osx && gmake \(compSpeed.rawValue)"))
+                        }
+                        catch {
+                            status = .error
+                            
+                            return
+                        }
+                        
+                        status = .finishingUp
+                        
+                        do {
+                            log.append(try shell("cd ~/Downloads && rm -rf \(repo)-build && gcp -r target_osx/build/us_pc/ \(repo)-build"))
+                        }
+                        catch {
+                            status = .error
+                            
+                            return
+                        }
+                        
+                        do {
+                            log.append(try shell("cd ~/Downloads && rm -rf target_osx __MACOSX"))
+                        }
+                        catch {
+                            status = .error
+                            
+                            return
+                        }
+
+                        status = .finished
+                        
+                    }) {
+                        Text("Start the Compiler")
+                    }.disabled(!disableCompilation)
+                }
                 
-                Text("The app will freeze until compilation is finished. The commpilation may take 1-8 min")
+                Text("The app will freeze until compilation is finished. The compilation may take 1-8 min. Please keep your computer awake.")
                 
                 Text(status.rawValue)
                 
