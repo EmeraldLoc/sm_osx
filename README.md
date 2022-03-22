@@ -1,7 +1,7 @@
 # sm_osx
 This is a tool for compiling Super Mario 64 for Mac M1.
 
-<img width="1291" alt="Screen Shot 2022-03-08 at 11 16 14 AM" src="https://user-images.githubusercontent.com/86802223/157309025-3a607579-17c7-438d-8aac-f7bb3ba611e3.png">
+<img width="1012" alt="Screen Shot 2022-03-22 at 3 04 55 PM" src="https://user-images.githubusercontent.com/86802223/159584113-67a90da9-56ae-4d62-9d53-9664d18d1d47.png">
 
 # Install
 
