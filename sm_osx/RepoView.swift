@@ -10,7 +10,7 @@ import SwiftUI
 struct RepoView: View {
     
     @State var shell = RomView(patch: [Patches](), repo: .sm64ex)
-    @State var currentVersion = "v1.0.8\n"
+    @State var currentVersion = "v1.0.9\n"
     @State var updateAlert = false
     @State var latestVersion = ""
     
@@ -31,6 +31,11 @@ struct RepoView: View {
                             Text("sm64ex")
                         }
                         
+                        NavigationLink(destination: PatchesView(repo: .sm64ex_master)) {
+                            
+                            Text("sm64ex-master (Old)")
+                        }
+                        
                         NavigationLink(destination: PatchesView(repo: .sm64ex_coop)) {
                             
                             Text("sm64ex-coop (Runs via Rosetta)")
@@ -41,6 +46,16 @@ struct RepoView: View {
                             
                             Text("Render96ex")
                                 .lineLimit(nil)
+                        }
+                        
+                        NavigationLink(destination: PatchesView(repo: .moonshine)) {
+                            
+                            Text("Moonshine")
+                        }
+                        
+                        NavigationLink(destination: PatchesView(repo: .moon64)) {
+                            
+                            Text("Moon64 (Discontinued)")
                         }
                     }
                     Spacer()
@@ -57,7 +72,7 @@ struct RepoView: View {
             
             print("Latest Version: \(latestVersion), Current Version: \(currentVersion)")
             
-            if latestVersion != currentVersion {
+            if latestVersion != currentVersion && !latestVersion.isEmpty {
                 updateAlert = true
             }
         }.alert("An Update is Avalible", isPresented: $updateAlert) {

@@ -13,5 +13,9 @@ struct sm_osxApp: App {
         WindowGroup {
             RepoView()
         }
+        
+        Settings {
+            SettingsView()
+        }
     }
 }

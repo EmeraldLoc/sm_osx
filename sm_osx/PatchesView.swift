@@ -29,7 +29,7 @@ struct PatchesView: View {
                     Spacer()
                     
                     List {
-                        if repo == .sm64ex {
+                        if repo == .sm64ex || repo == .moon64 {
                             Toggle(isOn: $isFPS) {
                                 Text("60 FPS")
                             }.onChange(of: isFPS) { _ in
@@ -44,77 +44,68 @@ struct PatchesView: View {
                                 }
                             }
                             
-                            Toggle(isOn: $timeTrials) {
-                                Text("Time Trial")
-                            }.onChange(of: timeTrials) { _ in
-                                
-                                if timeTrials {
-                                    patches.append(.timeTrials)
+                            if repo != .moon64 {
+
+                            
+                                Toggle(isOn: $timeTrials) {
+                                    Text("Time Trial")
+                                }.onChange(of: timeTrials) { _ in
+                                    
+                                    if timeTrials {
+                                        patches.append(.timeTrials)
+                                    }
+                                    else {
+                                        if let i = patches.firstIndex(of: .timeTrials) {
+                                            patches.remove(at: i)
+                                        }
+                                    }
                                 }
-                                else {
-                                    if let i = patches.firstIndex(of: .timeTrials) {
-                                        patches.remove(at: i)
+                                
+                                Toggle(isOn: $isToadStars) {
+                                    Text("\(Patches.captainToadStars.rawValue)")
+                                }.onChange(of: isToadStars) { _ in
+                                    
+                                    if isToadStars {
+                                        patches.append(.captainToadStars)
+                                    }
+                                    else {
+                                        if let i = patches.firstIndex(of: .captainToadStars) {
+                                            patches.remove(at: i)
+                                        }
+                                    }
+                                }
+                                
+                                Toggle(isOn: $isOmm) {
+                                    Text("Oddysey Mario Moveset")
+                                }.onChange(of: isOmm) { _ in
+                                    
+                                    if isOmm {
+                                        patches.append(.omm)
+                                    }
+                                    else {
+                                        if let i = patches.firstIndex(of: .omm) {
+                                            patches.remove(at: i)
+                                        }
+                                    }
+                                }
+                                
+                                Toggle(isOn: $extMoveset) {
+                                    Text("Extended Moveset")
+                                }.onChange(of: extMoveset) { _ in
+                                    
+                                    if extMoveset {
+                                        patches.append(.extMoveset)
+                                    }
+                                    else {
+                                        if let i = patches.firstIndex(of: .extMoveset) {
+                                            patches.remove(at: i)
+                                        }
                                     }
                                 }
                             }
                             
-                            Toggle(isOn: $isToadStars) {
-                                Text("\(Patches.captainToadStars.rawValue)")
-                            }.onChange(of: isToadStars) { _ in
-                                
-                                if isToadStars {
-                                    patches.append(.captainToadStars)
-                                }
-                                else {
-                                    if let i = patches.firstIndex(of: .captainToadStars) {
-                                        patches.remove(at: i)
-                                    }
-                                }
-                            }
-                            
-                            Toggle(isOn: $isOmm) {
-                                Text("Oddysey Mario Moveset")
-                            }.onChange(of: isOmm) { _ in
-                                
-                                if isOmm {
-                                    patches.append(.omm)
-                                }
-                                else {
-                                    if let i = patches.firstIndex(of: .omm) {
-                                        patches.remove(at: i)
-                                    }
-                                }
-                            }
-                            
-                            Toggle(isOn: $extMoveset) {
-                                Text("External Moveset")
-                            }.onChange(of: extMoveset) { _ in
-                                
-                                if extMoveset {
-                                    patches.append(.extMoveset)
-                                }
-                                else {
-                                    if let i = patches.firstIndex(of: .extMoveset) {
-                                        patches.remove(at: i)
-                                    }
-                                }
-                            }
-                            
-                            Toggle(isOn: $isDist) {
-                                Text("No Draw Distance")
-                            }.onChange(of: isDist) { _ in
-                                
-                                if isDist {
-                                    patches.append(.drawdistance)
-                                }
-                                else {
-                                    if let i = patches.firstIndex(of: .drawdistance) {
-                                        patches.remove(at: i)
-                                    }
-                                }
-                            }
                         }
-                        if repo == .sm64ex || repo == .sm64ex_coop || repo == .render96ex {
+                        if repo == .sm64ex || repo == .sm64ex_coop || repo == .render96ex || repo == .moonshine || repo == .moon64 || repo == .sm64ex_master {
                             Toggle(isOn: $isCam) {
                                 Text("Better Camera")
                             }.onChange(of: isCam) { _ in
@@ -129,22 +120,35 @@ struct PatchesView: View {
                                 }
                             }
                             
-                            Toggle(isOn: $extData) {
-                                Text("External Data")
-                            }.onChange(of: extData) { _ in
-                                
-                                if extData {
-                                    patches.append(.extData)
-                                }
-                                else {
-                                    if let i = patches.firstIndex(of: .extData) {
-                                        patches.remove(at: i)
+                            if repo != .moonshine && repo != .moon64 && repo != .sm64ex_master {
+                                Toggle(isOn: $extData) {
+                                    Text("External Data")
+                                }.onChange(of: extData) { _ in
+                                    
+                                    if extData {
+                                        patches.append(.extData)
+                                    }
+                                    else {
+                                        if let i = patches.firstIndex(of: .extData) {
+                                            patches.remove(at: i)
+                                        }
                                     }
                                 }
                             }
                         }
-                        if repo == .sm64ex || repo == .render96ex {
+
+                        Toggle(isOn: $isDist) {
+                            Text("No Draw Distance")
+                        }.onChange(of: isDist) { _ in
                             
+                            if isDist {
+                                patches.append(.drawdistance)
+                            }
+                            else {
+                                if let i = patches.firstIndex(of: .drawdistance) {
+                                    patches.remove(at: i)
+                                }
+                            }
                         }
                         
                         NavigationLink(destination:RomView(patch: patches, repo: repo)) {

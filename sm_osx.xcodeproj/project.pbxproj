@@ -17,6 +17,7 @@
 		9669DC7127D55F4700DE5FAB /* RomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9669DC7027D55F4700DE5FAB /* RomView.swift */; };
 		96BB22E327E274F700057915 /* RepoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96BB22E227E274F700057915 /* RepoView.swift */; };
 		96CF3D4227DBD8C7008A26F5 /* CompilationSpeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96CF3D4127DBD8C7008A26F5 /* CompilationSpeed.swift */; };
+		96DE71D327EB9C170090E7A0 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96DE71D227EB9C170090E7A0 /* SettingsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,8 @@
 		9669DC7027D55F4700DE5FAB /* RomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RomView.swift; sourceTree = "<group>"; };
 		96BB22E227E274F700057915 /* RepoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoView.swift; sourceTree = "<group>"; };
 		96CF3D4127DBD8C7008A26F5 /* CompilationSpeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompilationSpeed.swift; sourceTree = "<group>"; };
+		96DE71D227EB9C170090E7A0 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		96DE71D427EB9C7D0090E7A0 /* sm-osx-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "sm-osx-Info.plist"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +67,7 @@
 		9669DC5A27D5565000DE5FAB /* sm_osx */ = {
 			isa = PBXGroup;
 			children = (
+				96DE71D427EB9C7D0090E7A0 /* sm-osx-Info.plist */,
 				9669DC5B27D5565000DE5FAB /* sm_osxApp.swift */,
 				9669DC5F27D5565100DE5FAB /* Assets.xcassets */,
 				9669DC6427D5565100DE5FAB /* sm_osx.entitlements */,
@@ -75,6 +79,7 @@
 				960D46F527D6850D0056E393 /* BuildingSteps.swift */,
 				96CF3D4127DBD8C7008A26F5 /* CompilationSpeed.swift */,
 				96BB22E227E274F700057915 /* RepoView.swift */,
+				96DE71D227EB9C170090E7A0 /* SettingsView.swift */,
 			);
 			path = sm_osx;
 			sourceTree = "<group>";
@@ -116,7 +121,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1320;
+				LastSwiftUpdateCheck = 1330;
 				LastUpgradeCheck = 1330;
 				TargetAttributes = {
 					9669DC5727D5565000DE5FAB = {
@@ -164,6 +169,7 @@
 				9669DC6D27D55CD200DE5FAB /* Patches.swift in Sources */,
 				96CF3D4227DBD8C7008A26F5 /* CompilationSpeed.swift in Sources */,
 				9669DC7127D55F4700DE5FAB /* RomView.swift in Sources */,
+				96DE71D327EB9C170090E7A0 /* SettingsView.swift in Sources */,
 				960D46F627D6850D0056E393 /* BuildingSteps.swift in Sources */,
 				9669DC6F27D55D5300DE5FAB /* PatchesView.swift in Sources */,
 				9669DC6B27D5581F00DE5FAB /* Repos.swift in Sources */,
@@ -309,12 +315,15 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "sm-osx-Info.plist";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_UIStatusBarHidden = NO;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.9;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.CubingStudios.sm-osx";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -338,12 +347,15 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "sm-osx-Info.plist";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_UIStatusBarHidden = NO;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.9;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.CubingStudios.sm-osx";
 				PRODUCT_NAME = "$(TARGET_NAME)";

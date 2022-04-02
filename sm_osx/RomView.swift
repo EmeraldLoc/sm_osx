@@ -17,8 +17,10 @@ struct RomView: View {
     @State var betterCamera = 0
     @State var drawDistance = 0
     @State var doLog = false
-    @State var compSpeed: Speed = .fast
+    @State var compSpeed: Speed = .normal
     @State var extData = 0
+    @AppStorage("logData") var logData = false
+    @AppStorage("compilationSpeed") var compilationSpeed: Speed = .normal
     #if arch(x86_64)
     var disableCompilation = false
     #else
@@ -65,7 +67,7 @@ struct RomView: View {
                         status = .instDependencies
                         
                         do {
-                            log = try shell("arch -x86_64 zsh && /usr/local/bin/brew install make mingw-w64 gcc gcc@9 sdl2 pkg-config glew glfw3 libusb audiofile coreutils && brew uninstall glew sdl2")
+                            log = try shell("/usr/local/bin/brew install make mingw-w64 gcc gcc@9 sdl2 pkg-config glew glfw3 libusb audiofile coreutils && brew uninstall glew sdl2")
                         }
                         catch {
                             status = .rosetta
@@ -128,7 +130,7 @@ struct RomView: View {
                     }.disabled(disableCompilation)
                 }
                 
-                else if repo == .sm64ex || repo == .render96ex {
+                else if repo == .sm64ex || repo == .render96ex || repo == .moonshine || repo == .moon64 || repo == .sm64ex_master {
                     
                     Button(action:{
                         
@@ -148,12 +150,27 @@ struct RomView: View {
                         status = .instRepo
                         
                         do {
-                            log.append(try shell("cd ~/Downloads && rm -rf sm64ex && git clone \(repo.rawValue)"))
+                            log.append(try shell("cd ~/Downloads && rm -rf sm64ex && git clone \(repo.rawValue) sm64ex"))
                         }
                         catch {
                             status = .error
                             
                             return
+                        }
+                        
+                        if repo == .moon64 {
+                            if patch.contains(.highfps) {
+                                status = .patching
+                                
+                                do {
+                                    log.append(try shell("cd ~/Downloads/sm64ex && cp enhancements/moon64_60fps.patch 60fps_ex.patch && git apply --reject --ignore-whitespace '60fps_ex.patch'"))
+                                }
+                                catch {
+                                    status = .error
+                                    
+                                    return
+                                }
+                            }
                         }
                         
                         if repo == .sm64ex {
@@ -236,6 +253,13 @@ struct RomView: View {
                         
                         status = .compiling
 
+                        if repo == .moonshine {
+                            extData = 1
+                        }
+                        else if repo == .moon64 {
+                            extData = 0
+                        }
+                        
                         do {
                             log.append(try shell("cd ~/Downloads/sm64ex && gmake OSX_BUILD=1 BETTERCAMERA=\(betterCamera) EXTERNAL_DATA=\(extData) NODRAWDISTANCE=\(drawDistance) \(compSpeed.rawValue)"))
                         }
@@ -359,6 +383,8 @@ struct RomView: View {
                 Picker("Compilation Speed", selection: $compSpeed) {
                     Text("Slow")
                         .tag(Speed.slow)
+                    Text("Normal")
+                        .tag(Speed.normal)
                     Text("Fast")
                         .tag(Speed.fast)
                     Text("Very Fast")
@@ -398,6 +424,9 @@ struct RomView: View {
                 else {
                     extData = 0
                 }
+                
+                doLog = logData
+                compSpeed = compilationSpeed
             }
         }
     }
