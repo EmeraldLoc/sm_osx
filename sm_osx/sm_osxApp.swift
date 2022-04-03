@@ -9,9 +9,15 @@ import SwiftUI
 
 @main
 struct sm_osxApp: App {
+    
+    @StateObject private var dataController = DataController()
+    
     var body: some Scene {
+        
         WindowGroup {
-            RepoView()
+            LauncherView()
+                .frame(minWidth: 300, minHeight: 250)
+                .environment(\.managedObjectContext, dataController.container.viewContext)
         }
         
         Settings {

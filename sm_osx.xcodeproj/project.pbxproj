@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		960D46F627D6850D0056E393 /* BuildingSteps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 960D46F527D6850D0056E393 /* BuildingSteps.swift */; };
+		963F238327F8B211004E010E /* LauncherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963F238227F8B211004E010E /* LauncherView.swift */; };
+		963F238627F8B942004E010E /* DataStore.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 963F238427F8B942004E010E /* DataStore.xcdatamodeld */; };
+		963F238827F8BA01004E010E /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963F238727F8BA01004E010E /* DataController.swift */; };
 		9669DC5C27D5565000DE5FAB /* sm_osxApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9669DC5B27D5565000DE5FAB /* sm_osxApp.swift */; };
 		9669DC6027D5565100DE5FAB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9669DC5F27D5565100DE5FAB /* Assets.xcassets */; };
 		9669DC6327D5565100DE5FAB /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9669DC6227D5565100DE5FAB /* Preview Assets.xcassets */; };
@@ -22,6 +25,9 @@
 
 /* Begin PBXFileReference section */
 		960D46F527D6850D0056E393 /* BuildingSteps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildingSteps.swift; sourceTree = "<group>"; };
+		963F238227F8B211004E010E /* LauncherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LauncherView.swift; sourceTree = "<group>"; };
+		963F238527F8B942004E010E /* DataStore.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataStore.xcdatamodel; sourceTree = "<group>"; };
+		963F238727F8BA01004E010E /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		9669DC5827D5565000DE5FAB /* sm_osx.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = sm_osx.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9669DC5B27D5565000DE5FAB /* sm_osxApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sm_osxApp.swift; sourceTree = "<group>"; };
 		9669DC5F27D5565100DE5FAB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -80,6 +86,9 @@
 				96CF3D4127DBD8C7008A26F5 /* CompilationSpeed.swift */,
 				96BB22E227E274F700057915 /* RepoView.swift */,
 				96DE71D227EB9C170090E7A0 /* SettingsView.swift */,
+				963F238227F8B211004E010E /* LauncherView.swift */,
+				963F238427F8B942004E010E /* DataStore.xcdatamodeld */,
+				963F238727F8BA01004E010E /* DataController.swift */,
 			);
 			path = sm_osx;
 			sourceTree = "<group>";
@@ -167,7 +176,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				9669DC6D27D55CD200DE5FAB /* Patches.swift in Sources */,
+				963F238827F8BA01004E010E /* DataController.swift in Sources */,
+				963F238627F8B942004E010E /* DataStore.xcdatamodeld in Sources */,
 				96CF3D4227DBD8C7008A26F5 /* CompilationSpeed.swift in Sources */,
+				963F238327F8B211004E010E /* LauncherView.swift in Sources */,
 				9669DC7127D55F4700DE5FAB /* RomView.swift in Sources */,
 				96DE71D327EB9C170090E7A0 /* SettingsView.swift in Sources */,
 				960D46F627D6850D0056E393 /* BuildingSteps.swift in Sources */,
@@ -386,6 +398,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		963F238427F8B942004E010E /* DataStore.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				963F238527F8B942004E010E /* DataStore.xcdatamodel */,
+			);
+			currentVersion = 963F238527F8B942004E010E /* DataStore.xcdatamodel */;
+			path = DataStore.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 9669DC5027D5565000DE5FAB /* Project object */;
 }

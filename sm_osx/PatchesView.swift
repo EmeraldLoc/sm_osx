@@ -18,6 +18,7 @@ struct PatchesView: View {
     @State var isDist = false
     @State var extData = false
     @State var timeTrials = false
+    @Binding var repoView: Bool
     @State var patches = [Patches]()
     
     var body: some View {
@@ -25,6 +26,7 @@ struct PatchesView: View {
             ZStack {
                 VStack {
                     Text("Select a Patch")
+                        .lineLimit(nil)
                     
                     Spacer()
                     
@@ -32,6 +34,7 @@ struct PatchesView: View {
                         if repo == .sm64ex || repo == .moon64 {
                             Toggle(isOn: $isFPS) {
                                 Text("60 FPS")
+                                    .lineLimit(nil)
                             }.onChange(of: isFPS) { _ in
                                 
                                 if isFPS {
@@ -49,6 +52,7 @@ struct PatchesView: View {
                             
                                 Toggle(isOn: $timeTrials) {
                                     Text("Time Trial")
+                                        .lineLimit(nil)
                                 }.onChange(of: timeTrials) { _ in
                                     
                                     if timeTrials {
@@ -77,6 +81,7 @@ struct PatchesView: View {
                                 
                                 Toggle(isOn: $isOmm) {
                                     Text("Oddysey Mario Moveset")
+                                        .lineLimit(nil)
                                 }.onChange(of: isOmm) { _ in
                                     
                                     if isOmm {
@@ -91,6 +96,7 @@ struct PatchesView: View {
                                 
                                 Toggle(isOn: $extMoveset) {
                                     Text("Extended Moveset")
+                                        .lineLimit(nil)
                                 }.onChange(of: extMoveset) { _ in
                                     
                                     if extMoveset {
@@ -106,16 +112,19 @@ struct PatchesView: View {
                             
                         }
                         if repo == .sm64ex || repo == .sm64ex_coop || repo == .render96ex || repo == .moonshine || repo == .moon64 || repo == .sm64ex_master {
-                            Toggle(isOn: $isCam) {
-                                Text("Better Camera")
-                            }.onChange(of: isCam) { _ in
-                                
-                                if isCam {
-                                    patches.append(.bettercam)
-                                }
-                                else {
-                                    if let i = patches.firstIndex(of: .bettercam) {
-                                        patches.remove(at: i)
+                            if repo != .sm64ex_coop {
+                                Toggle(isOn: $isCam) {
+                                    Text("Better Camera")
+                                        .lineLimit(nil)
+                                }.onChange(of: isCam) { _ in
+                                    
+                                    if isCam {
+                                        patches.append(.bettercam)
+                                    }
+                                    else {
+                                        if let i = patches.firstIndex(of: .bettercam) {
+                                            patches.remove(at: i)
+                                        }
                                     }
                                 }
                             }
@@ -123,6 +132,7 @@ struct PatchesView: View {
                             if repo != .moonshine && repo != .moon64 && repo != .sm64ex_master {
                                 Toggle(isOn: $extData) {
                                     Text("External Data")
+                                        .lineLimit(nil)
                                 }.onChange(of: extData) { _ in
                                     
                                     if extData {
@@ -137,21 +147,24 @@ struct PatchesView: View {
                             }
                         }
 
-                        Toggle(isOn: $isDist) {
-                            Text("No Draw Distance")
-                        }.onChange(of: isDist) { _ in
-                            
-                            if isDist {
-                                patches.append(.drawdistance)
-                            }
-                            else {
-                                if let i = patches.firstIndex(of: .drawdistance) {
-                                    patches.remove(at: i)
+                        if repo != .sm64ex_coop {
+                            Toggle(isOn: $isDist) {
+                                Text("No Draw Distance")
+                                    .lineLimit(nil)
+                            }.onChange(of: isDist) { _ in
+                                
+                                if isDist {
+                                    patches.append(.drawdistance)
+                                }
+                                else {
+                                    if let i = patches.firstIndex(of: .drawdistance) {
+                                        patches.remove(at: i)
+                                    }
                                 }
                             }
                         }
                         
-                        NavigationLink(destination:RomView(patch: patches, repo: repo)) {
+                        NavigationLink(destination:RomView(patch: patches, repo: repo, repoView: $repoView)) {
                             Text("Next")
                         }
                     }
@@ -164,6 +177,6 @@ struct PatchesView: View {
 
 struct PatchesView_Previews: PreviewProvider {
     static var previews: some View {
-        PatchesView(repo: .sm64ex)
+        PatchesView(repo: .sm64ex, repoView: .constant(false))
     }
 }

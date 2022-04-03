@@ -9,86 +9,72 @@ import SwiftUI
 
 struct RepoView: View {
     
-    @State var shell = RomView(patch: [Patches](), repo: .sm64ex)
-    @State var currentVersion = "v1.0.9\n"
-    @State var updateAlert = false
-    @State var latestVersion = ""
+    @State var shell = RomView(patch: [Patches](), repo: .sm64ex, repoView: .constant(false))
+    @Binding var repoView: Bool
     
     var body: some View {
         NavigationView {
             ZStack {
                 VStack {
-                    Text("What repo would you like to use (More will be added in th future)")
+                    Text("What repo would you like to use")
+                        .lineLimit(nil)
                     List {
                         
-                        NavigationLink(destination: RomView(patch: [], repo: .sm64port)) {
+                        NavigationLink(destination: RomView(patch: [], repo: .sm64port, repoView: $repoView)) {
                             
                             Text("sm64port")
+                                .lineLimit(nil)
                         }
                         
-                        NavigationLink(destination: PatchesView(repo: .sm64ex)) {
+                        NavigationLink(destination: PatchesView(repo: .sm64ex, repoView: $repoView)) {
                             
                             Text("sm64ex")
+                                .lineLimit(nil)
                         }
                         
-                        NavigationLink(destination: PatchesView(repo: .sm64ex_master)) {
+                        NavigationLink(destination: PatchesView(repo: .sm64ex_master, repoView: $repoView)) {
                             
                             Text("sm64ex-master (Old)")
+                                .lineLimit(nil)
                         }
                         
-                        NavigationLink(destination: PatchesView(repo: .sm64ex_coop)) {
+                        NavigationLink(destination: PatchesView(repo: .sm64ex_coop, repoView: $repoView)) {
                             
                             Text("sm64ex-coop (Runs via Rosetta)")
                                 .lineLimit(nil)
                         }
                         
-                        NavigationLink(destination: PatchesView(repo: .render96ex)) {
+                        NavigationLink(destination: PatchesView(repo: .render96ex, repoView: $repoView)) {
                             
                             Text("Render96ex")
                                 .lineLimit(nil)
                         }
                         
-                        NavigationLink(destination: PatchesView(repo: .moonshine)) {
+                        NavigationLink(destination: PatchesView(repo: .moonshine, repoView: $repoView)) {
                             
                             Text("Moonshine")
+                                .lineLimit(nil)
                         }
                         
-                        NavigationLink(destination: PatchesView(repo: .moon64)) {
+                        NavigationLink(destination: PatchesView(repo: .moon64, repoView: $repoView)) {
                             
                             Text("Moon64 (Discontinued)")
+                                .lineLimit(nil)
                         }
                     }
                     Spacer()
                     
-                    Button(action:{
-                        print(try! shell.shell("/usr/local/bin/brew install make mingw-w64 gcc gcc@9 sdl2 pkg-config glew glfw3 libusb audiofile coreutils && brew install make mingw-w64 gcc sdl2 pkg-config glew glfw3 libusb audiofile coreutils"))
-                    }) {
-                        Text("Install Dependencies")
-                    }.padding(.vertical).buttonStyle(.plain)
+                    Button("Cancel") {
+                        repoView = false
+                    }.padding(.vertical)
                 }
             }
-        }.onAppear {
-            latestVersion = try! shell.shell("curl https://github.com/EmeraldLoc/sm_osx/releases/latest -s | grep -o 'v[0-9].[0-9].[0-9]*' | sort -u")
-            
-            print("Latest Version: \(latestVersion), Current Version: \(currentVersion)")
-            
-            if latestVersion != currentVersion && !latestVersion.isEmpty {
-                updateAlert = true
-            }
-        }.alert("An Update is Avalible", isPresented: $updateAlert) {
-            Button("Update", role: .none) {
-                print(try! shell.shell("cd ~/Downloads && wget https://github.com/EmeraldLoc/sm_osx/releases/latest/download/sm_osx.zip && unzip sm_osx.zip && rm -rf sm_osx.zip /Applications/sm_osx.app && mv sm_osx.app /Applications"))
-                
-                exit(0)
-            }
-            
-            Button("Not now", role: .cancel) {}
         }
     }
 }
 
 struct RepoView_Previews: PreviewProvider {
     static var previews: some View {
-        RepoView()
+        RepoView(repoView: .constant(false))
     }
 }
