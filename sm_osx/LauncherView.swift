@@ -16,9 +16,10 @@ struct LauncherView: View {
     @FetchRequest(sortDescriptors:[SortDescriptor(\.title)]) var launcherRepos: FetchedResults<LauncherRepos>
     @State var existingRepo = URL(string: "")
     @State var repoTitle = ""
-    @State var currentVersion = "v1.1.0\n"
+    @State var currentVersion = "v1.1.2\n"
     @State var updateAlert = false
     @State var latestVersion = ""
+    @State var repoArgs = ""
     @AppStorage("firstLaunch") var firstLaunch = true
     let sm64: UTType = .init(filenameExtension: "f3dex2e")!
     
@@ -50,8 +51,8 @@ struct LauncherView: View {
                                 
                                 Button(action: {
                                     
-                                    for i in 0...launcherRepos.count - 1 {
-                                        launcherRepos[i].isEditing = false
+                                    for iEdit in 0...launcherRepos.count - 1 {
+                                        launcherRepos[iEdit].isEditing = false
                                     }
                                     
                                     launcherRepos[i].isEditing = true
@@ -59,10 +60,24 @@ struct LauncherView: View {
                                     Image(systemName: "pencil")
                                 }.popover(isPresented: Binding.constant(launcherRepos[i].isEditing)) {
                                     
-                                    HStack {
+                                    VStack {
                                         TextField("Name of Repo", text: $repoTitle)
+                                            .lineLimit(nil)
+                                            .scaledToFill()
                                             .onChange(of: repoTitle) { _ in
                                                 launcherRepos[i].title = repoTitle
+                                                do {
+                                                    try moc.save()
+                                                }
+                                                catch {
+                                                    print("Its broken \(error)")
+                                                }
+                                            }
+                                        TextField("Arguments", text: $repoArgs)
+                                            .lineLimit(nil)
+                                            .scaledToFill()
+                                            .onChange(of: repoArgs) { _ in
+                                                launcherRepos[i].args = repoArgs
                                                 
                                                 do {
                                                     try moc.save()
@@ -71,7 +86,10 @@ struct LauncherView: View {
                                                     print("Its broken \(error)")
                                                 }
                                             }
-                                    }.onAppear {repoTitle = launcherRepos[i].title ?? ""}
+                                    }.onAppear {
+                                        repoTitle = launcherRepos[i].title ?? ""
+                                        repoArgs = launcherRepos[i].args ?? ""
+                                    }
                                 }
                                 
                                 Button(action: {
@@ -91,7 +109,7 @@ struct LauncherView: View {
                                 }
                                 
                                 Button(action: {
-                                    try? print(shell.shell("\(LauncherRepo.path ?? "its broken")"))
+                                    try? print(shell.shell("\(LauncherRepo.path ?? "its broken") \(LauncherRepo.args ?? "")"))
                                     
                                     print(LauncherRepo.path ?? "")
                                 }) {
@@ -131,6 +149,8 @@ struct LauncherView: View {
                         
                         repo.title = "Repo \(launcherRepos.count)"
                         repo.path = existingRepo?.path
+                        repo.args = ""
+                        repo.id = UUID()
                         
                         do {
                             try moc.save()
@@ -161,7 +181,7 @@ struct LauncherView: View {
             }
             
             if firstLaunch {
-                try? shell.shell("cd ~/ && mkdir SM64Repos")
+                try? print(shell.shell("cd ~/ && mkdir SM64Repos"))
             }
             
             if launcherRepos.isEmpty {return}

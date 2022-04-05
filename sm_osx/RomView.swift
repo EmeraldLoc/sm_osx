@@ -133,6 +133,8 @@ struct RomView: View {
                         launcherRepo.title = "sm64ex-coop"
                         launcherRepo.isEditing = false
                         launcherRepo.path = "~/SM64Repos/sm64ex-coop-build/sm64.us.f3dex2e"
+                        launcherRepo.args = ""
+                        launcherRepo.id = UUID()
                         
                         do {
                             try moc.save()
@@ -316,6 +318,8 @@ struct RomView: View {
                             launcherRepo.title = "\(repo)"
                             launcherRepo.isEditing = false
                             launcherRepo.path = "~/SM64Repos/\(repo)-build/moon64.us.f3dex2e"
+                            launcherRepo.args = ""
+                            launcherRepo.id = UUID()
                             
                             do {
                                 try moc.save()
@@ -330,6 +334,8 @@ struct RomView: View {
                             launcherRepo.title = "\(repo)"
                             launcherRepo.isEditing = false
                             launcherRepo.path = "~/SM64Repos/\(repo)-build/sm64.us.f3dex2e"
+                            launcherRepo.args = ""
+                            launcherRepo.id = UUID()
                             
                             do {
                                 try moc.save()
@@ -422,6 +428,8 @@ struct RomView: View {
                         launcherRepo.title = "sm64port"
                         launcherRepo.isEditing = false
                         launcherRepo.path = "~/SM64Repos/sm64port-build/sm64.us.f3dex2e"
+                        launcherRepo.args = ""
+                        launcherRepo.id = UUID()
                         
                         do {
                             try moc.save()
