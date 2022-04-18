@@ -7,11 +7,12 @@
 
 import SwiftUI
 import UniformTypeIdentifiers
+import UserNotifications
 
 struct LauncherView: View {
     
     @State var repoView = false
-    @State var shell = RomView(patch: [Patches](), repo: .sm64ex, repoView: .constant(false))
+    var shell = Shell()
     @Environment(\.managedObjectContext) var moc
     @FetchRequest(sortDescriptors:[SortDescriptor(\.title)]) var launcherRepos: FetchedResults<LauncherRepos>
     @State var existingRepo = URL(string: "")
@@ -109,7 +110,7 @@ struct LauncherView: View {
                                 }
                                 
                                 Button(action: {
-                                    try? print(shell.shell("\(LauncherRepo.path ?? "its broken") \(LauncherRepo.args ?? "")"))
+                                    try? print(shell.asyncShell("\(LauncherRepo.path ?? "its broken") \(LauncherRepo.args ?? "")", waitTillExit: false))
                                     
                                     print(LauncherRepo.path ?? "")
                                 }) {
@@ -164,8 +165,26 @@ struct LauncherView: View {
                 Text("Homebrew is REQUIRED for this software to work, please install homebrew at brew.sh")
                     .padding(.horizontal)
                 
+                Text("\nOptional: Homebrew Intel version is nice to have. Install by launching terminal with Rosetta and installing at brew.sh")
+                    .padding(.horizontal)
+                
                 Button(action:{
-                    print(try! shell.shell("/usr/local/bin/brew install make mingw-w64 gcc gcc@9 sdl2 pkg-config glew glfw3 libusb audiofile coreutils && brew install make mingw-w64 gcc sdl2 pkg-config glew glfw3 libusb audiofile coreutils"))
+                    print(try! shell.shell("brew install make mingw-w64 gcc sdl2 pkg-config glew glfw3 libusb audiofile coreutils"))
+                    print(try! shell.shell("/usr/local/bin/brew install make mingw-w64 gcc gcc@9 sdl2 pkg-config glew glfw3 libusb audiofile coreutils"))
+                    
+                    let content = UNMutableNotificationContent()
+                    content.title = "Finished installing dependencies"
+                    content.subtitle = "Dependencies are now installed."
+                    content.sound = UNNotificationSound.default
+
+                    // show this notification instantly
+                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.0001, repeats: false)
+
+                    // choose a random identifier
+                    let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+
+                    // add our notification request
+                    UNUserNotificationCenter.current().add(request)
                 }) {
                     Text("Install Dependencies")
                 }.buttonStyle(.bordered).padding(.vertical)
@@ -179,9 +198,15 @@ struct LauncherView: View {
             if latestVersion != currentVersion && !latestVersion.isEmpty {
                 updateAlert = true
             }
+
+            try? print(shell.shell("cd ~/ && mkdir SM64Repos"))
             
-            if firstLaunch {
-                try? print(shell.shell("cd ~/ && mkdir SM64Repos"))
+            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
+                if success {
+                    print("All set!")
+                } else if let error = error {
+                    print(error.localizedDescription)
+                }
             }
             
             if launcherRepos.isEmpty {return}
