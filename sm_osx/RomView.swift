@@ -12,6 +12,37 @@ class Shell {
     
     @State var log = ""
     
+    func intelShell(_ command: String) throws -> String {
+        
+        var error: NSDictionary?
+        var returnOutput = ""
+        
+        if let scriptObject = NSAppleScript(source: "do shell script \"arch -x86_64 /bin/zsh -cl '\(command)' 2>&1\" ") {
+            let output = scriptObject.executeAndReturnError(&error)
+            returnOutput.append(output.stringValue ?? "")
+            print(output.stringValue ?? "")
+            self.log.append(output.stringValue ?? "")
+            if (error != nil) {
+                print("error: \(String(describing: error))")
+            }
+        }
+        
+        return returnOutput
+    }
+    
+    func installBrew(_ command: String) {
+        
+        var error: NSDictionary?
+        
+        if let scriptObject = NSAppleScript(source: "do shell script \"/bin/bash -c 'cd /opt && mkdir homebrew && curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C homebrew'\" with administrator privileges") {
+            let output = scriptObject.executeAndReturnError(&error)
+            print(output.stringValue ?? "")
+            if (error != nil) {
+                print("error: \(String(describing: error))")
+            }
+        }
+    }
+    
     func asyncShell(_ command: String, waitTillExit: Bool = true) throws -> String {
         let task = Process()
 
@@ -37,21 +68,24 @@ class Shell {
             task.waitUntilExit()
         }
         
-        return ""
+        return self.log
     }
-    func shell(_ command: String) throws -> String {
+    func shell(_ command: String, _ waitTillExit: Bool = true) throws -> String {
         let task = Process()
-        task.executableURL = URL(fileURLWithPath: "/bin/zsh")
-        task.arguments = ["-cl", command]
         let pipe = Pipe()
+        
         task.standardOutput = pipe
         task.standardError = pipe
+        task.arguments = ["-cl", command]
+        task.executableURL = URL(fileURLWithPath: "/bin/zsh")
         try task.run()
-        task.waitUntilExit()
+        if waitTillExit {
+            task.waitUntilExit()
+        }
         
-        let data = pipe.fileHandleForReading.readDataToEndOfFile()
-        let output: String = String(data: data, encoding: String.Encoding.utf8) ?? ""
-            
+        let data = try? pipe.fileHandleForReading.readToEnd()
+        let output = String(data: data ?? Data(), encoding: .utf8)!
+        
         return output
     }
 }
@@ -60,10 +94,10 @@ struct RomView: View {
     
     var patch: Array<Patches>
     var repo: Repo
-    @State var isCompiled = false
     @State var status: CompilationProcess = .nothing
-    @State var allowFinish = false
+    @State var allowFinish = true
     @State var log = ""
+    @State var doLauncher = true
     @State var betterCamera = 0
     @State var drawDistance = 0
     @State var doLog = false
@@ -88,12 +122,7 @@ struct RomView: View {
                     .lineLimit(nil)
                 
                 if repo == .sm64ex_coop {
-                    Text("MAKE SURE YOU ARE RUNNING THIS APPLICATION WITH ROSSETA. Also, you will need to get the INTEL VERSION of HOMEBREW. To do so, launch terminal with Rosetta and follow instructions at brew.sh")
-                        .padding()
-                        .lineLimit(nil)
-
-                    Text("IMPORTANT! After the compilation is finished, open this app without Rosetta, and then hit the Install Dependencies button.")
-                        .padding()
+                    Text("\n For this repo, make sure you have the intel version of homebrew. To do this, launch your terminal with rosetta and follow install instructions at brew.sh")
                         .lineLimit(nil)
                 }
                 
@@ -101,12 +130,11 @@ struct RomView: View {
                     Button(action: {
                         
                         log = ""
-                        
-                        isCompiled = true
+
                         status = .instDependencies
                         
                         do {
-                            log = try shell.shell("/usr/local/bin/brew install make mingw-w64 gcc gcc@9 sdl2 pkg-config glew glfw3 libusb audiofile coreutils wget && brew uninstall glew sdl2")
+                            log = try shell.intelShell("/usr/local/bin/brew install make mingw-w64 gcc gcc@9 sdl2 pkg-config glew glfw3 libusb audiofile coreutils wget && brew uninstall glew sdl2")
                         }
                         catch {
                             status = .rosetta
@@ -123,7 +151,7 @@ struct RomView: View {
                             return
                         }
                         
-                        status = .copyingFiles
+                        status = .compiling
                         
                         do {
                             log.append(try shell.shell("cd ~/ && cp ~/Downloads/baserom.us.z64 ~/SM64Repos"))
@@ -139,7 +167,7 @@ struct RomView: View {
                         status = .compiling
                         
                         do {
-                            log.append(try shell.shell("cd ~/SM64Repos/sm64ex-coop && gmake OSX_BUILD=1 TARGET_ARCH=x86_64-apple-darwin TARGET_BITS=64 EXTERNAL_DATA=\(extData) \(compSpeed.rawValue)"))
+                            log.append(try shell.intelShell("cd ~/SM64Repos/sm64ex-coop && gmake OSX_BUILD=1 TARGET_ARCH=x86_64-apple-darwin TARGET_BITS=64 EXTERNAL_DATA=\(extData) \(compSpeed.rawValue)"))
                         }
                         catch {
                             status = .error
@@ -157,33 +185,34 @@ struct RomView: View {
                         }
                         
                         do {
-                            log.append(try shell.shell("cd ~/SM64Repos && rm -rf sm64ex-coop"))
+                            log.append(try shell.shell("cd ~/SM64Repos && rm -rf sm64ex-coop && brew install glew sdl2"))
                         }
                         catch {
                             status = .error
                         }
                          
-                        let launcherRepo = LauncherRepos(context: moc)
-                        
-                        launcherRepo.title = "sm64ex-coop"
-                        launcherRepo.isEditing = false
-                        launcherRepo.path = "~/SM64Repos/sm64ex-coop-build/sm64.us.f3dex2e"
-                        launcherRepo.args = ""
-                        launcherRepo.id = UUID()
-                        
-                        do {
-                            try moc.save()
-                        }
-                        catch {
-                            print(error)
+                        if doLauncher {
+                            let launcherRepo = LauncherRepos(context: moc)
+                            
+                            launcherRepo.title = "sm64ex-coop"
+                            launcherRepo.isEditing = false
+                            launcherRepo.path = "~/SM64Repos/sm64ex-coop-build/sm64.us.f3dex2e"
+                            launcherRepo.args = ""
+                            launcherRepo.id = UUID()
+                            
+                            do {
+                                try moc.save()
+                            }
+                            catch {
+                                print(error)
+                            }
                         }
                         
                         status = .finished
-                        isCompiled = false
                         
                     }) {
                         Text("Start the Compiler")
-                    }.disabled(disableCompilation)
+                    }
                 }
                 
                 else if repo == .sm64ex || repo == .render96ex || repo == .moonshine || repo == .moon64 || repo == .sm64ex_master {
@@ -347,36 +376,38 @@ struct RomView: View {
                             return
                         }
                         
-                        if repo == .moon64 {
-                            let launcherRepo = LauncherRepos(context: moc)
-                            
-                            launcherRepo.title = "\(repo)"
-                            launcherRepo.isEditing = false
-                            launcherRepo.path = "~/SM64Repos/\(repo)-build/moon64.us.f3dex2e"
-                            launcherRepo.args = ""
-                            launcherRepo.id = UUID()
-                            
-                            do {
-                                try moc.save()
+                        if doLauncher {
+                            if repo == .moon64 {
+                                let launcherRepo = LauncherRepos(context: moc)
+                                
+                                launcherRepo.title = "\(repo)"
+                                launcherRepo.isEditing = false
+                                launcherRepo.path = "~/SM64Repos/\(repo)-build/moon64.us.f3dex2e"
+                                launcherRepo.args = ""
+                                launcherRepo.id = UUID()
+                                
+                                do {
+                                    try moc.save()
+                                }
+                                catch {
+                                    print("its broken \(error)")
+                                }
                             }
-                            catch {
-                                print("its broken \(error)")
-                            }
-                        }
-                        else {
-                            let launcherRepo = LauncherRepos(context: moc)
-                            
-                            launcherRepo.title = "\(repo)"
-                            launcherRepo.isEditing = false
-                            launcherRepo.path = "~/SM64Repos/\(repo)-build/sm64.us.f3dex2e"
-                            launcherRepo.args = ""
-                            launcherRepo.id = UUID()
-                            
-                            do {
-                                try moc.save()
-                            }
-                            catch {
-                                print("its broken \(error)")
+                            else {
+                                let launcherRepo = LauncherRepos(context: moc)
+                                
+                                launcherRepo.title = "\(repo)"
+                                launcherRepo.isEditing = false
+                                launcherRepo.path = "~/SM64Repos/\(repo)-build/sm64.us.f3dex2e"
+                                launcherRepo.args = ""
+                                launcherRepo.id = UUID()
+                                
+                                do {
+                                    try moc.save()
+                                }
+                                catch {
+                                    print("its broken \(error)")
+                                }
                             }
                         }
                             
@@ -458,21 +489,23 @@ struct RomView: View {
                             return
                         }
 
-                        let launcherRepo = LauncherRepos(context: moc)
-                        
-                        launcherRepo.title = "sm64port"
-                        launcherRepo.isEditing = false
-                        launcherRepo.path = "~/SM64Repos/sm64port-build/sm64.us.f3dex2e"
-                        launcherRepo.args = ""
-                        launcherRepo.id = UUID()
-                        
-                        do {
-                            try moc.save()
+                        if doLauncher {
+                            let launcherRepo = LauncherRepos(context: moc)
+                            
+                            launcherRepo.title = "sm64port"
+                            launcherRepo.isEditing = false
+                            launcherRepo.path = "~/SM64Repos/sm64port-build/sm64.us.f3dex2e"
+                            launcherRepo.args = ""
+                            launcherRepo.id = UUID()
+                            
+                            do {
+                                try moc.save()
+                            }
+                            catch {
+                                print("its broken \(error)")
+                            }
                         }
-                        catch {
-                            print("its broken \(error)")
-                        }
-                        
+                            
                         status = .finished
                         
                     }) {
@@ -485,35 +518,41 @@ struct RomView: View {
                 
                 Text(status.rawValue)
                 
-                Toggle(isOn: $doLog) {
-                    Text("Log Data")
-                }
+                VStack {
+                    Toggle(isOn: $doLog) {
+                        Text("Log Data")
+                    }
+                    Toggle(isOn: $doLauncher) {
+                        Text("Add Repo to Launcher")
+                    }
                 
-                Picker("Compilation Speed", selection: $compSpeed) {
-                    Text("Slow")
-                        .tag(Speed.slow)
-                    Text("Normal")
-                        .tag(Speed.normal)
-                    Text("Fast")
-                        .tag(Speed.fast)
-                    Text("Very Fast")
-                        .tag(Speed.veryFast)
-                    Text("Fastest")
-                        .tag(Speed.fastest)
+                    Picker("Compilation Speed", selection: $compSpeed) {
+                        Text("Slow")
+                            .tag(Speed.slow)
+                        Text("Normal")
+                            .tag(Speed.normal)
+                        Text("Fast")
+                            .tag(Speed.fast)
+                        Text("Very Fast")
+                            .tag(Speed.veryFast)
+                        Text("Fastest")
+                            .tag(Speed.fastest)
+                    }
                 }
                 
                 if doLog && (status == .error || status == .finished || status == .rosetta || status == .notRosetta) {
                     ScrollView {
-                        TextEditor(text: $shell.log)
+                        TextEditor(text: $log)
                             .disabled(true)
                     }
                 }
-                
-                Button(action:{
-                    repoView = false
-                }) {
-                    Text("Finish")
-                }.disabled(!allowFinish)
+                VStack {
+                    Button(action:{
+                        repoView = false
+                    }) {
+                        Text("Finish")
+                    }.disabled(allowFinish)
+                }
                 
                 Spacer()
                 

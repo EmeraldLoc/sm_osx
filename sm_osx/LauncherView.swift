@@ -17,7 +17,7 @@ struct LauncherView: View {
     @FetchRequest(sortDescriptors:[SortDescriptor(\.title)]) var launcherRepos: FetchedResults<LauncherRepos>
     @State var existingRepo = URL(string: "")
     @State var repoTitle = ""
-    @State var currentVersion = "v1.1.2\n"
+    @State var currentVersion = "v1.1.3\n"
     @State var updateAlert = false
     @State var latestVersion = ""
     @State var repoArgs = ""
@@ -162,6 +162,24 @@ struct LauncherView: View {
                     }
                 }
                 
+                Button("Install Homebrew") {
+                    print(shell.installBrew("/bin/bash -c \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\""))
+                    
+                    let content = UNMutableNotificationContent()
+                    content.title = "Finished installing homebrew"
+                    content.subtitle = "Homebrew is now installed. If this is your first time with homebrew, please hit the install dependencies button."
+                    content.sound = UNNotificationSound.default
+
+                    // show this notification instantly
+                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.0001, repeats: false)
+
+                    // choose a random identifier
+                    let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+
+                    // add our notification request
+                    UNUserNotificationCenter.current().add(request)
+                }
+                
                 Text("Homebrew is REQUIRED for this software to work, please install homebrew at brew.sh")
                     .padding(.horizontal)
                 
@@ -170,7 +188,10 @@ struct LauncherView: View {
                 
                 Button(action:{
                     print(try! shell.shell("brew install make mingw-w64 gcc sdl2 pkg-config glew glfw3 libusb audiofile coreutils"))
-                    print(try! shell.shell("/usr/local/bin/brew install make mingw-w64 gcc gcc@9 sdl2 pkg-config glew glfw3 libusb audiofile coreutils"))
+                    
+                    print("its intel's turn nerd what an idiot man")
+                    
+                    print(try! shell.intelShell("/usr/local/bin/brew install gcc gcc@9 sdl2 pkg-config glew glfw3 libusb audiofile coreutils"))
                     
                     let content = UNMutableNotificationContent()
                     content.title = "Finished installing dependencies"
