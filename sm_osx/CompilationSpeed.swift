@@ -12,5 +12,5 @@ enum Speed: String {
     case normal = "-j2"
     case fast = "-j3"
     case veryFast = "-j6"
-    case fastest = "-j$(nproc)"
+    case fastest = "-j64"
 }

@@ -16,5 +16,8 @@ enum Patches: String {
     case extData = "External Data"
     case timeTrials = "Time Trials"
     case captainToadStars = "Captain Toad Stars"
+    case qolFixes = "Quality of Life Fixes"
+    case qolFeatures = "Quality of Life Features"
+    case star_road = "Super Mario Star Road"
     case nothing = ""
 }

@@ -18,6 +18,8 @@ struct sm_osxApp: App {
             LauncherView()
                 .frame(minWidth: 300, minHeight: 250)
                 .environment(\.managedObjectContext, dataController.container.viewContext)
+        }.commands {
+            SidebarCommands()
         }
         
         Settings {

@@ -38,9 +38,15 @@ struct RepoView: View {
                                 .lineLimit(nil)
                         }
                         
+                        NavigationLink(destination: PatchesView(repo: .sm64ex_alo, repoView: $repoView)) {
+                            
+                            Text("sm64ex-alo (No audio at this time)")
+                                .lineLimit(nil)
+                        }
+                        
                         NavigationLink(destination: PatchesView(repo: .sm64ex_coop, repoView: $repoView)) {
                             
-                            Text("sm64ex-coop (Runs via Rosetta)")
+                            Text("sm64ex-coop")
                                 .lineLimit(nil)
                         }
                         

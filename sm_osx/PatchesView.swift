@@ -18,6 +18,9 @@ struct PatchesView: View {
     @State var isDist = false
     @State var extData = false
     @State var timeTrials = false
+    @State var isQOLFeat = false
+    @State var isQOLFix = false
+    @State var starRoad = false
     @Binding var repoView: Bool
     @State var patches = [Patches]()
     
@@ -31,7 +34,7 @@ struct PatchesView: View {
                     Spacer()
                     
                     List {
-                        if repo == .sm64ex || repo == .moon64 {
+                        if repo == .sm64ex || repo == .moon64 || repo == .sm64ex_alo {
                             Toggle(isOn: $isFPS) {
                                 Text("60 FPS")
                                     .lineLimit(nil)
@@ -47,7 +50,7 @@ struct PatchesView: View {
                                 }
                             }
                             
-                            if repo != .moon64 {
+                            if repo != .moon64 && repo != .sm64ex_alo {
 
                             
                                 Toggle(isOn: $timeTrials) {
@@ -111,7 +114,7 @@ struct PatchesView: View {
                             }
                             
                         }
-                        if repo == .sm64ex || repo == .sm64ex_coop || repo == .render96ex || repo == .moonshine || repo == .moon64 || repo == .sm64ex_master {
+                        if repo == .sm64ex || repo == .sm64ex_coop || repo == .render96ex || repo == .moonshine || repo == .moon64 || repo == .sm64ex_master || repo == .sm64ex_alo {
                             if repo != .sm64ex_coop {
                                 Toggle(isOn: $isCam) {
                                     Text("Better Camera")
@@ -129,7 +132,7 @@ struct PatchesView: View {
                                 }
                             }
                             
-                            if repo != .moonshine && repo != .moon64 && repo != .sm64ex_master {
+                            if repo != .moonshine && repo != .moon64 && repo != .sm64ex_master && repo != .sm64ex_alo {
                                 Toggle(isOn: $extData) {
                                     Text("External Data")
                                         .lineLimit(nil)
@@ -159,6 +162,55 @@ struct PatchesView: View {
                                 else {
                                     if let i = patches.firstIndex(of: .drawdistance) {
                                         patches.remove(at: i)
+                                    }
+                                }
+                            }
+                        }
+                        
+                        if repo == .sm64ex_alo {
+                            VStack {
+                                Toggle(isOn: $isQOLFeat) {
+                                    Text("Quality of Life Features")
+                                        .lineLimit(nil)
+                                }.onChange(of: isQOLFeat) { _ in
+                                    
+                                    if isQOLFeat {
+                                        patches.append(.qolFeatures)
+                                    }
+                                    else {
+                                        if let i = patches.firstIndex(of: .qolFeatures) {
+                                            patches.remove(at: i)
+                                        }
+                                    }
+                                }
+                                
+                                Toggle(isOn: $isQOLFix) {
+                                    Text("Quality of Life Fixes")
+                                        .lineLimit(nil)
+                                }.onChange(of: isQOLFix) { _ in
+                                    
+                                    if isQOLFix {
+                                        patches.append(.qolFixes)
+                                    }
+                                    else {
+                                        if let i = patches.firstIndex(of: .qolFixes) {
+                                            patches.remove(at: i)
+                                        }
+                                    }
+                                }
+                                
+                                Toggle(isOn: $starRoad) {
+                                    Text("Star Road (Romhack)")
+                                        .lineLimit(nil)
+                                }.onChange(of: starRoad) { _ in
+                                    
+                                    if starRoad {
+                                        patches.append(.star_road)
+                                    }
+                                    else {
+                                        if let i = patches.firstIndex(of: .star_road) {
+                                            patches.remove(at: i)
+                                        }
                                     }
                                 }
                             }

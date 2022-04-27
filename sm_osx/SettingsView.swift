@@ -10,6 +10,7 @@ import SwiftUI
 struct SettingsView: View {
     
     @AppStorage("logData") var logData = false
+    @AppStorage("launchEntry") var launchEntry = true
     @AppStorage("compilationSpeed") var compilationSpeed: Speed = .normal
     
     var body: some View {
@@ -18,6 +19,10 @@ struct SettingsView: View {
                 List {
                     Toggle(isOn: $logData) {
                         Text("Log Data By Default")
+                    }
+                    
+                    Toggle(isOn: $launchEntry) {
+                        Text("Create Launcher Entry By Default")
                     }
                     
                     Picker("Compilation Speed By Default", selection: $compilationSpeed) {
