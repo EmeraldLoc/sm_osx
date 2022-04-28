@@ -17,7 +17,7 @@ struct LauncherView: View {
     @FetchRequest(sortDescriptors:[SortDescriptor(\.title)]) var launcherRepos: FetchedResults<LauncherRepos>
     @State var existingRepo = URL(string: "")
     @State var repoTitle = ""
-    @State var currentVersion = "v1.1.6\n"
+    @State var currentVersion = "v1.1.7\n"
     @State var updateAlert = false
     @State var latestVersion = ""
     @State var repoArgs = ""
@@ -25,10 +25,11 @@ struct LauncherView: View {
     @State var crashLog = ""
     @State var readableCrashLog = ""
     @State var allowAddingRepos = true
+    @State var beginLogging = false
     @AppStorage("firstLaunch") var firstLaunch = true
     @State var romURL = URL(string: "")
-    let sm64: UTType = .init(filenameExtension: "f3dex2e")!
-    let rom: UTType = .init(filenameExtension: "z64")!
+    let sm64: UTType = .init(filenameExtension: "f3dex2e") ?? UTType.unixExecutable
+    let rom: UTType = .init(filenameExtension: "z64") ?? UTType.unixExecutable
     
     func launcherShell(_ command: String) throws -> String {
         self.crashLog = ""
@@ -44,7 +45,7 @@ struct LauncherView: View {
         let outHandle = pipe.fileHandleForReading
         outHandle.waitForDataInBackgroundAndNotify()
 
-        var obs1 : NSObjectProtocol!
+        var obs1 : NSObjectProtocol?
         obs1 = NotificationCenter.default.addObserver(forName: Notification.Name.NSFileHandleDataAvailable, object: outHandle, queue: nil) {  notification -> Void in
             let data = outHandle.availableData
             
@@ -63,7 +64,7 @@ struct LauncherView: View {
             }
         }
 
-        var obs2 : NSObjectProtocol!
+        var obs2 : NSObjectProtocol?
         obs2 = NotificationCenter.default.addObserver(forName: Process.didTerminateNotification, object: task, queue: nil) { notification -> Void in
             print("terminated")
             
@@ -223,6 +224,23 @@ struct LauncherView: View {
                                     
                                     print(try? launcherShell("\(LauncherRepo.path ?? "its broken") \(LauncherRepo.args ?? "")"))
                                     
+                                    beginLogging = true
+                                    
+                                    print(LauncherRepo.path ?? "")
+                                }) {
+                                    Text("Log")
+                                    
+                                    Image(systemName: "arrow.right.circle.fill")
+                                }
+                                
+                                Button(action: {
+                                    
+                                    for i in 0...launcherRepos.count - 1 {
+                                        launcherRepos[i].isEditing = false
+                                    }
+                                    
+                                    print(try? launcherShell("\(LauncherRepo.path ?? "its broken") \(LauncherRepo.args ?? "")"))
+                                    
                                     print(LauncherRepo.path ?? "")
                                 }) {
                                     Image(systemName: "arrow.right.circle.fill")
@@ -246,8 +264,10 @@ struct LauncherView: View {
                 if allowAddingRepos {
                     Button(action:{
                         
-                        for i in 0...launcherRepos.count - 1 {
-                            launcherRepos[i].isEditing = false
+                        if !launcherRepos.isEmpty {
+                            for i in 0...launcherRepos.count - 1 {
+                                launcherRepos[i].isEditing = false
+                            }
                         }
                         
                         romURL = showOpenPanelForRom()
@@ -274,8 +294,10 @@ struct LauncherView: View {
 
                 Button(action:{
                     
-                    for i in 0...launcherRepos.count - 1 {
-                        launcherRepos[i].isEditing = false
+                    if !launcherRepos.isEmpty {
+                        for i in 0...launcherRepos.count - 1 {
+                            launcherRepos[i].isEditing = false
+                        }
                     }
                     
                     repoView = true
@@ -288,8 +310,10 @@ struct LauncherView: View {
                 
                 Button("Add Existing Repo") {
                     
-                    for i in 0...launcherRepos.count - 1 {
-                        launcherRepos[i].isEditing = false
+                    if !launcherRepos.isEmpty {
+                        for i in 0...launcherRepos.count - 1 {
+                            launcherRepos[i].isEditing = false
+                        }
                     }
                     
                     existingRepo = showOpenPanel()
@@ -324,11 +348,11 @@ struct LauncherView: View {
                         launcherRepos[i].isEditing = false
                     }
                     
-                    print(try! shell.shell("brew install make mingw-w64 gcc sdl2 pkg-config glew glfw3 libusb audiofile coreutils"))
+                    print(try? shell.shell("brew install make mingw-w64 gcc sdl2 pkg-config glew glfw3 libusb audiofile coreutils"))
                     
                     print("its intel's turn nerd what an idiot man")
                     
-                    print(try! shell.intelShell("/usr/local/bin/brew install gcc gcc@9 sdl2 pkg-config glew glfw3 libusb audiofile coreutils"))
+                    print(try? shell.intelShell("/usr/local/bin/brew install gcc gcc@9 sdl2 pkg-config glew glfw3 libusb audiofile coreutils"))
                     
                     let content = UNMutableNotificationContent()
                     content.title = "Finished installing dependencies"
@@ -349,14 +373,24 @@ struct LauncherView: View {
             }
             
         }.onAppear {
-            if try! checkRom("ls ~/SM64Repos/baserom.us.z64") {
-                allowAddingRepos = true
+            do {
+                if try checkRom("ls ~/SM64Repos/baserom.us.z64") {
+                    allowAddingRepos = true
+                }
+                else {
+                    allowAddingRepos = false
+                }
             }
-            else {
-                allowAddingRepos = false
+            catch {
+                print("Failed: \(error)")
             }
             
-            latestVersion = try! shell.shell("curl https://github.com/EmeraldLoc/sm_osx/releases/latest -s | grep -o 'v[0-9].[0-9].[0-9]*' | sort -u")
+            do {
+                latestVersion = try shell.shell("curl https://github.com/EmeraldLoc/sm_osx/releases/latest -s | grep -o 'v[0-9].[0-9].[0-9]*' | sort -u")
+            }
+            catch {
+                print("Failed: \(error)")
+            }
             
             print("Latest Version: \(latestVersion), Current Version: \(currentVersion)")
             
@@ -382,7 +416,7 @@ struct LauncherView: View {
             
         }.alert("An Update is Avalible", isPresented: $updateAlert) {
             Button("Update", role: .none) {
-                print(try! shell.shell("cd ~/Downloads && wget https://github.com/EmeraldLoc/sm_osx/releases/latest/download/sm_osx.zip && unzip sm_osx.zip && rm -rf sm_osx.zip /Applications/sm_osx.app && mv sm_osx.app /Applications && open /Applications/sm_osx.app"))
+                print(try? shell.shell("cd ~/Downloads && wget https://github.com/EmeraldLoc/sm_osx/releases/latest/download/sm_osx.zip && unzip sm_osx.zip && rm -rf sm_osx.zip /Applications/sm_osx.app && mv sm_osx.app /Applications && open /Applications/sm_osx.app"))
                 
                 exit(0)
             }
@@ -400,6 +434,8 @@ struct LauncherView: View {
                             readableCrashLog = crashLog
                         }
                         .onAppear {
+                            beginLogging = false
+                            
                             readableCrashLog = crashLog
                         }
                 }
@@ -410,6 +446,25 @@ struct LauncherView: View {
                     crashStatus = false
                 }
             }.frame(minWidth: 350, maxHeight: 350)
+        }.sheet(isPresented: $beginLogging) {
+            VStack {
+                TextEditor(text: $readableCrashLog)
+                    .frame(minWidth: 350, minHeight: 350)
+                    .onChange(of: readableCrashLog) { _ in
+                        readableCrashLog = crashLog
+                    }.onChange(of: crashLog) { _ in
+                        readableCrashLog = crashLog
+                    }
+                    .onAppear {
+                        readableCrashLog = crashLog
+                    }
+                
+                Spacer()
+                
+                Button("Finish") {
+                    beginLogging = false
+                }
+            }
         }
     }
 }

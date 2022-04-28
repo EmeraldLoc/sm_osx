@@ -1,7 +1,0 @@
-
-import SwiftUI
-
-struct AlertToBool {
-    
-
-}
