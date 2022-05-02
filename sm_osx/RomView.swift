@@ -107,6 +107,7 @@ struct RomView: View {
     @State var allowFinish = true
     @State var log = ""
     @State var doLauncher = true
+    @State var doKeepRepo = true
     @State var betterCamera = 0
     @State var drawDistance = 0
     @State var highFPS = 0
@@ -194,21 +195,23 @@ struct RomView: View {
                         
                         var execPath = "sm64ex-coop-build"
                         
-                        let checkExecPath = try? shell.shell("ls ~/SM64Repos/")
-                        
-                        var numbCur = 0
-                        
-                        while checkExecPath!.contains(execPath) {
+                        if doKeepRepo {
+                            let checkExecPath = try? shell.shell("ls ~/SM64Repos/")
                             
-                            numbCur += 1
+                            var numbCur = 0
                             
-                            if numbCur == 1 {
-                                execPath.append("-\(numbCur)")
-                            }
-                            else {
-                                execPath.removeLast()
+                            while checkExecPath!.contains(execPath) {
                                 
-                                execPath.append(String(numbCur))
+                                numbCur += 1
+                                
+                                if numbCur == 1 {
+                                    execPath.append("-\(numbCur)")
+                                }
+                                else {
+                                    execPath.removeLast()
+                                    
+                                    execPath.append(String(numbCur))
+                                }
                             }
                         }
                         
@@ -408,21 +411,23 @@ struct RomView: View {
                         
                         var execPath = "\(repo)-build"
                         
-                        let checkExecPath = try? shell.shell("ls ~/SM64Repos/")
-                        
-                        var numbCur = 0
-                        
-                        while checkExecPath!.contains(execPath) {
+                        if doKeepRepo {
+                            let checkExecPath = try? shell.shell("ls ~/SM64Repos/")
                             
-                            numbCur += 1
+                            var numbCur = 0
                             
-                            if numbCur == 1 {
-                                execPath.append("-\(numbCur)")
-                            }
-                            else {
-                                execPath.removeLast()
+                            while checkExecPath!.contains(execPath) {
                                 
-                                execPath.append(String(numbCur))
+                                numbCur += 1
+                                
+                                if numbCur == 1 {
+                                    execPath.append("-\(numbCur)")
+                                }
+                                else {
+                                    execPath.removeLast()
+                                    
+                                    execPath.append(String(numbCur))
+                                }
                             }
                         }
                         
@@ -539,21 +544,23 @@ struct RomView: View {
                         
                         var execPath = "\(repo)-build"
                         
-                        let checkExecPath = try? shell.shell("ls ~/SM64Repos/")
-                        
-                        var numbCur = 0
-                        
-                        while checkExecPath!.contains(execPath) {
+                        if doKeepRepo {
+                            let checkExecPath = try? shell.shell("ls ~/SM64Repos/")
                             
-                            numbCur += 1
+                            var numbCur = 0
                             
-                            if numbCur == 1 {
-                                execPath.append("-\(numbCur)")
-                            }
-                            else {
-                                execPath.removeLast()
+                            while checkExecPath!.contains(execPath) {
                                 
-                                execPath.append(String(numbCur))
+                                numbCur += 1
+                                
+                                if numbCur == 1 {
+                                    execPath.append("-\(numbCur)")
+                                }
+                                else {
+                                    execPath.removeLast()
+                                    
+                                    execPath.append(String(numbCur))
+                                }
                             }
                         }
                         
@@ -670,23 +677,24 @@ struct RomView: View {
                         
                         var execPath = "\(repo)-build"
                         
-                        let checkExecPath = try? shell.shell("ls ~/SM64Repos/")
-                        
-                        print(checkExecPath)
-                        
-                        var numbCur = 0
-                        
-                        while checkExecPath!.contains(execPath) {
+                        if doKeepRepo {
                             
-                            numbCur += 1
+                            let checkExecPath = try? shell.shell("ls ~/SM64Repos/")
                             
-                            if numbCur == 1 {
-                                execPath.append("-\(numbCur)")
-                            }
-                            else {
-                                execPath.removeLast()
+                            var numbCur = 0
+                            
+                            while checkExecPath!.contains(execPath) {
                                 
-                                execPath.append(String(numbCur))
+                                numbCur += 1
+                                
+                                if numbCur == 1 {
+                                    execPath.append("-\(numbCur)")
+                                }
+                                else {
+                                    execPath.removeLast()
+                                    
+                                    execPath.append(String(numbCur))
+                                }
                             }
                         }
                         
@@ -743,6 +751,9 @@ struct RomView: View {
                     }
                     Toggle(isOn: $doLauncher) {
                         Text("Add Repo to Launcher")
+                    }
+                    Toggle(isOn: $doKeepRepo) {
+                        Text("Keep Repo (this setting only matters if you already compiled thos repo)")
                     }
                 
                     Picker("Compilation Speed", selection: $compSpeed) {
