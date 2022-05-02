@@ -17,7 +17,7 @@ struct LauncherView: View {
     @FetchRequest(sortDescriptors:[SortDescriptor(\.title)]) var launcherRepos: FetchedResults<LauncherRepos>
     @State var existingRepo = URL(string: "")
     @State var repoTitle = ""
-    @State var currentVersion = "v1.1.7\n"
+    @State var currentVersion = "v1.1.8\n"
     @State var updateAlert = false
     @State var latestVersion = ""
     @State var repoArgs = ""
