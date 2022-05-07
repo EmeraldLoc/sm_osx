@@ -6,4 +6,4 @@ This is a launcher for Super Mario 64 PC Port that can compile for Mac M1.
 
 # Install
 
-Simply go to releases and download sm_osx.app
+Simply go to releases and download sm_osx.app (And yes there is an auto-update feature)
