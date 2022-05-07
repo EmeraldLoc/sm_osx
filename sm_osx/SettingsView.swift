@@ -11,6 +11,7 @@ struct SettingsView: View {
     
     @AppStorage("logData") var logData = false
     @AppStorage("launchEntry") var launchEntry = true
+    @AppStorage("devMode") var devMode = true
     @AppStorage("compilationSpeed") var compilationSpeed: Speed = .normal
     
     var body: some View {
@@ -36,6 +37,10 @@ struct SettingsView: View {
                             .tag(Speed.veryFast)
                         Text("Fastest")
                             .tag(Speed.fastest)
+                    }
+                    
+                    Toggle(isOn: $devMode) {
+                        Text("Enable dev repos (Not recommended)")
                     }
                 }
             }

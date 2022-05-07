@@ -17,6 +17,7 @@ struct PatchesView: View {
     @State var isCam = false
     @State var isDist = false
     @State var extData = false
+    @State var debug = false
     @State var timeTrials = false
     @State var isQOLFeat = false
     @State var isQOLFix = false
@@ -34,6 +35,24 @@ struct PatchesView: View {
                     Spacer()
                     
                     List {
+                        
+                        if repo == .sm64ex_coop || repo == .sm64ex_coop_dev {
+                            Toggle(isOn: $debug) {
+                                Text("Debug")
+                                    .lineLimit(nil)
+                            }.onChange(of: debug) { _ in
+                                
+                                if debug {
+                                    patches.append(.debug)
+                                }
+                                else {
+                                    if let i = patches.firstIndex(of: .debug) {
+                                        patches.remove(at: i)
+                                    }
+                                }
+                            }
+                        }
+                        
                         if repo == .sm64ex || repo == .moon64 || repo == .sm64ex_alo {
                             Toggle(isOn: $isFPS) {
                                 Text("60 FPS")
@@ -114,8 +133,8 @@ struct PatchesView: View {
                             }
                             
                         }
-                        if repo == .sm64ex || repo == .sm64ex_coop || repo == .render96ex || repo == .moonshine || repo == .moon64 || repo == .sm64ex_master || repo == .sm64ex_alo {
-                            if repo != .sm64ex_coop {
+                        if repo == .sm64ex || repo == .sm64ex_coop || repo == .render96ex || repo == .moonshine || repo == .moon64 || repo == .sm64ex_master || repo == .sm64ex_alo || repo == .sm64ex_coop_dev {
+                            if repo != .sm64ex_coop && repo != .sm64ex_coop_dev {
                                 Toggle(isOn: $isCam) {
                                     Text("Better Camera")
                                         .lineLimit(nil)
@@ -150,7 +169,7 @@ struct PatchesView: View {
                             }
                         }
 
-                        if repo != .sm64ex_coop {
+                        if repo != .sm64ex_coop && repo != .sm64ex_coop_dev {
                             Toggle(isOn: $isDist) {
                                 Text("No Draw Distance")
                                     .lineLimit(nil)

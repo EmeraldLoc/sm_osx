@@ -16,4 +16,5 @@ enum Repo: String {
     case moon64 = "https://github.com/EmeraldLoc/Moon64"
     case render96ex = "https://github.com/EmeraldLoc/sm64ex.git --branch alpha"
     case sm64ex_coop = "https://github.com/djoslin0/sm64ex-coop.git"
+    case sm64ex_coop_dev = "https://github.com/sm64ex-coop-dev/sm64ex-coop.git"
 }

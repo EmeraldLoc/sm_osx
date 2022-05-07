@@ -12,7 +12,7 @@ class Shell {
     
     @State var log = ""
     
-    func intelShell(_ command: String) throws -> String {
+    func intelShell(_ command: String, _ doNonAsync: Bool = true) throws -> String {
         
         var error: NSDictionary?
         var returnOutput = ""
@@ -28,7 +28,7 @@ class Shell {
                 returnOutput.append("NSAppleScriptError: \(String(describing: error))")
             }
         }
-        
+
         return returnOutput
     }
     
@@ -113,6 +113,7 @@ struct RomView: View {
     @State var highFPS = 0
     @State var qolFix = 0
     @State var qolFeatures = 0
+    @State var debug = 0
     @State var doLog = false
     @State var compSpeed: Speed = .normal
     @State var extData = 0
@@ -134,12 +135,12 @@ struct RomView: View {
         ZStack {
             VStack {
                 
-                if repo == .sm64ex_coop || repo == .moon64 {
+                if repo == .sm64ex_coop || repo == .moon64 || repo == .sm64ex_coop_dev {
                     Text("\n For this repo, make sure you have the intel version of homebrew. To do this, launch your terminal with rosetta and follow install instructions at brew.sh")
                         .lineLimit(nil)
                 }
                 
-                if repo == .sm64ex_coop {
+                if repo == .sm64ex_coop || repo == .sm64ex_coop_dev {
                     Button(action: {
                         
                         log = ""
@@ -183,7 +184,7 @@ struct RomView: View {
                             //buffer
                             print(try shell.shell("ls ."))
                             
-                            log.append(try shell.intelShell("cd ~/SM64Repos/sm64ex-coop && gmake OSX_BUILD=1 TARGET_ARCH=x86_64-apple-darwin TARGET_BITS=64 EXTERNAL_DATA=\(extData) \(compSpeed.rawValue)"))
+                            log.append(try shell.intelShell("cd ~/SM64Repos/sm64ex-coop && gmake OSX_BUILD=1 TARGET_ARCH=x86_64-apple-darwin TARGET_BITS=64 EXTERNAL_DATA=\(extData) DEBUG=\(debug) \(compSpeed.rawValue)"))
                         }
                         catch {
                             status = .error
@@ -193,7 +194,7 @@ struct RomView: View {
                         
                         status = .finishingUp
                         
-                        var execPath = "sm64ex-coop-build"
+                        var execPath = "\(repo)-build"
                         
                         if doKeepRepo {
                             let checkExecPath = try? shell.shell("ls ~/SM64Repos/")
@@ -232,7 +233,7 @@ struct RomView: View {
                         if doLauncher {
                             let launcherRepo = LauncherRepos(context: moc)
                             
-                            launcherRepo.title = "sm64ex-coop"
+                            launcherRepo.title = "\(repo)"
                             launcherRepo.isEditing = false
                             launcherRepo.path = "~/SM64Repos/\(execPath)/sm64.us.f3dex2e"
                             launcherRepo.args = ""
@@ -816,6 +817,9 @@ struct RomView: View {
                 }
                 if patch.contains(.highfps) {
                     highFPS = 1
+                }
+                if patch.contains(.debug) {
+                    debug = 1
                 }
                 
                 doLog = logData

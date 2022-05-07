@@ -11,6 +11,7 @@ struct RepoView: View {
     
     @State var shell = RomView(patch: [Patches](), repo: .sm64ex, repoView: .constant(false))
     @Binding var repoView: Bool
+    @AppStorage("devMode") var devMode = true
     
     var body: some View {
         NavigationView {
@@ -50,6 +51,14 @@ struct RepoView: View {
                                 .lineLimit(nil)
                         }
                         
+                        if devMode {
+                            NavigationLink(destination: PatchesView(repo: .sm64ex_coop_dev, repoView: $repoView)) {
+                                
+                                Text("sm64ex-coop-dev (Only avalible to devs)")
+                                    .lineLimit(nil)
+                            }
+                        }
+                            
                         NavigationLink(destination: PatchesView(repo: .render96ex, repoView: $repoView)) {
                             
                             Text("Render96ex")

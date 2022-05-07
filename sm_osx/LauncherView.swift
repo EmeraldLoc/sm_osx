@@ -12,12 +12,13 @@ import UserNotifications
 struct LauncherView: View {
     
     @State var repoView = false
+    @AppStorage("devMode") var devMode = true
     var shell = Shell()
     @Environment(\.managedObjectContext) var moc
     @FetchRequest(sortDescriptors:[SortDescriptor(\.title)]) var launcherRepos: FetchedResults<LauncherRepos>
     @State var existingRepo = URL(string: "")
     @State var repoTitle = ""
-    @State var currentVersion = "v1.1.8\n"
+    @State var currentVersion = "v1.1.9\n"
     @State var updateAlert = false
     @State var latestVersion = ""
     @State var repoArgs = ""
@@ -143,6 +144,47 @@ struct LauncherView: View {
                                 
                                 Spacer()
                                 
+                                Menu {
+                                    Button(action: {
+                                        
+                                        for i in 0...launcherRepos.count - 1 {
+                                            launcherRepos[i].isEditing = false
+                                        }
+                                        
+                                        print(try? launcherShell("\(LauncherRepo.path ?? "its broken") \(LauncherRepo.args ?? "")"))
+                                        
+                                        beginLogging = true
+                                        
+                                        print(LauncherRepo.path ?? "")
+                                    }) {
+                                        Text("Log")
+                                        
+                                        Image(systemName: "arrow.right.circle.fill")
+                                    }
+                                    
+                                    Button(action: {
+                                        
+                                        for i in 0...launcherRepos.count - 1 {
+                                            launcherRepos[i].isEditing = false
+                                        }
+                                        
+                                        let launcherRepo = launcherRepos[i]
+                                        
+                                        moc.delete(launcherRepo)
+                                        
+                                        do {
+                                            try moc.save()
+                                        }
+                                        catch {
+                                            print("Error: its broken: \(error)")
+                                        }
+                                    }) {
+                                        Text("Remove Repo")
+                                    }
+                                } label: {
+                                    Text("...")
+                                }.frame(width: 40)
+                                
                                 Button(action: {
                                     
                                     for iEdit in 0...launcherRepos.count - 1 {
@@ -194,43 +236,6 @@ struct LauncherView: View {
                                         repoTitle = launcherRepos[i].title ?? ""
                                         repoArgs = launcherRepos[i].args ?? ""
                                     }
-                                }
-                                
-                                Button(action: {
-                                    
-                                    for i in 0...launcherRepos.count - 1 {
-                                        launcherRepos[i].isEditing = false
-                                    }
-                                    
-                                    let launcherRepo = launcherRepos[i]
-                                    
-                                    moc.delete(launcherRepo)
-                                    
-                                    do {
-                                        try moc.save()
-                                    }
-                                    catch {
-                                        print("Error: its broken: \(error)")
-                                    }
-                                }) {
-                                    Image(systemName: "trash")
-                                }
-                                
-                                Button(action: {
-                                    
-                                    for i in 0...launcherRepos.count - 1 {
-                                        launcherRepos[i].isEditing = false
-                                    }
-                                    
-                                    print(try? launcherShell("\(LauncherRepo.path ?? "its broken") \(LauncherRepo.args ?? "")"))
-                                    
-                                    beginLogging = true
-                                    
-                                    print(LauncherRepo.path ?? "")
-                                }) {
-                                    Text("Log")
-                                    
-                                    Image(systemName: "arrow.right.circle.fill")
                                 }
                                 
                                 Button(action: {
@@ -352,7 +357,10 @@ struct LauncherView: View {
                     
                     print("its intel's turn nerd what an idiot man")
                     
-                    print(try? shell.intelShell("/usr/local/bin/brew install gcc gcc@9 sdl2 pkg-config glew glfw3 libusb audiofile coreutils"))
+                    do {
+                        try shell.intelShell("/usr/local/bin/brew install gcc gcc@9 sdl2 pkg-config glew glfw3 libusb audiofile coreutils")
+                    }
+                    catch {}
                     
                     let content = UNMutableNotificationContent()
                     content.title = "Finished installing dependencies"
