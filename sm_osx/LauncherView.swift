@@ -18,7 +18,7 @@ struct LauncherView: View {
     @FetchRequest(sortDescriptors:[SortDescriptor(\.title)]) var launcherRepos: FetchedResults<LauncherRepos>
     @State var existingRepo = URL(string: "")
     @State var repoTitle = ""
-    @State var currentVersion = "v1.1.9\n"
+    @State var currentVersion = "v1.1.91\n"
     @State var updateAlert = false
     @State var latestVersion = ""
     @State var repoArgs = ""
@@ -394,7 +394,7 @@ struct LauncherView: View {
             }
             
             do {
-                latestVersion = try shell.shell("curl https://github.com/EmeraldLoc/sm_osx/releases/latest -s | grep -o 'v[0-9].[0-9].[0-9]*' | sort -u")
+                latestVersion = try shell.shell("curl -s https://raw.githubusercontent.com/EmeraldLoc/sm_osx/main/CurVer")
             }
             catch {
                 print("Failed: \(error)")
