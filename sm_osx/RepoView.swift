@@ -19,6 +19,9 @@ struct RepoView: View {
                 VStack {
                     Text("What repo would you like to use")
                         .lineLimit(nil)
+                        .padding(.top, 3)
+                        .padding(.horizontal, 1)
+                    
                     List {
                         
                         NavigationLink(destination: RomView(patch: [], repo: .sm64port, repoView: $repoView)) {
@@ -76,7 +79,7 @@ struct RepoView: View {
                             Text("Moon64 (Discontinued)")
                                 .lineLimit(nil)
                         }
-                    }
+                    }.listStyle(.sidebar)
                     Spacer()
                     
                     Button("Cancel") {

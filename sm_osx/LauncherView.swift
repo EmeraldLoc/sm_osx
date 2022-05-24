@@ -12,13 +12,13 @@ import UserNotifications
 struct LauncherView: View {
     
     @State var repoView = false
-    @AppStorage("devMode") var devMode = true
+    @AppStorage("devMode") var devMode = false
     var shell = Shell()
     @Environment(\.managedObjectContext) var moc
     @FetchRequest(sortDescriptors:[SortDescriptor(\.title)]) var launcherRepos: FetchedResults<LauncherRepos>
     @State var existingRepo = URL(string: "")
     @State var repoTitle = ""
-    @State var currentVersion = "v1.1.91\n"
+    @State var currentVersion = "v1.2.0\n"
     @State var updateAlert = false
     @State var latestVersion = ""
     @State var repoArgs = ""
@@ -29,11 +29,13 @@ struct LauncherView: View {
     @State var beginLogging = false
     @AppStorage("firstLaunch") var firstLaunch = true
     @State var romURL = URL(string: "")
+    @State var crashIndex = 0
+    @State var logIndex = 0
     let sm64: UTType = .init(filenameExtension: "f3dex2e") ?? UTType.unixExecutable
     let rom: UTType = .init(filenameExtension: "z64") ?? UTType.unixExecutable
     
-    func launcherShell(_ command: String) throws -> String {
-        self.crashLog = ""
+    func launcherShell(_ command: String, index: Int, isLogging: Bool = false) throws -> String {
+        self.launcherRepos[index].log = ""
         
         let task = Process()
         var output = ""
@@ -52,11 +54,9 @@ struct LauncherView: View {
             
             if data.count > 0 {
                 if let str = String(data: data, encoding: .utf8) {
-                    print("got output: \(str)")
-                   
                     output.append(str)
                     
-                    self.crashLog.append(str)
+                    self.launcherRepos[index].log!.append(str)
                 }
                 outHandle.waitForDataInBackgroundAndNotify()
             } else   {
@@ -70,7 +70,9 @@ struct LauncherView: View {
             print("terminated")
             
             if task.terminationStatus != 0 {
-                self.crashLog.append("A Crash has happend. Termination Status: \(task.terminationStatus)")
+                self.launcherRepos[index].log?.append("\n A Crash has happend. Termination Status: \(task.terminationStatus)")
+                
+                crashIndex = index
                 
                 self.crashStatus = true
             }
@@ -151,7 +153,9 @@ struct LauncherView: View {
                                             launcherRepos[i].isEditing = false
                                         }
                                         
-                                        print(try? launcherShell("\(LauncherRepo.path ?? "its broken") \(LauncherRepo.args ?? "")"))
+                                        print(try? launcherShell("\(LauncherRepo.path ?? "its broken") \(LauncherRepo.args ?? "")", index: i))
+                                        
+                                        logIndex = i
                                         
                                         beginLogging = true
                                         
@@ -244,7 +248,7 @@ struct LauncherView: View {
                                         launcherRepos[i].isEditing = false
                                     }
                                     
-                                    print(try? launcherShell("\(LauncherRepo.path ?? "its broken") \(LauncherRepo.args ?? "")"))
+                                    print(try? launcherShell("\(LauncherRepo.path ?? "its broken") \(LauncherRepo.args ?? "")", index: i))
                                     
                                     print(LauncherRepo.path ?? "")
                                 }) {
@@ -358,7 +362,7 @@ struct LauncherView: View {
                     print("its intel's turn nerd what an idiot man")
                     
                     do {
-                        try shell.intelShell("/usr/local/bin/brew install gcc gcc@9 sdl2 pkg-config glew glfw3 libusb audiofile coreutils")
+                        print(try shell.intelShell("/usr/local/bin/brew install gcc gcc@9 sdl2 pkg-config glew glfw3 libusb audiofile coreutils"))
                     }
                     catch {}
                     
@@ -381,6 +385,9 @@ struct LauncherView: View {
             }
             
         }.onAppear {
+            
+            devMode = false
+            
             do {
                 if try checkRom("ls ~/SM64Repos/baserom.us.z64") {
                     allowAddingRepos = true
@@ -420,6 +427,7 @@ struct LauncherView: View {
             
             for i in 0...launcherRepos.count - 1 {
                 launcherRepos[i].isEditing = false
+                launcherRepos[i].log = ""
             }
             
         }.alert("An Update is Avalible", isPresented: $updateAlert) {
@@ -431,48 +439,9 @@ struct LauncherView: View {
             
             Button("Not now", role: .cancel) {}
         }.sheet(isPresented: $crashStatus) {
-            VStack {
-                Text("Your Game Crashed")
-
-                ScrollView {
-                    
-                    TextEditor(text: $readableCrashLog)
-                        .frame(minWidth: 350, minHeight: 350)
-                        .onChange(of: readableCrashLog) { _ in
-                            readableCrashLog = crashLog
-                        }
-                        .onAppear {
-                            beginLogging = false
-                            
-                            readableCrashLog = crashLog
-                        }
-                }
-                
-                Button("Close") {
-                    crashLog = ""
-                    
-                    crashStatus = false
-                }
-            }.frame(minWidth: 350, maxHeight: 350)
+            CrashView(beginLogging: $beginLogging, crashStatus: $crashStatus, index: $crashIndex)
         }.sheet(isPresented: $beginLogging) {
-            VStack {
-                TextEditor(text: $readableCrashLog)
-                    .frame(minWidth: 350, minHeight: 350)
-                    .onChange(of: readableCrashLog) { _ in
-                        readableCrashLog = crashLog
-                    }.onChange(of: crashLog) { _ in
-                        readableCrashLog = crashLog
-                    }
-                    .onAppear {
-                        readableCrashLog = crashLog
-                    }
-                
-                Spacer()
-                
-                Button("Finish") {
-                    beginLogging = false
-                }
-            }
+            LogView(index: $logIndex)
         }
     }
 }

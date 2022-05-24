@@ -31,6 +31,7 @@ struct PatchesView: View {
                 VStack {
                     Text("Select a Patch")
                         .lineLimit(nil)
+                        .padding(.top, 3)
                     
                     Spacer()
                     

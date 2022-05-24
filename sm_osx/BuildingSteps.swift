@@ -7,16 +7,13 @@
 
 import Foundation
 
-enum CompilationProcess: String {
-    case patching = "Patching..."
-    case instDependencies = "Installing Dependencies..."
-    case instRepo = "Downloading Repo..."
-    case copyingFiles = "Copying Files..."
-    case compiling = "Compiling, this may take a while, please be patient."
-    case finishingUp = "Finishing Up..."
-    case finished = "Finshed!"
-    case nothing = ""
-    case error = "Error!"
-    case rosetta = "Make sure you are runing this app with rosetta"
-    case notRosetta = "Make sure you are NOT running this app with rosetta"
+enum CompStatus: Double {
+    case patching = 45
+    case instDependencies = 2
+    case instRepo = 5
+    case copyingFiles = 15
+    case compiling = 65
+    case finishingUp = 90
+    case finished = 100
+    case nothing = 0
 }
