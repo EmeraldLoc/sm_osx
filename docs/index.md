@@ -28,7 +28,7 @@ Make sure you have Homebrew installed, if it is installed, please make an issue 
 ### I downloaded sm_osx, but it crashes on bootup
 Please create an issue in the Issues page.
 ### My notifications are not working
-Make sure you accepted them. You can check in *Notification & Focus* in the System Prefrences App
+Make sure you accepted them. You can check in *Notification & Focus* in the System Preferences App
 ### How do I update
 Their is an auto updater in sm_osx, so if an update comes out, you will be alerted.
 ### How can I get sm_osx
