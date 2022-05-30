@@ -1,2 +1,4 @@
-remote_theme: "sproogen/modern-resume-theme"
-darkmode: true
+remote_theme: "mmistakes/so-simple-theme@3.2.0"
+title: "sm_osx"
+description: "A launcher and compiler for Super Mario 64"
+logo: /sm_osx/Assets.xcassets/AppIcon.appiconset/icon_32@2x.png
