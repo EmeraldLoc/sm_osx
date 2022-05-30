@@ -8,6 +8,7 @@ Super Mario 64 was one of the first  of 3 games I played, however I forgot about
 
 ## Getting started
 You can download sm_osx [here](https://github.com/EmeraldLoc/sm_osx/releases/latest/download/sm_osx.zip)
+
 Homebrew will also be needed, you can follow the install instructions [here](https://brew.sh)
 
 ## Faq
