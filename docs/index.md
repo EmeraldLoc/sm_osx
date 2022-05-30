@@ -7,7 +7,8 @@ I am a swift programmer who enjoys playing video games. I started when I was ver
 Super Mario 64 was one of the first  of 3 games I played, however I forgot about it for a couple of years until I learned about decomp and the sm64 pc port. Ever since I heard about it, I wanted to play the game in what was promised to be a wonderful 60fps, however with no easy way to do it, I realized I would have to make my own way. So after collecting a lot of knowledge about c and Makefiles and compilers, I was able to tinker up a small, but usable app, I then released the first version of sm_osx. Only including a couple of repos, it was the start of a wonderful project.
 
 ## Getting started
-Go to the top of the page and hit the Download button
+You can download sm_osx [here](https://github.com/EmeraldLoc/sm_osx/releases/latest/download/sm_osx.zip)
+Homebrew will also be needed, you can follow the install instructions [here](https://brew.sh)
 
 ## Faq
 ### What is sm_osx
@@ -31,4 +32,4 @@ Make sure you accepted them. You can check in *Notification & Focus* in the Syst
 ### How do I update
 Their is an auto updater in sm_osx, so if an update comes out, you will be alerted.
 ### How can I get sm_osx
-Simply go to the top of this page and download sm_osx
+Go to the Getting Started section of this page
