@@ -18,7 +18,7 @@ struct LauncherView: View {
     @FetchRequest(sortDescriptors:[SortDescriptor(\.title)]) var launcherRepos: FetchedResults<LauncherRepos>
     @State var existingRepo = URL(string: "")
     @State var repoTitle = ""
-    @State var currentVersion = "v1.2.0\n"
+    @State var currentVersion = "v1.2.1\n"
     @State var updateAlert = false
     @State var latestVersion = ""
     @State var repoArgs = ""
@@ -31,6 +31,7 @@ struct LauncherView: View {
     @State var romURL = URL(string: "")
     @State var crashIndex = 0
     @State var logIndex = 0
+    @State var homebrewText = ""
     let sm64: UTType = .init(filenameExtension: "f3dex2e") ?? UTType.unixExecutable
     let rom: UTType = .init(filenameExtension: "z64") ?? UTType.unixExecutable
     
@@ -281,12 +282,10 @@ struct LauncherView: View {
                         
                         romURL = showOpenPanelForRom()
                         
-                        romURL? = URL(fileURLWithPath: romURL?.path.replacingOccurrences(of: " ", with: "\\ ") ?? "")
+                        romURL? = URL(fileURLWithPath: romURL?.path.replacingOccurrences(of: " ", with: #"\ "#
+                                                                                         , options: .literal, range: nil) ?? "")
                         
-                        print(romURL?.path ?? "")
-                        print(romURL?.pathExtension ?? "")
-                        
-                        print(try? shell.shell("cp \(romURL?.path ?? "") ~/SM64Repos/baserom.us.z64") ?? "")
+                        print(try? shell.shell("cp \(romURL?.path ?? "") ~/SM64Repos/baserom.us.z64") )
                         
                         if let doesExist = try? checkRom("ls ~/SM64Repos/baserom.us.z64") {
                             if doesExist {
@@ -345,10 +344,7 @@ struct LauncherView: View {
                     }
                 }
                 
-                Text("Homebrew is REQUIRED for this software to work, please install homebrew at brew.sh")
-                    .padding(.horizontal)
-                
-                Text("\nOptional: Homebrew Intel version is nice to have. Install by launching terminal with Rosetta and installing at brew.sh")
+                Text(homebrewText)
                     .padding(.horizontal)
                 
                 Button(action:{
@@ -383,10 +379,27 @@ struct LauncherView: View {
                     Text("Install Dependencies")
                 }.buttonStyle(.bordered).padding(.vertical)
             }
-            
         }.onAppear {
             
             devMode = false
+            
+            let detectArmBrewInstall = try? shell.shell("which brew")
+            let detectIntelBrewInstall = try? shell.shell("which /usr/local/bin/brew")
+            
+            if detectArmBrewInstall?.contains("/opt/homebrew/bin/brew") ?? false && detectIntelBrewInstall == "/usr/local/bin/brew\n" {
+                homebrewText = "Both versions of homebrew are installed."
+            }
+            else if !(detectArmBrewInstall?.contains("/opt/homebrew/bin/brew") ?? false) && detectIntelBrewInstall == "/usr/local/bin/brew\n" {
+                    
+                homebrewText = "Arm homebrew is not installed. Please install at brew.sh\n\nIntel homebrew is installed"
+            }
+            else if (detectArmBrewInstall?.contains("/opt/homebrew/bin/brew") ?? false) && detectIntelBrewInstall != "/usr/local/bin/brew\n" {
+                    
+                homebrewText = "Arm homebrew is installed\n\nIntel homebrew is not installed. Install by launching your terminal with rosetta, and then follow instructions at brew.sh"
+            }
+            else {
+                homebrewText = "Homebrew is not installed, please install at brew.sh"
+            }
             
             do {
                 if try checkRom("ls ~/SM64Repos/baserom.us.z64") {

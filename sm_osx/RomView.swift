@@ -167,7 +167,7 @@ struct RomView: View {
         
         if repo == .sm64ex {
             if patch.contains(.omm) {
-                commandsCompile.append("cd ~/SM64Repos && git clone https://github.com/PeachyPeachSM64/sm64pc-omm.git && cp sm64pc-omm/patch/omm.patch \(repo) && rm -rf sm64pc-omm && cd \(repo) && git apply --reject --ignore-whitespace 'omm.patch' && ")
+                commandsCompile.append("cd ~/SM64Repos && wget -O omm.patch https://raw.githubusercontent.com/PeachyPeachSM64/sm64pc-omm/master/patch/omm.patch && rm -rf sm64pc-omm && cd \(repo) && git apply --reject --ignore-whitespace 'omm.patch' && ")
             }
         
             if patch.contains(.highfps) {
@@ -189,7 +189,7 @@ struct RomView: View {
         
         if repo == .sm64ex_alo {
             if patch.contains(.star_road) {
-                commandsCompile.append("cd ~/SM64Repos/\(repo) && wget -O star_road_release.patch https://raw.githubusercontent.com/EmeraldLoc/star_road_release_patch/main/star_road_release.patch && git apply --reject --ignore-whitespace \"star_road_release.patch\" && ")
+                commandsCompile.append("cd ~/SM64Repos/\(repo) && wget -O star_road_release.patch http://drive.google.com/uc\\?id\\=1kXskWESOTUJDoeCGVV9JMUkn0tLd_GXO && git apply --reject --ignore-whitespace \"star_road_release.patch\" && ")
             }
         }
         
@@ -205,13 +205,13 @@ struct RomView: View {
         commandsCompile.append("echo 'Compiling Now' && ")
         
         if repo == .sm64ex_coop || repo == .sm64ex_coop_dev {
-            commandsCompile.append("cd ~/SM64Repos/\(repo) && arch -x86_64 /bin/zsh -cl 'gmake OSX_BUILD=1 TARGET_ARCH=x86_64-apple-darwin TARGET_BITS=64 EXTERNAL_DATA=\(extData) DEBUG=\(debug) \(compSpeed.rawValue)' && ")
+            commandsCompile.append("cd ~/SM64Repos/\(repo) && arch -x86_64 /bin/zsh -cl 'gmake OSX_BUILD=1 TARGET_ARCH=x86_64-apple-darwin TARGET_BITS=64 EXTERNAL_DATA=\(extData) DEBUG=\(debug) COLOR=0 \(compSpeed.rawValue)' && ")
         }
         else if repo == .moon64 {
             commandsCompile.append("cd ~/SM64Repos/\(repo) && arch -x86_64 /bin/zsh -cl 'gmake OSX_BUILD=1 BETTERCAMERA=\(betterCamera) EXTERNAL_DATA=\(extData) NODRAWDISTANCE=\(drawDistance) \(compSpeed.rawValue)' && ")
         }
         else if repo == .sm64ex_alo {
-            commandsCompile.append("cd ~/SM64Repos/\(repo) && gmake OSX_BUILD=1 BETTERCAMERA=\(betterCamera) EXTERNAL_DATA=0 NODRAWDISTANCE=\(drawDistance) QOL_FEATURES=\(qolFeatures) QOL_FIXES=\(qolFix) HIGH_FPS_PC=\(highFPS) \(compSpeed.rawValue) && ")
+            commandsCompile.append("cd ~/SM64Repos/\(repo) && gmake OSX_BUILD=1 BETTERCAMERA=\(betterCamera) EXTERNAL_DATA=0 NODRAWDISTANCE=\(drawDistance) QOL_FEATURES=\(qolFeatures) QOL_FIXES=\(qolFix) HIGH_FPS_PC=\(highFPS) COLOR=0 \(compSpeed.rawValue) && ")
         }
         else if repo == .sm64port {
             commandsCompile.append("cd ~/SM64Repos/\(repo) && gmake \(compSpeed.rawValue) && ")
@@ -223,11 +223,19 @@ struct RomView: View {
         execPath = "\(repo)-build"
         
         if doKeepRepo {
-            let checkExecPath = try? shell.shell("ls ~/SM64Repos/")
+            
+            var checkExecPath = ""
+            
+            do {
+                checkExecPath = try shell.shell("ls ~/SM64Repos/")
+            }
+            catch {
+                print("thats bad")
+            }
             
             var numbCur = 0
             
-            while checkExecPath!.contains(execPath) {
+            while checkExecPath.contains(execPath) {
                 
                 numbCur += 1
                 

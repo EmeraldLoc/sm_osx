@@ -40,8 +40,7 @@ struct CompilationView: View {
                 
                 Spacer()
                 
-                TextEditor(text: $totalLog)
-                    .disabled(true)
+                TextEditor(text: .constant(totalLog))
                 
                 Spacer()
                 
@@ -51,6 +50,9 @@ struct CompilationView: View {
             }
             
         }.onAppear {
+            
+            print("Exec Path: \(execPath)\n Repo Path: \(repo)")
+            
             task.executableURL = URL(fileURLWithPath: "/bin/zsh")
             task.arguments = ["-cl", "cd ~/SM64Repos && rm -rf \(execPath) && cd ~/; \(compileCommands)"]
             
@@ -178,7 +180,7 @@ struct CompilationView: View {
                             
                             compilesSucess = false
                             
-                            height = 150
+                            height = 550
                             
                             try? shell.shell("cd ~/SM64Repos && rm -rf \(execPath)", false)
                             try? shell.shell("cd ~/SM64Repos && rm -rf \(repo)", false)
