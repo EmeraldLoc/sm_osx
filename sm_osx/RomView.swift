@@ -189,7 +189,7 @@ struct RomView: View {
         
         if repo == .sm64ex_alo {
             if patch.contains(.star_road) {
-                commandsCompile.append("cd ~/SM64Repos/\(repo) && wget -O star_road_release.patch http://drive.google.com/uc\\?id\\=1kXskWESOTUJDoeCGVV9JMUkn0tLd_GXO && git apply --reject --ignore-whitespace \"star_road_release.patch\" && ")
+                commandsCompile.append("cd ~/SM64Repos/\(repo) && wget -O star_road_release.patch http://drive.google.com/uc\\?id\\=1kXskWESOTUJDoeCGVV9JMUkn0tLd_GXO && git apply --reject --ignore-whitespace star_road_release.patch && ")
             }
         }
         
@@ -205,7 +205,7 @@ struct RomView: View {
         commandsCompile.append("echo 'Compiling Now' && ")
         
         if repo == .sm64ex_coop || repo == .sm64ex_coop_dev {
-            commandsCompile.append("cd ~/SM64Repos/\(repo) && arch -x86_64 /bin/zsh -cl 'gmake OSX_BUILD=1 TARGET_ARCH=x86_64-apple-darwin TARGET_BITS=64 EXTERNAL_DATA=\(extData) DEBUG=\(debug) COLOR=0 \(compSpeed.rawValue)' && ")
+            commandsCompile.append("cd ~/SM64Repos/\(repo) && arch -x86_64 /bin/zsh -cl 'gmake OSX_BUILD=1 TARGET_ARCH=x86_64-apple-darwin TARGET_BITS=64 EXTERNAL_DATA=\(extData) DEBUG=\(debug) USE_APP=0 COLOR=0 \(compSpeed.rawValue)' && ")
         }
         else if repo == .moon64 {
             commandsCompile.append("cd ~/SM64Repos/\(repo) && arch -x86_64 /bin/zsh -cl 'gmake OSX_BUILD=1 BETTERCAMERA=\(betterCamera) EXTERNAL_DATA=\(extData) NODRAWDISTANCE=\(drawDistance) \(compSpeed.rawValue)' && ")

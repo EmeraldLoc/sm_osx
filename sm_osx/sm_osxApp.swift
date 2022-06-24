@@ -25,5 +25,7 @@ struct sm_osxApp: App {
         Settings {
             SettingsView()
         }
+        
+        
     }
 }

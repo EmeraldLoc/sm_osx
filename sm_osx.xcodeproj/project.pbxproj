@@ -25,6 +25,7 @@
 		96BDA2F7283D283200A4DFF3 /* CrashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96BDA2F6283D283200A4DFF3 /* CrashView.swift */; };
 		96BDA2F9283D29E300A4DFF3 /* LogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96BDA2F8283D29E300A4DFF3 /* LogView.swift */; };
 		96BEADAE2839986200FF72E3 /* CompilationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96BEADAD2839986200FF72E3 /* CompilationView.swift */; };
+		96C54E6D285930D7003B4A2D /* GlobalFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C54E6C285930D7003B4A2D /* GlobalFunctions.swift */; };
 		96CF3D4227DBD8C7008A26F5 /* CompilationSpeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96CF3D4127DBD8C7008A26F5 /* CompilationSpeed.swift */; };
 		96DE71D327EB9C170090E7A0 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96DE71D227EB9C170090E7A0 /* SettingsView.swift */; };
 /* End PBXBuildFile section */
@@ -50,6 +51,7 @@
 		96BDA2F6283D283200A4DFF3 /* CrashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrashView.swift; sourceTree = "<group>"; };
 		96BDA2F8283D29E300A4DFF3 /* LogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogView.swift; sourceTree = "<group>"; };
 		96BEADAD2839986200FF72E3 /* CompilationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompilationView.swift; sourceTree = "<group>"; };
+		96C54E6C285930D7003B4A2D /* GlobalFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalFunctions.swift; sourceTree = "<group>"; };
 		96CF3D4127DBD8C7008A26F5 /* CompilationSpeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompilationSpeed.swift; sourceTree = "<group>"; };
 		96DE71D227EB9C170090E7A0 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		96DE71D427EB9C7D0090E7A0 /* sm-osx-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "sm-osx-Info.plist"; sourceTree = SOURCE_ROOT; };
@@ -107,6 +109,7 @@
 				96BDA2F4283D221700A4DFF3 /* DeveloperView.swift */,
 				96BDA2F6283D283200A4DFF3 /* CrashView.swift */,
 				96BDA2F8283D29E300A4DFF3 /* LogView.swift */,
+				96C54E6C285930D7003B4A2D /* GlobalFunctions.swift */,
 			);
 			path = sm_osx;
 			sourceTree = "<group>";
@@ -204,6 +207,7 @@
 				9669DC7127D55F4700DE5FAB /* RomView.swift in Sources */,
 				96BDA2F3283D216500A4DFF3 /* General View.swift in Sources */,
 				96DE71D327EB9C170090E7A0 /* SettingsView.swift in Sources */,
+				96C54E6D285930D7003B4A2D /* GlobalFunctions.swift in Sources */,
 				960D46F627D6850D0056E393 /* BuildingSteps.swift in Sources */,
 				96BDA2F7283D283200A4DFF3 /* CrashView.swift in Sources */,
 				9669DC6F27D55D5300DE5FAB /* PatchesView.swift in Sources */,

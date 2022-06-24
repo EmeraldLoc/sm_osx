@@ -53,6 +53,8 @@ struct CompilationView: View {
             
             print("Exec Path: \(execPath)\n Repo Path: \(repo)")
             
+            print(compileCommands)
+            
             task.executableURL = URL(fileURLWithPath: "/bin/zsh")
             task.arguments = ["-cl", "cd ~/SM64Repos && rm -rf \(execPath) && cd ~/; \(compileCommands)"]
             
