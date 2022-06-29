@@ -21,6 +21,7 @@ Yes
 You will need a nintendo 64 and a super mario 64 cartridge, from there, look up how to dump games from an n64.
 ### I have a rom, but it is not accepting it
 Make sure the format is .z64, if it is .n64, you can use the byteswapper [here](https://hack64.net/tools/swapper.php)
+If for some reason it is still failing, please make a issue.
 ### The repos are failing to compile
 Make sure you have Homebrew installed, if it is installed, please make an issue and send the log created.
 ### Where are the repos stored
