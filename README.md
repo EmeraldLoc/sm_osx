@@ -17,6 +17,10 @@ Homebrew will also be needed, you can follow the install instructions [here](htt
 sm_osx is a launcher and compiler for the Super Mario 64 Pc Port.
 ### Is sm_osx completly free
 Yes
+### How can I get sm_osx
+Go to the Getting Started section of this page
+### How do I update
+Their is an auto updater in sm_osx, so if an update comes out, you will be alerted.
 ### It says I need to select a rom, where can I get one?
 You will need a nintendo 64 and a super mario 64 cartridge, from there, look up how to dump games from an n64.
 ### I have a rom, but it is not accepting it
@@ -27,13 +31,9 @@ If for some reason it is still failing, please make a issue.
 Make sure you have Homebrew installed, if it is installed, please make an issue and send the log created.
 ### Where are the repos stored
 The repos are stored in a folder called SM64Repos in your home folder.
-### I have compiled a repo manually, but it does not compile with sm_osx
+### I have compiled a repo manually from source, but it does not compile with sm_osx
 Make sure you have Homebrew installed, if it is installed, please make an issue and send the log created.
 ### I downloaded sm_osx, but it crashes on bootup
 Please create an issue in the Issues page.
 ### My notifications are not working
 Make sure you accepted them. You can check in *Notification & Focus* in the System Preferences App
-### How do I update
-Their is an auto updater in sm_osx, so if an update comes out, you will be alerted.
-### How can I get sm_osx
-Go to the Getting Started section of this page
