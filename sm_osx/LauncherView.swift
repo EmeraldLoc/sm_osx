@@ -11,15 +11,14 @@ import UserNotifications
 
 struct LauncherView: View {
     
-    @State var repoView = false
+    @Binding var repoView: Bool
     @AppStorage("devMode") var devMode = false
     var shell = Shell()
     @Environment(\.managedObjectContext) var moc
     @FetchRequest(sortDescriptors:[SortDescriptor(\.title)]) var launcherRepos: FetchedResults<LauncherRepos>
     @State var existingRepo = URL(string: "")
     @State var repoTitle = ""
-    @State var currentVersion = "v1.2.1\n"
-    @State var updateAlert = false
+    @Binding var updateAlert: Bool
     @State var latestVersion = ""
     @State var repoArgs = ""
     @State var crashStatus = false
@@ -28,12 +27,56 @@ struct LauncherView: View {
     @State var allowAddingRepos = true
     @State var beginLogging = false
     @AppStorage("firstLaunch") var firstLaunch = true
+    @AppStorage("checkUpdateAuto") var checkUpdateAuto = true
     @State var romURL = URL(string: "")
     @State var crashIndex = 0
     @State var logIndex = 0
     @State var homebrewText = ""
-    let sm64: UTType = .init(filenameExtension: "f3dex2e") ?? UTType.unixExecutable
+    @State var isLogging = false
+    @State var isInstallindDeps = false
+    let timer = Timer.publish(every: 300, on: .main, in: .common).autoconnect()
     let rom: UTType = .init(filenameExtension: "z64") ?? UTType.unixExecutable
+    
+    func depsShell(_ command: String, _ waitTillExit: Bool = false) {
+        let task = Process()
+
+        task.executableURL = URL(fileURLWithPath: "/bin/zsh")
+        task.arguments = ["-cl", command]
+        
+        let pipe = Pipe()
+        task.standardOutput = pipe
+        task.standardError = pipe
+        let outHandle = pipe.fileHandleForReading
+        
+        outHandle.readabilityHandler = { pipe in
+            if let line = String(data: pipe.availableData, encoding: String.Encoding.utf8) {
+                if line.contains("Finished installing deps") {
+                    isInstallindDeps = false
+                    
+                    let content = UNMutableNotificationContent()
+                    content.title = "Finished installing dependencies"
+                    content.subtitle = "Dependencies are now installed."
+                    content.sound = UNNotificationSound.default
+                    
+                    // show this notification instantly
+                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.0001, repeats: false)
+                    
+                    // choose a random identifier
+                    let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+                    
+                    // add our notification request
+                    UNUserNotificationCenter.current().add(request)
+                }
+            } else {
+                print("Error decoding data. why do I program...: \(pipe.availableData)")
+            }
+        }
+        
+        try? task.run()
+        if waitTillExit {
+            task.waitUntilExit()
+        }
+    }
     
     func launcherShell(_ command: String, index: Int, isLogging: Bool = false) throws -> String {
         self.launcherRepos[index].log = ""
@@ -87,15 +130,7 @@ struct LauncherView: View {
     }
 
     
-    func showOpenPanel() -> URL? {
-        let openPanel = NSOpenPanel()
-        openPanel.allowedContentTypes = [.unixExecutable, sm64]
-        openPanel.allowsMultipleSelection = false
-        openPanel.canChooseDirectories = false
-        openPanel.canChooseFiles = true
-        let response = openPanel.runModal()
-        return response == .OK ? openPanel.url : nil
-    }
+    
     
     func showOpenPanelForRom() -> URL? {
         let openPanel = NSOpenPanel()
@@ -136,12 +171,11 @@ struct LauncherView: View {
             VStack {
                 
                 if !launcherRepos.isEmpty {
-                    List {
+                    ScrollView {
                         ForEach(launcherRepos) { LauncherRepo in
                             HStack {
                                 
                                 let i = launcherRepos.firstIndex(of: LauncherRepo) ?? 0
-                                
                                     
                                 Text(LauncherRepo.title  ?? "")
                                 
@@ -154,7 +188,7 @@ struct LauncherView: View {
                                             launcherRepos[i].isEditing = false
                                         }
                                         
-                                        print(try? launcherShell("\(LauncherRepo.path ?? "its broken") \(LauncherRepo.args ?? "")", index: i))
+                                        try? launcherShell("\(LauncherRepo.path ?? "its broken") \(LauncherRepo.args ?? "")", index: i)
                                         
                                         logIndex = i
                                         
@@ -204,7 +238,6 @@ struct LauncherView: View {
                                     VStack {
                                         TextField("Name of Repo", text: $repoTitle)
                                             .lineLimit(nil)
-                                            .scaledToFill()
                                             .onChange(of: repoTitle) { _ in
                                                 launcherRepos[i].title = repoTitle
                                                 do {
@@ -213,10 +246,9 @@ struct LauncherView: View {
                                                 catch {
                                                     print("Its broken \(error)")
                                                 }
-                                            }
+                                            }.padding(.top).frame(width: 125)
                                         TextField("Arguments", text: $repoArgs)
                                             .lineLimit(nil)
-                                            .scaledToFill()
                                             .onChange(of: repoArgs) { _ in
                                                 launcherRepos[i].args = repoArgs
                                                 
@@ -226,18 +258,19 @@ struct LauncherView: View {
                                                 catch {
                                                     print("Its broken \(error)")
                                                 }
-                                            }
+                                            }.frame(width: 125)
                                         
-                                        Button("Change Repo") {
-                                            existingRepo = showOpenPanel()
+                                        Button("Change Exec") {
+                                            existingRepo = showExecFilePanel()
                                             
                                             launcherRepos[i].path = existingRepo?.path
                                             
                                             for i in 0...launcherRepos.count - 1 {
                                                 launcherRepos[i].isEditing = false
                                             }
-                                        }
-                                    }.onAppear {
+                                        }.padding(.bottom).padding(.horizontal)
+                                    }.frame(width: 150, height: 150)
+                                    .onAppear {
                                         repoTitle = launcherRepos[i].title ?? ""
                                         repoArgs = launcherRepos[i].args ?? ""
                                     }
@@ -249,7 +282,7 @@ struct LauncherView: View {
                                         launcherRepos[i].isEditing = false
                                     }
                                     
-                                    print(try? launcherShell("\(LauncherRepo.path ?? "its broken") \(LauncherRepo.args ?? "")", index: i))
+                                    try? launcherShell("\(LauncherRepo.path ?? "its broken") \(LauncherRepo.args ?? "")", index: i)
                                     
                                     print(LauncherRepo.path ?? "")
                                 }) {
@@ -257,7 +290,7 @@ struct LauncherView: View {
                                 }
                             }
                         }
-                    }
+                    }.padding()
                 }
                 else {
                     
@@ -285,7 +318,7 @@ struct LauncherView: View {
                         romURL? = URL(fileURLWithPath: romURL?.path.replacingOccurrences(of: " ", with: #"\ "#
                                                                                          , options: .literal, range: nil) ?? "")
                         
-                        print(try? shell.shell("cp \(romURL?.path ?? "") ~/SM64Repos/baserom.us.z64") )
+                        try? shell.shell("cp \(romURL?.path ?? "") ~/SM64Repos/baserom.us.z64")
                         
                         if let doesExist = try? checkRom("ls ~/SM64Repos/baserom.us.z64") {
                             if doesExist {
@@ -313,7 +346,7 @@ struct LauncherView: View {
                     Text("Add New Repo")
                 }.buttonStyle(.borderedProminent).sheet(isPresented: $repoView) {
                     RepoView(repoView: $repoView)
-                        .frame(minWidth: 750, minHeight: 500)
+                        .frame(minWidth: 650, idealWidth: 750, maxWidth: 850, minHeight: 400, idealHeight: 500, maxHeight: 550)
                 }.disabled(allowAddingRepos)
                 
                 Button("Add Existing Repo") {
@@ -324,7 +357,7 @@ struct LauncherView: View {
                         }
                     }
                     
-                    existingRepo = showOpenPanel()
+                    existingRepo = showExecFilePanel()
                     
                     if existingRepo != nil {
                     
@@ -353,31 +386,22 @@ struct LauncherView: View {
                         launcherRepos[i].isEditing = false
                     }
                     
-                    print(try? shell.shell("brew install make mingw-w64 gcc sdl2 pkg-config glew glfw3 libusb audiofile coreutils"))
+                    isInstallindDeps = true
                     
-                    print("its intel's turn nerd what an idiot man")
-                    
-                    do {
-                        print(try shell.intelShell("/usr/local/bin/brew install gcc gcc@9 sdl2 pkg-config glew glfw3 libusb audiofile coreutils"))
+                    if isArm() {
+                        depsShell("/usr/local/bin/brew install gcc gcc@9 sdl2 pkg-config glew glfw3 libusb audiofile coreutils; brew install make mingw-w64 gcc sdl2 pkg-config glew glfw3 libusb audiofile coreutils; echo 'Finished installing deps'")
+                    } else {
+                        depsShell("/usr/local/bin/brew install gcc gcc@9 sdl2 pkg-config glew glfw3 libusb audiofile coreutils; echo 'Finished installing deps'")
                     }
-                    catch {}
-                    
-                    let content = UNMutableNotificationContent()
-                    content.title = "Finished installing dependencies"
-                    content.subtitle = "Dependencies are now installed."
-                    content.sound = UNNotificationSound.default
-
-                    // show this notification instantly
-                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.0001, repeats: false)
-
-                    // choose a random identifier
-                    let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-
-                    // add our notification request
-                    UNUserNotificationCenter.current().add(request)
                 }) {
-                    Text("Install Dependencies")
-                }.buttonStyle(.bordered).padding(.vertical)
+                    Text("Install SM64 Dependencies")
+                }.buttonStyle(.bordered).padding(.bottom)
+                
+                if isInstallindDeps {
+                    ProgressView()
+                        .progressViewStyle(.linear)
+                        .frame(width: 250)
+                }
             }
         }.onAppear {
             
@@ -386,14 +410,18 @@ struct LauncherView: View {
             let detectArmBrewInstall = try? shell.shell("which brew")
             let detectIntelBrewInstall = try? shell.shell("which /usr/local/bin/brew")
             
-            if detectArmBrewInstall?.contains("/opt/homebrew/bin/brew") ?? false && detectIntelBrewInstall == "/usr/local/bin/brew\n" {
-                homebrewText = "Both versions of homebrew are installed."
+            if (detectArmBrewInstall?.contains("/opt/homebrew/bin/brew") ?? false && detectIntelBrewInstall == "/usr/local/bin/brew\n" && isArm()) || (detectIntelBrewInstall == "/usr/local/bin/brew\n" && !isArm())  {
+                if isArm() {
+                    homebrewText = "Both versions of homebrew are installed."
+                } else {
+                    homebrewText = "Homebrew are installed."
+                }
             }
-            else if !(detectArmBrewInstall?.contains("/opt/homebrew/bin/brew") ?? false) && detectIntelBrewInstall == "/usr/local/bin/brew\n" {
+            else if !(detectArmBrewInstall?.contains("/opt/homebrew/bin/brew") ?? false) && detectIntelBrewInstall == "/usr/local/bin/brew\n" && isArm() {
                     
                 homebrewText = "Arm homebrew is not installed. Please install at brew.sh\n\nIntel homebrew is installed"
             }
-            else if (detectArmBrewInstall?.contains("/opt/homebrew/bin/brew") ?? false) && detectIntelBrewInstall != "/usr/local/bin/brew\n" {
+            else if (detectArmBrewInstall?.contains("/opt/homebrew/bin/brew") ?? false) && detectIntelBrewInstall != "/usr/local/bin/brew\n" && isArm() {
                     
                 homebrewText = "Arm homebrew is installed\n\nIntel homebrew is not installed. Install by launching your terminal with rosetta, and then follow instructions at brew.sh"
             }
@@ -413,18 +441,7 @@ struct LauncherView: View {
                 print("Failed: \(error)")
             }
             
-            do {
-                latestVersion = try shell.shell("curl -s https://raw.githubusercontent.com/EmeraldLoc/sm_osx/main/CurVer")
-            }
-            catch {
-                print("Failed: \(error)")
-            }
-            
-            print("Latest Version: \(latestVersion), Current Version: \(currentVersion)")
-            
-            if latestVersion != currentVersion && !latestVersion.isEmpty {
-                updateAlert = true
-            }
+            checkForUpdates(updateAlert: &updateAlert)
 
             try? print(shell.shell("cd ~/ && mkdir SM64Repos"))
             
@@ -445,7 +462,7 @@ struct LauncherView: View {
             
         }.alert("An Update is Avalible", isPresented: $updateAlert) {
             Button("Update", role: .none) {
-                print(try? shell.shell("cd ~/Downloads && wget https://github.com/EmeraldLoc/sm_osx/releases/latest/download/sm_osx.zip && unzip sm_osx.zip && rm -rf sm_osx.zip /Applications/sm_osx.app && mv sm_osx.app /Applications && open /Applications/sm_osx.app"))
+                try? shell.shell("cd ~/Downloads && wget https://github.com/EmeraldLoc/sm_osx/releases/latest/download/sm_osx.zip && unzip sm_osx.zip && rm -rf sm_osx.zip /Applications/sm_osx.app && mv sm_osx.app /Applications && open /Applications/sm_osx.app")
                 
                 exit(0)
             }
@@ -455,12 +472,10 @@ struct LauncherView: View {
             CrashView(beginLogging: $beginLogging, crashStatus: $crashStatus, index: $crashIndex)
         }.sheet(isPresented: $beginLogging) {
             LogView(index: $logIndex)
+        }.onReceive(timer) { _ in
+            if checkUpdateAuto {
+                checkForUpdates(updateAlert: &updateAlert)
+            }
         }
-    }
-}
-
-struct LauncherView_Previews: PreviewProvider {
-    static var previews: some View {
-        LauncherView()
     }
 }

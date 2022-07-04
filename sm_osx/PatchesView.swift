@@ -29,13 +29,11 @@ struct PatchesView: View {
         NavigationView {
             ZStack {
                 VStack {
-                    Text("Select a Patch")
-                        .lineLimit(nil)
-                        .padding(.top, 3)
-                    
-                    Spacer()
-                    
                     List {
+                        
+                        Text("Select a Patch")
+                            .lineLimit(nil)
+                            .padding(.top, 3)
                         
                         if repo == .sm64ex_coop || repo == .sm64ex_coop_dev {
                             Toggle(isOn: $debug) {
@@ -132,8 +130,8 @@ struct PatchesView: View {
                                     }
                                 }
                             }
-                            
                         }
+                        
                         if repo == .sm64ex || repo == .sm64ex_coop || repo == .render96ex || repo == .moonshine || repo == .moon64 || repo == .sm64ex_master || repo == .sm64ex_alo || repo == .sm64ex_coop_dev {
                             if repo != .sm64ex_coop && repo != .sm64ex_coop_dev {
                                 Toggle(isOn: $isCam) {
@@ -188,49 +186,47 @@ struct PatchesView: View {
                         }
                         
                         if repo == .sm64ex_alo {
-                            VStack {
-                                Toggle(isOn: $isQOLFeat) {
-                                    Text("Quality of Life Features")
-                                        .lineLimit(nil)
-                                }.onChange(of: isQOLFeat) { _ in
-                                    
-                                    if isQOLFeat {
-                                        patches.append(.qolFeatures)
-                                    }
-                                    else {
-                                        if let i = patches.firstIndex(of: .qolFeatures) {
-                                            patches.remove(at: i)
-                                        }
+                            Toggle(isOn: $isQOLFeat) {
+                                Text("Quality of Life Features")
+                                    .lineLimit(nil)
+                            }.onChange(of: isQOLFeat) { _ in
+                                
+                                if isQOLFeat {
+                                    patches.append(.qolFeatures)
+                                }
+                                else {
+                                    if let i = patches.firstIndex(of: .qolFeatures) {
+                                        patches.remove(at: i)
                                     }
                                 }
+                            }
+                            
+                            Toggle(isOn: $isQOLFix) {
+                                Text("Quality of Life Fixes")
+                                    .lineLimit(nil)
+                            }.onChange(of: isQOLFix) { _ in
                                 
-                                Toggle(isOn: $isQOLFix) {
-                                    Text("Quality of Life Fixes")
-                                        .lineLimit(nil)
-                                }.onChange(of: isQOLFix) { _ in
-                                    
-                                    if isQOLFix {
-                                        patches.append(.qolFixes)
-                                    }
-                                    else {
-                                        if let i = patches.firstIndex(of: .qolFixes) {
-                                            patches.remove(at: i)
-                                        }
+                                if isQOLFix {
+                                    patches.append(.qolFixes)
+                                }
+                                else {
+                                    if let i = patches.firstIndex(of: .qolFixes) {
+                                        patches.remove(at: i)
                                     }
                                 }
+                            }
+                            
+                            Toggle(isOn: $starRoad) {
+                                Text("Star Road (Romhack)")
+                                    .lineLimit(nil)
+                            }.onChange(of: starRoad) { _ in
                                 
-                                Toggle(isOn: $starRoad) {
-                                    Text("Star Road (Romhack)")
-                                        .lineLimit(nil)
-                                }.onChange(of: starRoad) { _ in
-                                    
-                                    if starRoad {
-                                        patches.append(.star_road)
-                                    }
-                                    else {
-                                        if let i = patches.firstIndex(of: .star_road) {
-                                            patches.remove(at: i)
-                                        }
+                                if starRoad {
+                                    patches.append(.star_road)
+                                }
+                                else {
+                                    if let i = patches.firstIndex(of: .star_road) {
+                                        patches.remove(at: i)
                                     }
                                 }
                             }
@@ -240,8 +236,7 @@ struct PatchesView: View {
                             Text("Next")
                         }
                     }
-                    Spacer()
-                }
+                }.listStyle(.sidebar)
             }
         }
     }

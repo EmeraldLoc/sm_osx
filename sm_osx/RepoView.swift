@@ -17,17 +17,18 @@ struct RepoView: View {
         NavigationView {
             ZStack {
                 VStack {
-                    Text("What repo would you like to use")
-                        .lineLimit(nil)
-                        .padding(.top, 3)
-                        .padding(.horizontal, 1)
-                    
                     List {
                         
-                        NavigationLink(destination: RomView(patch: [], repo: .sm64port, repoView: $repoView)) {
-                            
-                            Text("sm64port")
-                                .lineLimit(nil)
+                        Text("Select a Repo")
+                            .lineLimit(nil)
+                            .padding(.top, 3)
+                        
+                        if isArm() {
+                            NavigationLink(destination: RomView(patch: [], repo: .sm64port, repoView: $repoView)) {
+                                
+                                Text("sm64port")
+                                    .lineLimit(nil)
+                            }
                         }
                         
                         NavigationLink(destination: PatchesView(repo: .sm64ex, repoView: $repoView)) {
@@ -36,10 +37,12 @@ struct RepoView: View {
                                 .lineLimit(nil)
                         }
                         
-                        NavigationLink(destination: PatchesView(repo: .sm64ex_master, repoView: $repoView)) {
-                            
-                            Text("sm64ex-master (Old)")
-                                .lineLimit(nil)
+                        if isArm() {
+                            NavigationLink(destination: PatchesView(repo: .sm64ex_master, repoView: $repoView)) {
+                                
+                                Text("sm64ex-master (Old)")
+                                    .lineLimit(nil)
+                            }
                         }
                         
                         NavigationLink(destination: PatchesView(repo: .sm64ex_alo, repoView: $repoView)) {

@@ -205,7 +205,7 @@ struct RomView: View {
         commandsCompile.append("echo 'Compiling Now' && ")
         
         if repo == .sm64ex_coop || repo == .sm64ex_coop_dev {
-            commandsCompile.append("cd ~/SM64Repos/\(repo) && arch -x86_64 /bin/zsh -cl 'gmake OSX_BUILD=1 TARGET_ARCH=x86_64-apple-darwin TARGET_BITS=64 EXTERNAL_DATA=\(extData) DEBUG=\(debug) USE_APP=0 COLOR=0 \(compSpeed.rawValue)' && ")
+            commandsCompile.append("cd ~/SM64Repos/\(repo) && arch -x86_64 /bin/zsh -cl 'gmake OSX_BUILD=1 TARGET_ARCH=x86_64-apple-darwin TARGET_BITS=64 EXTERNAL_DATA=\(extData) DEBUG=\(debug) COLOR=0 \(compSpeed.rawValue)' && ")
         }
         else if repo == .moon64 {
             commandsCompile.append("cd ~/SM64Repos/\(repo) && arch -x86_64 /bin/zsh -cl 'gmake OSX_BUILD=1 BETTERCAMERA=\(betterCamera) EXTERNAL_DATA=\(extData) NODRAWDISTANCE=\(drawDistance) \(compSpeed.rawValue)' && ")
@@ -261,28 +261,6 @@ struct RomView: View {
         }
         
         commandsCompile.append(" echo 'Finished Doin Stonks'")
-        
-        if doLauncher {
-            let launcherRepo = LauncherRepos(context: moc)
-            
-            launcherRepo.title = "\(repo)"
-            launcherRepo.isEditing = false
-            if repo != .moon64 {
-                launcherRepo.path = "~/SM64Repos/\(execPath)/sm64.us.f3dex2e"
-            }
-            else {
-                launcherRepo.path = "~/SM64Repos/\(execPath)/moon64.us.f3dex2e"
-            }
-            launcherRepo.args = ""
-            launcherRepo.id = UUID()
-            
-            do {
-                try moc.save()
-            }
-            catch {
-                print(error)
-            }
-        }
 
         startedCompilation = true
     }
@@ -291,31 +269,15 @@ struct RomView: View {
         ZStack {
             VStack {
                 
-                if repo == .sm64ex_coop || repo == .moon64 || repo == .sm64ex_coop_dev {
-                    Text("For this repo, make sure you have the intel version of homebrew. To install homebrew this, launch your terminal with rosetta and follow install instructions at brew.sh")
-                        .lineLimit(nil)
-                        .padding(.top, 3)
-                        .padding(.horizontal, 3)
-                }
-
-                Button("Start the Compiler") {
-                    compile()
-                }.padding(.top, 3).sheet(isPresented: $startedCompilation) {
-                    CompilationView(compileCommands: $commandsCompile, repo: $repo, execPath: $execPath)
-                        .onAppear {
-                            dismiss.callAsFunction()
-                        }
-                }
-                
-                VStack {
+                List {
                     Toggle(isOn: $doLauncher) {
                         Text("Add Repo to Launcher")
                     }
                     Toggle(isOn: $doKeepRepo) {
                         Text("Keep Previously Compiled Repo")
                     }
-                
-                    Picker("Compilation Speed", selection: $compSpeed) {
+                    
+                    Picker(selection: $compSpeed) {
                         Text("Slow")
                             .tag(Speed.slow)
                         Text("Normal")
@@ -326,13 +288,22 @@ struct RomView: View {
                             .tag(Speed.veryFast)
                         Text("Fastest")
                             .tag(Speed.fastest)
-                    }.padding(.horizontal, 3)
-                }
-                
-                Spacer()
-                
-                
-            }.onAppear {
+                    } label: {
+                        Text("Speed")
+                            .lineLimit(nil)
+                    }
+                    .padding(.horizontal, 3)
+                    .frame(idealWidth: 200, maxWidth: 200)
+                    
+                    Button("Compile") {
+                        compile()
+                    }.padding(.top, 3).sheet(isPresented: $startedCompilation) {
+                        CompilationView(compileCommands: $commandsCompile, repo: $repo, execPath: $execPath, doLauncher: $doLauncher)
+                    }
+                }.listStyle(.sidebar)
+            }
+            .frame(minWidth: 200)
+            .onAppear {
                 if patch.contains(.bettercam) {
                     betterCamera = 1
                 }

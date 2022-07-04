@@ -12,6 +12,7 @@ struct General_View: View {
     @AppStorage("launchEntry") var launchEntry = true
     @AppStorage("compilationSpeed") var compilationSpeed: Speed = .normal
     @AppStorage("keepRepo") var keepRepo = false
+    @AppStorage("checkUpdateAuto") var checkUpdateAuto = true
     
     var body: some View {
         ZStack {
@@ -25,7 +26,11 @@ struct General_View: View {
                         Text("Keep Previously Compiled Repo By Default")
                     }
                     
-                    Picker("Compilation Speed By Default", selection: $compilationSpeed) {
+                    Toggle(isOn: $checkUpdateAuto) {
+                        Text("Check for Updates Automatically")
+                    }
+                    
+                    Picker("Default Speed", selection: $compilationSpeed) {
                         Text("Slow")
                             .tag(Speed.slow)
                         Text("Normal")
@@ -36,7 +41,7 @@ struct General_View: View {
                             .tag(Speed.veryFast)
                         Text("Fastest")
                             .tag(Speed.fastest)
-                    }
+                    }.frame(idealWidth: 200, maxWidth: 200)
                 }
             }
         }

@@ -15,22 +15,23 @@ struct CompilationView: View {
     @State var compilesSucess = false
     @Binding var repo: Repo
     @Binding var execPath: String
+    @Binding var doLauncher: Bool
     @State var shell = Shell()
     @State var log = ""
     @State var totalLog = ""
-    @State var height = 65
+    @State var height = 80
     @Environment(\.dismiss) var dismiss
+    @Environment(\.managedObjectContext) var moc
     
     let task = Process()
     
     var body: some View {
         VStack {
             
+            Spacer()
+            
             Text(log)
                 .lineLimit(2)
-                .padding(.top, 3)
-            
-            Spacer()
             
             ProgressView(value: compilationStatus.rawValue, total: 100)
                 .progressViewStyle(.linear)
@@ -38,16 +39,26 @@ struct CompilationView: View {
             
             if compilesSucess == false && compilationStatus == .finished {
                 
-                Spacer()
-                
                 TextEditor(text: .constant(totalLog))
-                
-                Spacer()
                 
                 Button("Finish") {
                     dismiss.callAsFunction()
                 }
             }
+            
+            if compilationStatus != .finished {
+                HStack {
+                    Spacer()
+                    
+                    Button("Cancel") {
+                        try? shell.shell("cd ~/SM64Repos && rm -rf \(execPath)", false)
+                        try? shell.shell("cd ~/SM64Repos && rm -rf \(repo)", false)
+                        
+                        dismiss.callAsFunction()
+                    }.padding(.bottom).padding(.trailing)
+                }
+            }
+            
             
         }.onAppear {
             
@@ -75,6 +86,8 @@ struct CompilationView: View {
                     
                     totalLog.append(line)
                     
+                    let prevLog = log
+                    
                     if !line.isEmpty {
                         if line.rangeOfCharacter(from: number) != nil {
                             log = line
@@ -90,37 +103,37 @@ struct CompilationView: View {
                     if log.contains("Installing Deps") {
                         compilationStatus = .instDependencies
                         
-                        log = ""
+                        log = prevLog
                     }
                     else if log.contains("Started Clone") {
                         compilationStatus = .instRepo
                         
-                        log = ""
+                        log = prevLog
                     }
                     else if log.contains("Patching Files") {
                         compilationStatus = .patching
                         
-                        log = ""
+                        log = prevLog
                     }
                     else if log.contains("Rom Files Done") {
                         compilationStatus = .copyingFiles
                         
-                        log = ""
+                        log = prevLog
                     }
                     else if log.contains("Compiling Now") {
                         compilationStatus = .compiling
                         
-                        log = ""
+                        log = prevLog
                     }
                     else if log.contains("Finishing Up") {
                         compilationStatus = .finishingUp
                         
-                        log = ""
+                        log = prevLog
                     }
                     else if log.contains("Finished Doin Stonks") {
                         task.terminate()
                         
-                        log = ""
+                        log = prevLog
                         
                         compilationStatus = .finished
                         
@@ -161,6 +174,28 @@ struct CompilationView: View {
                             UNUserNotificationCenter.current().add(request)
                             
                             compilesSucess = true
+                            
+                            if doLauncher {
+                                let launcherRepo = LauncherRepos(context: moc)
+                                
+                                launcherRepo.title = "\(repo)"
+                                launcherRepo.isEditing = false
+                                if repo != .moon64 {
+                                    launcherRepo.path = "~/SM64Repos/\(execPath)/sm64.us.f3dex2e"
+                                }
+                                else {
+                                    launcherRepo.path = "~/SM64Repos/\(execPath)/moon64.us.f3dex2e"
+                                }
+                                launcherRepo.args = ""
+                                launcherRepo.id = UUID()
+                                
+                                do {
+                                    try moc.save()
+                                }
+                                catch {
+                                    print(error)
+                                }
+                            }
                             
                             dismiss.callAsFunction()
                         }
