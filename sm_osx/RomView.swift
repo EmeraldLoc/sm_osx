@@ -205,7 +205,7 @@ struct RomView: View {
         commandsCompile.append("echo 'Compiling Now' && ")
         
         if repo == .sm64ex_coop || repo == .sm64ex_coop_dev {
-            commandsCompile.append("cd ~/SM64Repos/\(repo) && arch -x86_64 /bin/zsh -cl 'gmake OSX_BUILD=1 TARGET_ARCH=x86_64-apple-darwin TARGET_BITS=64 EXTERNAL_DATA=\(extData) DEBUG=\(debug) COLOR=0 \(compSpeed.rawValue)' && ")
+            commandsCompile.append("cd ~/SM64Repos/\(repo) && arch -x86_64 /bin/zsh -cl 'gmake OSX_BUILD=1 TARGET_ARCH=x86_64-apple-darwin TARGET_BITS=64 USE_APP=0 EXTERNAL_DATA=\(extData) DEBUG=\(debug) COLOR=0 \(compSpeed.rawValue)' && ")
         }
         else if repo == .moon64 {
             commandsCompile.append("cd ~/SM64Repos/\(repo) && arch -x86_64 /bin/zsh -cl 'gmake OSX_BUILD=1 BETTERCAMERA=\(betterCamera) EXTERNAL_DATA=\(extData) NODRAWDISTANCE=\(drawDistance) \(compSpeed.rawValue)' && ")

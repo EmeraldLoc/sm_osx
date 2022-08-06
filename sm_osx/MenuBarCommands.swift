@@ -36,7 +36,7 @@ struct MenuCommands: Commands {
                         launcherRepos[iE].isEditing = false
                     }
         
-                    print(try? Shell().shell("\(LauncherRepo.path ?? "its broken") \(LauncherRepo.args ?? "")"))
+                    print(try? Shell().shell("\(LauncherRepo.path ?? "its broken") \(LauncherRepo.args ?? "")", false))
                 }
             }
         }

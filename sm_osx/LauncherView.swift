@@ -412,9 +412,9 @@ struct LauncherView: View {
             
             if (detectArmBrewInstall?.contains("/opt/homebrew/bin/brew") ?? false && detectIntelBrewInstall == "/usr/local/bin/brew\n" && isArm()) || (detectIntelBrewInstall == "/usr/local/bin/brew\n" && !isArm())  {
                 if isArm() {
-                    homebrewText = "Both versions of homebrew are installed."
+                    homebrewText = ""
                 } else {
-                    homebrewText = "Homebrew are installed."
+                    homebrewText = ""
                 }
             }
             else if !(detectArmBrewInstall?.contains("/opt/homebrew/bin/brew") ?? false) && detectIntelBrewInstall == "/usr/local/bin/brew\n" && isArm() {
