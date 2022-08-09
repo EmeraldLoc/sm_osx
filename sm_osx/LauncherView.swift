@@ -381,9 +381,10 @@ struct LauncherView: View {
                     .padding(.horizontal)
                 
                 Button(action:{
-                    
-                    for i in 0...launcherRepos.count - 1 {
-                        launcherRepos[i].isEditing = false
+                    if (launcherRepos.count > 0) {
+                        for i in 0...launcherRepos.count - 1 {
+                            launcherRepos[i].isEditing = false
+                        }
                     }
                     
                     isInstallindDeps = true
