@@ -150,7 +150,7 @@ struct PatchesView: View {
                                 }
                             }
                             
-                            if repo != .moonshine && repo != .moon64 && repo != .sm64ex_master && repo != .sm64ex_alo {
+                            if repo != .moonshine && repo != .moon64 && repo != .sm64ex_master && repo != .sm64ex_alo && repo != .sm64ex_coop && repo != .sm64ex_coop_dev {
                                 Toggle(isOn: $extData) {
                                     Text("External Data")
                                         .lineLimit(nil)
