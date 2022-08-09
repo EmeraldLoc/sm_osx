@@ -155,6 +155,28 @@ struct CompilationView: View {
                             
                             compilesSucess = true
                             
+                            if doLauncher {
+                                let launcherRepo = LauncherRepos(context: moc)
+                                
+                                launcherRepo.title = "\(repo)"
+                                launcherRepo.isEditing = false
+                                if repo != .moon64 {
+                                    launcherRepo.path = "~/SM64Repos/\(execPath)/sm64.us.f3dex2e"
+                                }
+                                else {
+                                    launcherRepo.path = "~/SM64Repos/\(execPath)/moon64.us.f3dex2e"
+                                }
+                                launcherRepo.args = ""
+                                launcherRepo.id = UUID()
+                                
+                                do {
+                                    try moc.save()
+                                }
+                                catch {
+                                    print(error)
+                                }
+                            }
+                            
                             dismiss.callAsFunction()
                         }
                         else if try! shell.shell("ls ~/SM64Repos/\(execPath)/moon64.us.f3dex2e | echo y", true) == "y\n" {
