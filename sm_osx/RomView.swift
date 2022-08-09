@@ -167,7 +167,7 @@ struct RomView: View {
         
         if repo == .sm64ex {
             if patch.contains(.omm) {
-                commandsCompile.append("cd ~/SM64Repos && wget -O omm.patch https://raw.githubusercontent.com/PeachyPeachSM64/sm64pc-omm/master/patch/omm.patch && rm -rf sm64pc-omm && cd \(repo) && git apply --reject --ignore-whitespace 'omm.patch' && ")
+                commandsCompile.append("cd ~/SM64Repos/\(repo) && wget https://raw.githubusercontent.com/PeachyPeachSM64/sm64ex-omm/master/patch/omm.patch && wget https://raw.githubusercontent.com/PeachyPeachSM64/sm64ex-omm/nightly/omm.mk && git apply --reject --ignore-whitespace 'omm.patch' && ")
             }
         
             if patch.contains(.highfps) {
