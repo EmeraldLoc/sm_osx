@@ -7,11 +7,11 @@
 
 import SwiftUI
 
-
 struct MenuCommands: Commands {
     @State var existingRepo = URL(string: "")
     @Binding var updateAlert: Bool
     @Binding var showAddRepos: Bool
+    @State var launcherRepos = [LauncherRepos]()
     @StateObject var dataController: DataController
     let moc = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
     
@@ -27,8 +27,14 @@ struct MenuCommands: Commands {
     }
     
     var body: some Commands {
+        
         CommandMenu("Launch") {
-            let launcherRepos = fetchLaunchers()
+            
+            Text("Entries").onAppear {
+                launcherRepos = fetchLaunchers()
+            }
+            
+            Divider()
             
             ForEach(launcherRepos) { LauncherRepo in
                 Button(LauncherRepo.title ?? "Unrecognized Repo") {

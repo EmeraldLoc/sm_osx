@@ -45,12 +45,10 @@ struct RepoView: View {
                             }
                         }
                         
-                        if devMode {
-                            NavigationLink(destination: PatchesView(repo: .sm64ex_alo, repoView: $repoView)) {
-                                
-                                Text("sm64ex-alo")
-                                    .lineLimit(nil)
-                            }
+                        NavigationLink(destination: PatchesView(repo: .sm64ex_alo, repoView: $repoView)) {
+                            
+                            Text("sm64ex-alo")
+                                .lineLimit(nil)
                         }
                         
                         NavigationLink(destination: PatchesView(repo: .sm64ex_coop, repoView: $repoView)) {

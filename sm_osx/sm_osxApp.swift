@@ -35,7 +35,7 @@ struct sm_osxApp: App {
     }
 }
 
-/*
+
 struct menuExtras: Scene {
     
     @State var dataController: DataController
@@ -85,12 +85,11 @@ struct menuExtras: Scene {
                 
                 Link("Check Latest Changelog", destination: URL(string: "https://github.com/EmeraldLoc/sm_osx/releases/latest")!)
             } label: {
-                Image("menu_bar_dark")
+                Image("menu_bar_icon")
+                    .resizable()
             }
         } else {
             return WindowGroup { EmptyView() }
         }
     }
 }
-
-*/
