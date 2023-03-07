@@ -10,7 +10,7 @@ import UniformTypeIdentifiers
 import AppKit
 
 struct CurrentVersion {
-    public let currentVersion = "v1.2.6\n"
+    public let currentVersion = "v1.2.7\n"
 }
 
 public func isArm() -> Bool {
