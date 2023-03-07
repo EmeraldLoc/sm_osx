@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		960A559729B29DC600F5CC37 /* PlayHover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 960A559629B29DC600F5CC37 /* PlayHover.swift */; };
+		960A559929B2A50100F5CC37 /* LauncherEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 960A559829B2A50100F5CC37 /* LauncherEditView.swift */; };
 		960D46F627D6850D0056E393 /* BuildingSteps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 960D46F527D6850D0056E393 /* BuildingSteps.swift */; };
 		963F238327F8B211004E010E /* LauncherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963F238227F8B211004E010E /* LauncherView.swift */; };
 		963F238627F8B942004E010E /* DataStore.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 963F238427F8B942004E010E /* DataStore.xcdatamodeld */; };
@@ -18,6 +20,7 @@
 		9669DC6D27D55CD200DE5FAB /* Patches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9669DC6C27D55CD200DE5FAB /* Patches.swift */; };
 		9669DC6F27D55D5300DE5FAB /* PatchesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9669DC6E27D55D5300DE5FAB /* PatchesView.swift */; };
 		9669DC7127D55F4700DE5FAB /* RomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9669DC7027D55F4700DE5FAB /* RomView.swift */; };
+		96A3D83A29B52328007AF78A /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96A3D83929B52328007AF78A /* ImagePicker.swift */; };
 		96AC85B1286670B800CCFF58 /* MenuBarCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AC85B0286670B800CCFF58 /* MenuBarCommands.swift */; };
 		96BB22E327E274F700057915 /* RepoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96BB22E227E274F700057915 /* RepoView.swift */; };
 		96BDA2F3283D216500A4DFF3 /* General View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96BDA2F2283D216500A4DFF3 /* General View.swift */; };
@@ -31,6 +34,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		960A559629B29DC600F5CC37 /* PlayHover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayHover.swift; sourceTree = "<group>"; };
+		960A559829B2A50100F5CC37 /* LauncherEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LauncherEditView.swift; sourceTree = "<group>"; };
 		960D46F527D6850D0056E393 /* BuildingSteps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildingSteps.swift; sourceTree = "<group>"; };
 		963F238227F8B211004E010E /* LauncherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LauncherView.swift; sourceTree = "<group>"; };
 		963F238527F8B942004E010E /* DataStore.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataStore.xcdatamodel; sourceTree = "<group>"; };
@@ -44,6 +49,7 @@
 		9669DC6C27D55CD200DE5FAB /* Patches.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Patches.swift; sourceTree = "<group>"; };
 		9669DC6E27D55D5300DE5FAB /* PatchesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatchesView.swift; sourceTree = "<group>"; };
 		9669DC7027D55F4700DE5FAB /* RomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RomView.swift; sourceTree = "<group>"; };
+		96A3D83929B52328007AF78A /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		96AC85B0286670B800CCFF58 /* MenuBarCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarCommands.swift; sourceTree = "<group>"; };
 		96BB22E227E274F700057915 /* RepoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoView.swift; sourceTree = "<group>"; };
 		96BDA2F2283D216500A4DFF3 /* General View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "General View.swift"; sourceTree = "<group>"; };
@@ -110,6 +116,9 @@
 				96BDA2F8283D29E300A4DFF3 /* LogView.swift */,
 				96C54E6C285930D7003B4A2D /* GlobalFunctions.swift */,
 				96AC85B0286670B800CCFF58 /* MenuBarCommands.swift */,
+				960A559629B29DC600F5CC37 /* PlayHover.swift */,
+				960A559829B2A50100F5CC37 /* LauncherEditView.swift */,
+				96A3D83929B52328007AF78A /* ImagePicker.swift */,
 			);
 			path = sm_osx;
 			sourceTree = "<group>";
@@ -203,13 +212,16 @@
 				96BEADAE2839986200FF72E3 /* CompilationView.swift in Sources */,
 				96CF3D4227DBD8C7008A26F5 /* CompilationSpeed.swift in Sources */,
 				963F238327F8B211004E010E /* LauncherView.swift in Sources */,
+				96A3D83A29B52328007AF78A /* ImagePicker.swift in Sources */,
 				96BDA2F9283D29E300A4DFF3 /* LogView.swift in Sources */,
 				9669DC7127D55F4700DE5FAB /* RomView.swift in Sources */,
 				96BDA2F3283D216500A4DFF3 /* General View.swift in Sources */,
 				96DE71D327EB9C170090E7A0 /* SettingsView.swift in Sources */,
 				96C54E6D285930D7003B4A2D /* GlobalFunctions.swift in Sources */,
 				960D46F627D6850D0056E393 /* BuildingSteps.swift in Sources */,
+				960A559729B29DC600F5CC37 /* PlayHover.swift in Sources */,
 				96BDA2F7283D283200A4DFF3 /* CrashView.swift in Sources */,
+				960A559929B2A50100F5CC37 /* LauncherEditView.swift in Sources */,
 				9669DC6F27D55D5300DE5FAB /* PatchesView.swift in Sources */,
 				9669DC6B27D5581F00DE5FAB /* Repos.swift in Sources */,
 				96BB22E327E274F700057915 /* RepoView.swift in Sources */,
@@ -363,7 +375,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.2.4;
+				MARKETING_VERSION = 1.2.5;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.CubingStudios.sm-osx";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -395,7 +407,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.2.4;
+				MARKETING_VERSION = 1.2.5;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.CubingStudios.sm-osx";
 				PRODUCT_NAME = "$(TARGET_NAME)";

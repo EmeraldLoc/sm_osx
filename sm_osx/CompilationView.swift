@@ -17,9 +17,9 @@ struct CompilationView: View {
     @Binding var execPath: String
     @Binding var doLauncher: Bool
     @State var shell = Shell()
-    @State var log = ""
+    @State var log = "Starting..."
     @State var totalLog = ""
-    @State var height = 80
+    @State var height = 100
     @Environment(\.dismiss) var dismiss
     @Environment(\.managedObjectContext) var moc
     
@@ -30,8 +30,15 @@ struct CompilationView: View {
             
             Spacer()
             
-            Text(log)
-                .lineLimit(2)
+            if !log.isEmpty {
+                Text(log)
+                    .lineLimit(2)
+                    .padding([.horizontal, .top], 5)
+            } else {
+                Text(" ")
+                    .padding([.horizontal, .top], 5)
+                    .lineLimit(2)
+            }
             
             ProgressView(value: compilationStatus.rawValue, total: 100)
                 .progressViewStyle(.linear)
@@ -43,7 +50,7 @@ struct CompilationView: View {
                 
                 Button("Finish") {
                     dismiss.callAsFunction()
-                }
+                }.padding(.bottom)
             }
             
             if compilationStatus != .finished {
@@ -51,11 +58,14 @@ struct CompilationView: View {
                     Spacer()
                     
                     Button("Cancel") {
+                        
+                        log = "Canceling"
+                        
                         try? shell.shell("cd ~/SM64Repos && rm -rf \(execPath)", false)
                         try? shell.shell("cd ~/SM64Repos && rm -rf \(repo)", false)
                         
                         dismiss.callAsFunction()
-                    }.padding(.bottom).padding(.trailing)
+                    }.padding([.bottom, .trailing])
                 }
             }
             
@@ -76,11 +86,8 @@ struct CompilationView: View {
 
             outHandle.readabilityHandler = { pipe in
                 if let line = String(data: pipe.availableData, encoding: String.Encoding.utf8) {
-                    // Update your view with the new text here
-                    
-                    let number = CharacterSet(["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"])
-                    let lowerLetters = CharacterSet.lowercaseLetters
-                    let upperLetters = CharacterSet.uppercaseLetters
+                    let number = CharacterSet.decimalDigits
+                    let letters = CharacterSet.letters
                     
                     print(line)
                     
@@ -92,10 +99,7 @@ struct CompilationView: View {
                         if line.rangeOfCharacter(from: number) != nil {
                             log = line
                         }
-                        else if line.rangeOfCharacter(from: lowerLetters) != nil {
-                            log = line
-                        }
-                        else if line.rangeOfCharacter(from: upperLetters) != nil {
+                        else if line.rangeOfCharacter(from: letters) != nil {
                             log = line
                         }
                     }

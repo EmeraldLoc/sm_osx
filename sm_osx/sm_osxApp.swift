@@ -19,7 +19,6 @@ struct sm_osxApp: App {
         
         WindowGroup {
             LauncherView(repoView: $showAddRepos, updateAlert: $updateAlert)
-                .frame(minWidth: 300, minHeight: 250)
                 .environment(\.managedObjectContext, dataController.container.viewContext)
         }.commands {
             SidebarCommands()
@@ -29,9 +28,9 @@ struct sm_osxApp: App {
 
         Settings {
             SettingsView()
+                .environment(\.managedObjectContext, dataController.container.viewContext)
+
         }
-        
-        //menuExtras(dataController: dataController, updateAlert: $updateAlert, showAddRepos: $showAddRepos).body
     }
 }
 

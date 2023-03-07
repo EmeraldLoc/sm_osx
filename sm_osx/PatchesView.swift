@@ -236,7 +236,7 @@ struct PatchesView: View {
                             Text("Next")
                         }
                     }
-                }.listStyle(.sidebar)
+                }
             }
         }
     }

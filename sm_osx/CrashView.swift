@@ -18,24 +18,19 @@ struct CrashView: View {
     var body: some View {
         VStack {
             Text("Your Game Crashed")
+                .padding(.top)
 
-            ScrollView {
-                
-                TextEditor(text: $readableCrashLog)
-                    .frame(minWidth: 350, minHeight: 350)
-                    .onChange(of: readableCrashLog) { _ in
-                        readableCrashLog = launcherRepos[index].log ?? "Error, could not get log data. We are sorry for the inconvienience"
-                    }
-                    .onAppear {
-                        readableCrashLog = launcherRepos[index].log ?? "Error, could not get log data. We are sorry for the inconvienience"
-                    }
+            ZStack {
+                TextEditor(text: .constant(launcherRepos[index].log ?? "Error, could not get log data. We are sorry for the inconvienience"))
+                    .padding(.vertical)
+                    
             }
             
             Button("Close") {
                 launcherRepos[index].log? = ""
                 
                 crashStatus = false
-            }
-        }.frame(minWidth: 350, maxHeight: 350)
+            }.padding(.bottom)
+        }.frame(width: 400, height: 400)
     }
 }

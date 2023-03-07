@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import AppKit
 import UniformTypeIdentifiers
 import UserNotifications
 
@@ -16,11 +17,9 @@ struct LauncherView: View {
     var shell = Shell()
     @Environment(\.managedObjectContext) var moc
     @FetchRequest(sortDescriptors:[SortDescriptor(\.title)]) var launcherRepos: FetchedResults<LauncherRepos>
-    @State var existingRepo = URL(string: "")
-    @State var repoTitle = ""
     @Binding var updateAlert: Bool
+    @State var existingRepo = URL(string: "")
     @State var latestVersion = ""
-    @State var repoArgs = ""
     @State var crashStatus = false
     @State var crashLog = ""
     @State var readableCrashLog = ""
@@ -33,50 +32,9 @@ struct LauncherView: View {
     @State var logIndex = 0
     @State var homebrewText = ""
     @State var isLogging = false
-    @State var isInstallindDeps = false
     let timer = Timer.publish(every: 300, on: .main, in: .common).autoconnect()
     let rom: UTType = .init(filenameExtension: "z64") ?? UTType.unixExecutable
-    
-    func depsShell(_ command: String, _ waitTillExit: Bool = false) {
-        let task = Process()
-
-        task.executableURL = URL(fileURLWithPath: "/bin/zsh")
-        task.arguments = ["-cl", command]
-        
-        let pipe = Pipe()
-        task.standardOutput = pipe
-        task.standardError = pipe
-        let outHandle = pipe.fileHandleForReading
-        
-        outHandle.readabilityHandler = { pipe in
-            if let line = String(data: pipe.availableData, encoding: String.Encoding.utf8) {
-                if line.contains("Finished installing deps") {
-                    isInstallindDeps = false
-                    
-                    let content = UNMutableNotificationContent()
-                    content.title = "Finished installing dependencies"
-                    content.subtitle = "Dependencies are now installed."
-                    content.sound = UNNotificationSound.default
-                    
-                    // show this notification instantly
-                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.0001, repeats: false)
-                    
-                    // choose a random identifier
-                    let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-                    
-                    // add our notification request
-                    UNUserNotificationCenter.current().add(request)
-                }
-            } else {
-                print("Error decoding data. why do I program...: \(pipe.availableData)")
-            }
-        }
-        
-        try? task.run()
-        if waitTillExit {
-            task.waitUntilExit()
-        }
-    }
+    let layout = [GridItem(.adaptive(minimum: 260))]
     
     func launcherShell(_ command: String, index: Int, isLogging: Bool = false) throws -> String {
         self.launcherRepos[index].log = ""
@@ -169,20 +127,17 @@ struct LauncherView: View {
     var body: some View {
         ZStack {
             VStack {
-                
                 if !launcherRepos.isEmpty {
                     ScrollView {
-                        ForEach(launcherRepos) { LauncherRepo in
-                            HStack {
-                                
-                                let i = launcherRepos.firstIndex(of: LauncherRepo) ?? 0
+                        LazyVGrid(columns: layout) {
+                            ForEach(launcherRepos) { LauncherRepo in
+                                VStack {
                                     
-                                Text(LauncherRepo.title  ?? "")
-                                
-                                Spacer()
-                                
-                                Menu {
-                                    Button(action: {
+                                    let i = launcherRepos.firstIndex(of: LauncherRepo) ?? 0
+                                    
+                                    Button {
+                                        
+                                        if launcherRepos.isEmpty { return }
                                         
                                         for i in 0...launcherRepos.count - 1 {
                                             launcherRepos[i].isEditing = false
@@ -190,116 +145,116 @@ struct LauncherView: View {
                                         
                                         try? launcherShell("\(LauncherRepo.path ?? "its broken") \(LauncherRepo.args ?? "")", index: i)
                                         
-                                        logIndex = i
-                                        
-                                        beginLogging = true
-                                        
                                         print(LauncherRepo.path ?? "")
-                                    }) {
-                                        Text("Log")
-                                        
-                                        Image(systemName: "arrow.right.circle.fill")
-                                    }
-                                    
-                                    Button(action: {
-                                        
-                                        for i in 0...launcherRepos.count - 1 {
-                                            launcherRepos[i].isEditing = false
+                                    } label: {
+                                        if !launcherRepos.isEmpty {
+                                            if launcherRepos[i].imagePath == nil {
+                                                GroupBox {
+                                                    Text(LauncherRepo.title ?? "")
+                                                        .frame(width: 250, height: 140)
+                                                }.playHover()
+                                            } else {
+                                                VStack {
+                                                    Image(nsImage: NSImage(contentsOf: URL(fileURLWithPath: LauncherRepo.imagePath ?? ""))!)
+                                                        .resizable()
+                                                        .aspectRatio(contentMode: .fill)
+                                                        .frame(width: 250, height: 150)
+                                                        .playHover()
+                                                    
+                                                    Text(LauncherRepo.title ?? "Unknown Title")
+                                                }
+                                            }
                                         }
-                                        
-                                        let launcherRepo = launcherRepos[i]
-                                        
-                                        moc.delete(launcherRepo)
-                                        
-                                        do {
-                                            try moc.save()
-                                        }
-                                        catch {
-                                            print("Error: its broken: \(error)")
-                                        }
-                                    }) {
-                                        Text("Remove Repo")
-                                    }
-                                } label: {
-                                    Text("...")
-                                }.frame(width: 40)
-                                
-                                Button(action: {
+                                    }.buttonStyle(.plain)
                                     
-                                    for iEdit in 0...launcherRepos.count - 1 {
-                                        launcherRepos[iEdit].isEditing = false
-                                    }
+                                    Spacer()
                                     
-                                    launcherRepos[i].isEditing = true
-                                }) {
-                                    Image(systemName: "pencil")
-                                }.popover(isPresented: Binding.constant(launcherRepos[i].isEditing)) {
-                                    
-                                    VStack {
-                                        TextField("Name of Repo", text: $repoTitle)
-                                            .lineLimit(nil)
-                                            .onChange(of: repoTitle) { _ in
-                                                launcherRepos[i].title = repoTitle
-                                                do {
-                                                    try moc.save()
-                                                }
-                                                catch {
-                                                    print("Its broken \(error)")
-                                                }
-                                            }.padding(.top).frame(width: 125)
-                                        TextField("Arguments", text: $repoArgs)
-                                            .lineLimit(nil)
-                                            .onChange(of: repoArgs) { _ in
-                                                launcherRepos[i].args = repoArgs
-                                                
-                                                do {
-                                                    try moc.save()
-                                                }
-                                                catch {
-                                                    print("Its broken \(error)")
-                                                }
-                                            }.frame(width: 125)
-                                        
-                                        Button("Change Exec") {
-                                            existingRepo = showExecFilePanel()
+                                    Menu {
+                                        Button(action: {
                                             
-                                            launcherRepos[i].path = existingRepo?.path
+                                            if launcherRepos.isEmpty { return }
                                             
                                             for i in 0...launcherRepos.count - 1 {
                                                 launcherRepos[i].isEditing = false
                                             }
-                                        }.padding(.bottom).padding(.horizontal)
-                                    }.frame(width: 150, height: 150)
-                                    .onAppear {
-                                        repoTitle = launcherRepos[i].title ?? ""
-                                        repoArgs = launcherRepos[i].args ?? ""
+                                            
+                                            try? launcherShell("\(LauncherRepo.path ?? "its broken") \(LauncherRepo.args ?? "")", index: i)
+                                            
+                                            logIndex = i
+                                            
+                                            beginLogging = true
+                                            
+                                            print(LauncherRepo.path ?? "")
+                                        }) {
+                                            Text("Log")
+                                            
+                                            Image(systemName: "arrow.right.circle.fill")
+                                        }
+                                        
+                                        Button(action: {
+                                            
+                                            if launcherRepos.isEmpty { return }
+                                            
+                                            for i in 0...launcherRepos.count - 1 {
+                                                launcherRepos[i].isEditing = false
+                                            }
+                                            
+                                            let launcherRepo = launcherRepos[i]
+                                            
+                                            moc.delete(launcherRepo)
+                                            
+                                            do {
+                                                try moc.save()
+                                                print("Repo Correctly Removed")
+                                            }
+                                            catch {
+                                                print("Error: its broken: \(error)")
+                                            }
+                                        }) {
+                                            Text("Remove Repo")
+                                        }
+                                        
+                                        Button(action: {
+                                            
+                                            if launcherRepos.isEmpty { return }
+                                            
+                                            for iEdit in 0...launcherRepos.count - 1 {
+                                                launcherRepos[iEdit].isEditing = false
+                                            }
+                                            
+                                            launcherRepos[i].isEditing = true
+                                        }) {
+                                            Text("Edit \(Image(systemName: "pencil"))")
+                                        }
+                                            
+                                    } label: {
+                                        Text("Options")
+                                    }.frame(width: 210).sheet(isPresented: .constant(LauncherRepo.isEditing)) {
+                                        LauncherEditView(i: i, existingRepo: $existingRepo)
                                     }
-                                }
-                                
-                                Button(action: {
-                                    
-                                    for i in 0...launcherRepos.count - 1 {
-                                        launcherRepos[i].isEditing = false
-                                    }
-                                    
-                                    try? launcherShell("\(LauncherRepo.path ?? "its broken") \(LauncherRepo.args ?? "")", index: i)
-                                    
-                                    print(LauncherRepo.path ?? "")
-                                }) {
-                                    Image(systemName: "arrow.right.circle.fill")
                                 }
                             }
                         }
-                    }.padding()
+                    }.padding().sheet(isPresented: $repoView) {
+                        RepoView(repoView: $repoView)
+                            .frame(minWidth: 650, idealWidth: 750, maxWidth: 850, minHeight: 400, idealHeight: 500, maxHeight: 550)
+                    }
                 }
                 else {
                     
                     Spacer()
                     
-                    Text("You have no repos, add a repo to begin!")
-                        .font(.title2)
-                        .multilineTextAlignment(.center)
-                        .padding()
+                    if !allowAddingRepos {
+                        Text("You have no repos, add a repo to begin!")
+                            .font(.title2)
+                            .multilineTextAlignment(.center)
+                            .padding()
+                    } else {
+                        Text("Please select your sm64 rom.")
+                            .font(.title2)
+                            .multilineTextAlignment(.center)
+                            .padding()
+                    }
                 }
                 
                 Spacer()
@@ -330,78 +285,59 @@ struct LauncherView: View {
                         }
                     }) {
                         Text("Select Rom")
-                    }
+                    }.buttonStyle(.borderedProminent)
                 }
 
-                Button(action:{
-                    
-                    if !launcherRepos.isEmpty {
-                        for i in 0...launcherRepos.count - 1 {
-                            launcherRepos[i].isEditing = false
-                        }
-                    }
-                    
-                    repoView = true
-                }) {
-                    Text("Add New Repo")
-                }.buttonStyle(.borderedProminent).sheet(isPresented: $repoView) {
-                    RepoView(repoView: $repoView)
-                        .frame(minWidth: 650, idealWidth: 750, maxWidth: 850, minHeight: 400, idealHeight: 500, maxHeight: 550)
-                }.disabled(allowAddingRepos)
-                
-                Button("Add Existing Repo") {
-                    
-                    if !launcherRepos.isEmpty {
-                        for i in 0...launcherRepos.count - 1 {
-                            launcherRepos[i].isEditing = false
-                        }
-                    }
-                    
-                    existingRepo = showExecFilePanel()
-                    
-                    if existingRepo != nil {
-                    
-                        let repo = LauncherRepos(context: moc)
-                        
-                        repo.title = "New Repo \(launcherRepos.count)"
-                        repo.path = existingRepo?.path
-                        repo.args = ""
-                        repo.id = UUID()
-                        
-                        do {
-                            try moc.save()
-                        }
-                        catch {
-                            print("it BROKE \(error)")
-                        }
-                    }
-                }
                 
                 Text(homebrewText)
                     .padding(.horizontal)
-                
-                Button(action:{
-                    if (launcherRepos.count > 0) {
-                        for i in 0...launcherRepos.count - 1 {
-                            launcherRepos[i].isEditing = false
+            }.toolbar {
+                ToolbarItem {
+                    Menu {
+                        Button(action: {
+                            
+                            if !launcherRepos.isEmpty {
+                                for i in 0...launcherRepos.count - 1 {
+                                    launcherRepos[i].isEditing = false
+                                }
+                            }
+                            
+                            repoView = true
+                        }) {
+                            Text("Add New Repo")
+                        }.buttonStyle(.borderedProminent).disabled(allowAddingRepos)
+                        
+                        Button("Add Existing Repo") {
+                            
+                            if !launcherRepos.isEmpty {
+                                for i in 0...launcherRepos.count - 1 {
+                                    launcherRepos[i].isEditing = false
+                                }
+                            }
+                            
+                            existingRepo = showExecFilePanel()
+                            
+                            if existingRepo != nil {
+                                
+                                let repo = LauncherRepos(context: moc)
+                                
+                                repo.title = "New Repo \(launcherRepos.count)"
+                                repo.path = existingRepo?.path
+                                repo.args = ""
+                                repo.id = UUID()
+                                
+                                do {
+                                    try moc.save()
+                                }
+                                catch {
+                                    print("it BROKE \(error)")
+                                }
+                            }
                         }
-                    }
-                    
-                    isInstallindDeps = true
-                    
-                    if isArm() {
-                        depsShell("/usr/local/bin/brew install gcc gcc@9 sdl2 pkg-config glew glfw3 libusb audiofile coreutils; brew install make mingw-w64 gcc sdl2 pkg-config glew glfw3 libusb audiofile coreutils; echo 'Finished installing deps'")
-                    } else {
-                        depsShell("/usr/local/bin/brew install gcc gcc@9 sdl2 pkg-config glew glfw3 libusb audiofile coreutils; echo 'Finished installing deps'")
-                    }
-                }) {
-                    Text("Install SM64 Dependencies")
-                }.buttonStyle(.bordered).padding(.bottom)
-                
-                if isInstallindDeps {
-                    ProgressView()
-                        .progressViewStyle(.linear)
-                        .frame(width: 250)
+                    } label: {
+                        Text("Repos")
+                            .frame(maxWidth: .infinity)
+                    }.frame(width: 70)
                 }
             }
         }.onAppear {
@@ -412,11 +348,7 @@ struct LauncherView: View {
             let detectIntelBrewInstall = try? shell.shell("which /usr/local/bin/brew")
             
             if (detectArmBrewInstall?.contains("/opt/homebrew/bin/brew") ?? false && detectIntelBrewInstall == "/usr/local/bin/brew\n" && isArm()) || (detectIntelBrewInstall == "/usr/local/bin/brew\n" && !isArm())  {
-                if isArm() {
                     homebrewText = ""
-                } else {
-                    homebrewText = ""
-                }
             }
             else if !(detectArmBrewInstall?.contains("/opt/homebrew/bin/brew") ?? false) && detectIntelBrewInstall == "/usr/local/bin/brew\n" && isArm() {
                     
@@ -454,7 +386,7 @@ struct LauncherView: View {
                 }
             }
             
-            if launcherRepos.isEmpty {return}
+            if launcherRepos.isEmpty { return }
             
             for i in 0...launcherRepos.count - 1 {
                 launcherRepos[i].isEditing = false
@@ -477,6 +409,6 @@ struct LauncherView: View {
             if checkUpdateAuto {
                 checkForUpdates(updateAlert: &updateAlert)
             }
-        }
+        }.frame(minWidth: 300, minHeight: 250)
     }
 }

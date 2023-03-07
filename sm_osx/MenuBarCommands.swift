@@ -36,13 +36,15 @@ struct MenuCommands: Commands {
             
             Divider()
             
-            ForEach(launcherRepos) { LauncherRepo in
-                Button(LauncherRepo.title ?? "Unrecognized Repo") {
-                    for iE in 0...launcherRepos.count - 1 {
-                        launcherRepos[iE].isEditing = false
+            if !launcherRepos.isEmpty {
+                ForEach(launcherRepos) { LauncherRepo in
+                    Button(LauncherRepo.title ?? "Unrecognized Repo") {
+                        for iE in 0...launcherRepos.count - 1 {
+                            launcherRepos[iE].isEditing = false
+                        }
+                        
+                        print(try? Shell().shell("\(LauncherRepo.path ?? "its broken") \(LauncherRepo.args ?? "")", false))
                     }
-        
-                    print(try? Shell().shell("\(LauncherRepo.path ?? "its broken") \(LauncherRepo.args ?? "")", false))
                 }
             }
         }

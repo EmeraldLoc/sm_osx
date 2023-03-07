@@ -22,15 +22,7 @@ struct RepoView: View {
                         Text("Select a Repo")
                             .lineLimit(nil)
                             .padding(.top, 3)
-                        
-                        if isArm() {
-                            NavigationLink(destination: RomView(patch: [], repo: .sm64port, repoView: $repoView)) {
-                                
-                                Text("sm64port")
-                                    .lineLimit(nil)
-                            }
-                        }
-                        
+
                         NavigationLink(destination: PatchesView(repo: .sm64ex, repoView: $repoView)) {
                             
                             Text("sm64ex")
@@ -82,7 +74,8 @@ struct RepoView: View {
                             Text("Moon64 (Discontinued)")
                                 .lineLimit(nil)
                         }
-                    }.listStyle(.sidebar)
+                    }
+                    
                     Spacer()
                     
                     Button("Cancel") {
@@ -91,11 +84,5 @@ struct RepoView: View {
                 }
             }
         }
-    }
-}
-
-struct RepoView_Previews: PreviewProvider {
-    static var previews: some View {
-        RepoView(repoView: .constant(false))
     }
 }

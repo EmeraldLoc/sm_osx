@@ -124,17 +124,12 @@ struct RomView: View {
     @FetchRequest(sortDescriptors:[SortDescriptor(\.title)]) var launcherRepos: FetchedResults<LauncherRepos>
     @State var startedCompilation = false
     @State var commandsCompile = ""
-    #if arch(x86_64)
-    var disableCompilation = false
-    #else
-    var disableCompilation = true
-    #endif
     
     func compile() {
         
         //install dependencies
         
-        if repo == .sm64ex_coop || repo == .sm64ex_coop_dev || repo == .moon64 {
+        if (repo == .sm64ex_coop || repo == .sm64ex_coop_dev || repo == .moon64) && isArm() {
             commandsCompile = "echo 'Installing Deps' && brew uninstall glew sdl2; arch -x86_64 /bin/zsh -cl '/usr/local/bin/brew install make mingw-w64 gcc gcc@9 sdl2 pkg-config glew glfw3 libusb audiofile coreutils wget'; "
         }
         else {
@@ -142,12 +137,8 @@ struct RomView: View {
         }
         
         //clone the repo
-        if repo != .sm64port {
-            commandsCompile.append("echo 'Started Clone' && cd ~/SM64Repos && rm -rf \(repo) && git clone \(repo.rawValue) \(repo) && ")
-        }
-        else {
-            commandsCompile.append("cd ~/SM64Repos && rm -rf target_osx.zip target_osx __MACOSX | echo 'Started Clone' && wget \(repo.rawValue) && unzip target_osx.zip && rm -rf target_osx.zip && mv target_osx \(repo) && ")
-        }
+        
+        commandsCompile.append("echo 'Started Clone' && cd ~/SM64Repos && rm -rf \(repo) && git clone \(repo.rawValue) \(repo) && ")
         
         //copy files
         
@@ -212,9 +203,6 @@ struct RomView: View {
         }
         else if repo == .sm64ex_alo {
             commandsCompile.append("cd ~/SM64Repos/\(repo) && gmake OSX_BUILD=1 BETTERCAMERA=\(betterCamera) EXTERNAL_DATA=0 NODRAWDISTANCE=\(drawDistance) QOL_FEATURES=\(qolFeatures) QOL_FIXES=\(qolFix) HIGH_FPS_PC=\(highFPS) COLOR=0 \(compSpeed.rawValue) && ")
-        }
-        else if repo == .sm64port {
-            commandsCompile.append("cd ~/SM64Repos/\(repo) && gmake \(compSpeed.rawValue) && ")
         }
         else {
             commandsCompile.append("cd ~/SM64Repos/\(repo) && gmake OSX_BUILD=1 BETTERCAMERA=\(betterCamera) EXTERNAL_DATA=\(extData) NODRAWDISTANCE=\(drawDistance) \(compSpeed.rawValue) && ")
@@ -300,7 +288,7 @@ struct RomView: View {
                     }.padding(.top, 3).sheet(isPresented: $startedCompilation) {
                         CompilationView(compileCommands: $commandsCompile, repo: $repo, execPath: $execPath, doLauncher: $doLauncher)
                     }
-                }.listStyle(.sidebar)
+                }
             }
             .frame(minWidth: 200)
             .onAppear {
