@@ -235,10 +235,7 @@ struct LauncherView: View {
                                 }
                             }
                         }
-                    }.padding().sheet(isPresented: $repoView) {
-                        RepoView(repoView: $repoView)
-                            .frame(minWidth: 650, idealWidth: 750, maxWidth: 850, minHeight: 400, idealHeight: 500, maxHeight: 550)
-                    }
+                    }.padding()
                 }
                 else {
                     
@@ -401,6 +398,9 @@ struct LauncherView: View {
             }
             
             Button("Not now", role: .cancel) {}
+        }.sheet(isPresented: $repoView) {
+            RepoView(repoView: $repoView)
+                .frame(minWidth: 650, idealWidth: 750, maxWidth: 850, minHeight: 400, idealHeight: 500, maxHeight: 550)
         }.sheet(isPresented: $crashStatus) {
             CrashView(beginLogging: $beginLogging, crashStatus: $crashStatus, index: $crashIndex)
         }.sheet(isPresented: $beginLogging) {
