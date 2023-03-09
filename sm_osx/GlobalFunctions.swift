@@ -9,9 +9,8 @@ import Foundation
 import UniformTypeIdentifiers
 import AppKit
 
-struct CurrentVersion {
-    public let currentVersion = "v1.2.6.1\n"
-}
+public let currentVersion = "v\(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "v0")\n"
+
 
 public func isArm() -> Bool {
     #if arch(x86_64)
@@ -36,9 +35,9 @@ public func showExecFilePanel() -> URL? {
 
 public func checkForUpdates(updateAlert: inout Bool) {
     
-    var latestVersion = ""
+    print(currentVersion)
     
-    let currentVersion = CurrentVersion().currentVersion
+    var latestVersion = ""
     
     do {
         latestVersion = try Shell().shell("curl -s https://raw.githubusercontent.com/EmeraldLoc/sm_osx/main/CurVer")
