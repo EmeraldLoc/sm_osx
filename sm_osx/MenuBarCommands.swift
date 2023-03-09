@@ -62,5 +62,7 @@ struct MenuCommands: Commands {
             
             Link("Check Latest Changelog", destination: URL(string: "https://github.com/EmeraldLoc/sm_osx/releases/latest")!)
         }
+        
+        CommandGroup(replacing: .newItem) { }
     }
 }

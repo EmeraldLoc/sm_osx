@@ -20,6 +20,9 @@ struct sm_osxApp: App {
         WindowGroup {
             LauncherView(repoView: $showAddRepos, updateAlert: $updateAlert)
                 .environment(\.managedObjectContext, dataController.container.viewContext)
+                .onAppear {
+                    NSWindow.allowsAutomaticWindowTabbing = false
+                }
         }.commands {
             SidebarCommands()
             
