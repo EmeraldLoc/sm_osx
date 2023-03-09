@@ -8,7 +8,7 @@
 import SwiftUI
 import UserNotifications
 
-struct General_View: View {
+struct GeneralView: View {
     
     func depsShell(_ command: String, _ waitTillExit: Bool = false) {
         let task = Process()
@@ -55,7 +55,6 @@ struct General_View: View {
     @AppStorage("launchEntry") var launchEntry = true
     @AppStorage("compilationSpeed") var compilationSpeed: Speed = .normal
     @AppStorage("keepRepo") var keepRepo = false
-    @AppStorage("checkUpdateAuto") var checkUpdateAuto = true
     @State var isInstallingDeps = false
     
     var body: some View {
@@ -68,10 +67,6 @@ struct General_View: View {
                     
                     Toggle(isOn: $keepRepo) {
                         Text("Keep Previously Compiled Repo By Default")
-                    }
-                    
-                    Toggle(isOn: $checkUpdateAuto) {
-                        Text("Check for Updates Automatically")
                     }
                     
                     Picker("Default Speed", selection: $compilationSpeed) {
