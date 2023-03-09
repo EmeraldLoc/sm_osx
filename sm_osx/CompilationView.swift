@@ -12,14 +12,15 @@ struct CompilationView: View {
     
     @Binding var compileCommands: String
     @State var compilationStatus = CompStatus.nothing
+    @State var compilationStatusString = " "
     @State var compilesSucess = false
     @Binding var repo: Repo
     @Binding var execPath: String
     @Binding var doLauncher: Bool
     @State var shell = Shell()
-    @State var log = "Starting..."
+    @State var log = ""
     @State var totalLog = ""
-    @State var height = 100
+    @State var height = 125
     @Environment(\.dismiss) var dismiss
     @Environment(\.managedObjectContext) var moc
     
@@ -43,6 +44,29 @@ struct CompilationView: View {
             ProgressView(value: compilationStatus.rawValue, total: 100)
                 .progressViewStyle(.linear)
                 .padding(.horizontal, 7)
+            
+            Text(compilationStatusString)
+                .onChange(of: compilationStatus) { _ in
+                    switch compilationStatus {
+                    case .instDependencies:
+                        compilationStatusString = "Installing Dependencies..."
+                    case .instRepo:
+                        compilationStatusString = "Downloading Repo..."
+                    case .patching:
+                        compilationStatusString = "Patching..."
+                    case .copyingFiles:
+                        compilationStatusString = "Copying Required Files..."
+                    case .compiling:
+                        compilationStatusString = "Compiling..."
+                    case .finishingUp:
+                        compilationStatusString = "Finishing..."
+                    case .finished:
+                        compilationStatusString = "Finished..."
+                    case .nothing:
+                        compilationStatusString = "Starting..."
+                    }
+                    
+                }
             
             if compilesSucess == false && compilationStatus == .finished {
                 
@@ -243,7 +267,7 @@ struct CompilationView: View {
                             
                             compilesSucess = false
                             
-                            height = 550
+                            height = 575
                             
                             try? shell.shell("cd ~/SM64Repos && rm -rf \(execPath)", false)
                             try? shell.shell("cd ~/SM64Repos && rm -rf \(repo)", false)

@@ -241,9 +241,3 @@ struct PatchesView: View {
         }
     }
 }
-
-struct PatchesView_Previews: PreviewProvider {
-    static var previews: some View {
-        PatchesView(repo: .sm64ex, repoView: .constant(false))
-    }
-}
