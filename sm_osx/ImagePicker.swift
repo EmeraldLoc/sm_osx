@@ -28,6 +28,12 @@ struct ImagePicker: View {
             } label: {
                 Image(systemName: "trash")
             }.disabled(image == nil)
+            
+            if image != nil {
+                Image(nsImage: NSImage(contentsOf: URL(fileURLWithPath: image ?? ""))!)
+                    .resizable()
+                    .frame(width: 35.56, height: 20)
+            }
         }
     }
 }
