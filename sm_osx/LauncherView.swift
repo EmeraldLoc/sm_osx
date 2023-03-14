@@ -380,9 +380,7 @@ struct LauncherView: View {
                 Task {
                     let result = await checkForUpdates()
                     
-                    if result == 0 {
-                        noUpdateAlert = true
-                    } else {
+                    if result == 1 {
                         updateAlert = true
                     }
                 }
