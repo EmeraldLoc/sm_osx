@@ -28,7 +28,7 @@ Make sure the format is .z64, if it is .n64, you can use the byteswapper [here](
 
 If it's still failing, try renaming the file to something simple, if its still broken, please make a issue.
 ### The repos are failing to compile
-Make sure you have Homebrew installed, if it is installed, please make an issue and send the log created.
+Make sure you have Homebrew installed, if it is, please make an issue and send the log created.
 ### Where are the repos stored
 The repos are stored in a folder called SM64Repos in your home folder.
 ### I have compiled a repo manually from source, but it does not compile with sm_osx
