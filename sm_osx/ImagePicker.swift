@@ -18,13 +18,17 @@ struct ImagePicker: View {
                 openPanel.begin { (result) -> Void in
                     if result.rawValue == NSApplication.ModalResponse.OK.rawValue {
                         let selectedPath = openPanel.url!.path
-                        image = selectedPath
+                        withAnimation {
+                            image = selectedPath
+                        }
                     }
                 }
             }
             
             Button {
-                image = nil
+                withAnimation {
+                    image = nil
+                }
             } label: {
                 Image(systemName: "trash")
             }.disabled(image == nil)

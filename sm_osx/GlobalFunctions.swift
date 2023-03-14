@@ -9,7 +9,7 @@ import Foundation
 import UniformTypeIdentifiers
 import AppKit
 
-public let currentVersion = "v\(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "v0")\n"
+public let currentVersion = "v\(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "v0")"
 
 
 public func isArm() -> Bool {
@@ -33,20 +33,22 @@ public func showExecFilePanel() -> URL? {
     return response == .OK ? openPanel.url : nil
 }
 
-public func checkForUpdates(updateAlert: inout Bool) {
+public func checkForUpdates() async -> Int {
     
     print(currentVersion)
     
     var latestVersion = ""
     
     do {
-        latestVersion = try Shell().shell("curl -s https://raw.githubusercontent.com/EmeraldLoc/sm_osx/main/CurVer")
+        latestVersion = try await Shell().shell("curl -s https://raw.githubusercontent.com/EmeraldLoc/sm_osx/main/CurVer")
     }
     catch {
         print("Failed: \(error)")
     }
     
-    if latestVersion != currentVersion && !latestVersion.isEmpty {
-        updateAlert = true
+    if latestVersion != "\(currentVersion)\n" && !latestVersion.isEmpty {
+        return 1
+    } else {
+        return 0
     }
 }

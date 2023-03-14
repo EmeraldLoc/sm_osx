@@ -9,6 +9,8 @@ import SwiftUI
 
 struct SettingsView: View {
     @State var defaultView = true
+    @Binding var noUpdateAlert: Bool
+    @Binding var updateAlert: Bool
     var body: some View {
         TabView {
             GeneralView()
@@ -16,9 +18,9 @@ struct SettingsView: View {
                     Label("General", systemImage: "gearshape")
                 }
             
-            UpdatesSettingsView()
+            UpdatesSettingsView(noUpdateAlert: $noUpdateAlert, updateAlert: $updateAlert)
                 .tabItem {
-                    Label("Update", systemImage: "arrow.down.circle")
+                    Label("Updates", systemImage: "arrow.down.circle")
                 }
             
             DeveloperView()

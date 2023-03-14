@@ -14,14 +14,8 @@ struct DeveloperView: View {
     var body: some View {
         List {
             Toggle(isOn: $devMode) {
-                Text("Enable dev repos (Not recommended)")
+                Text("Enable development repos (Not recommended)")
             }
         }
-    }
-}
-
-struct DeveloperView_Previews: PreviewProvider {
-    static var previews: some View {
-        DeveloperView()
     }
 }

@@ -11,7 +11,9 @@ struct PlayHover: ViewModifier {
                 .overlay(.black.opacity(isHovered ? 0.7 : 0))
                 .clipShape(RoundedRectangle(cornerRadius: 15))
                 .onHover { isHovered in
-                    self.isHovered = isHovered
+                    withAnimation {
+                        self.isHovered = isHovered
+                    }
                 }
             
             if isHovered {
