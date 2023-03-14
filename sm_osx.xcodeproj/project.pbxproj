@@ -23,7 +23,7 @@
 		96A3D83A29B52328007AF78A /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96A3D83929B52328007AF78A /* ImagePicker.swift */; };
 		96AC85B1286670B800CCFF58 /* MenuBarCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AC85B0286670B800CCFF58 /* MenuBarCommands.swift */; };
 		96BB22E327E274F700057915 /* RepoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96BB22E227E274F700057915 /* RepoView.swift */; };
-		96BDA2F3283D216500A4DFF3 /* General View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96BDA2F2283D216500A4DFF3 /* General View.swift */; };
+		96BDA2F3283D216500A4DFF3 /* GeneralView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96BDA2F2283D216500A4DFF3 /* GeneralView.swift */; };
 		96BDA2F5283D221700A4DFF3 /* DeveloperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96BDA2F4283D221700A4DFF3 /* DeveloperView.swift */; };
 		96BDA2F7283D283200A4DFF3 /* CrashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96BDA2F6283D283200A4DFF3 /* CrashView.swift */; };
 		96BDA2F9283D29E300A4DFF3 /* LogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96BDA2F8283D29E300A4DFF3 /* LogView.swift */; };
@@ -31,6 +31,7 @@
 		96C54E6D285930D7003B4A2D /* GlobalFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C54E6C285930D7003B4A2D /* GlobalFunctions.swift */; };
 		96CF3D4227DBD8C7008A26F5 /* CompilationSpeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96CF3D4127DBD8C7008A26F5 /* CompilationSpeed.swift */; };
 		96DE71D327EB9C170090E7A0 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96DE71D227EB9C170090E7A0 /* SettingsView.swift */; };
+		96EBED1329BA51970033771E /* UpdatesSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96EBED1229BA51970033771E /* UpdatesSettingsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,7 +53,7 @@
 		96A3D83929B52328007AF78A /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		96AC85B0286670B800CCFF58 /* MenuBarCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarCommands.swift; sourceTree = "<group>"; };
 		96BB22E227E274F700057915 /* RepoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoView.swift; sourceTree = "<group>"; };
-		96BDA2F2283D216500A4DFF3 /* General View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "General View.swift"; sourceTree = "<group>"; };
+		96BDA2F2283D216500A4DFF3 /* GeneralView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralView.swift; sourceTree = "<group>"; };
 		96BDA2F4283D221700A4DFF3 /* DeveloperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeveloperView.swift; sourceTree = "<group>"; };
 		96BDA2F6283D283200A4DFF3 /* CrashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrashView.swift; sourceTree = "<group>"; };
 		96BDA2F8283D29E300A4DFF3 /* LogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogView.swift; sourceTree = "<group>"; };
@@ -61,6 +62,7 @@
 		96CF3D4127DBD8C7008A26F5 /* CompilationSpeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompilationSpeed.swift; sourceTree = "<group>"; };
 		96DE71D227EB9C170090E7A0 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		96DE71D427EB9C7D0090E7A0 /* sm-osx-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "sm-osx-Info.plist"; sourceTree = SOURCE_ROOT; };
+		96EBED1229BA51970033771E /* UpdatesSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdatesSettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,7 +112,7 @@
 				963F238427F8B942004E010E /* DataStore.xcdatamodeld */,
 				963F238727F8BA01004E010E /* DataController.swift */,
 				96BEADAD2839986200FF72E3 /* CompilationView.swift */,
-				96BDA2F2283D216500A4DFF3 /* General View.swift */,
+				96BDA2F2283D216500A4DFF3 /* GeneralView.swift */,
 				96BDA2F4283D221700A4DFF3 /* DeveloperView.swift */,
 				96BDA2F6283D283200A4DFF3 /* CrashView.swift */,
 				96BDA2F8283D29E300A4DFF3 /* LogView.swift */,
@@ -119,6 +121,7 @@
 				960A559629B29DC600F5CC37 /* PlayHover.swift */,
 				960A559829B2A50100F5CC37 /* LauncherEditView.swift */,
 				96A3D83929B52328007AF78A /* ImagePicker.swift */,
+				96EBED1229BA51970033771E /* UpdatesSettingsView.swift */,
 			);
 			path = sm_osx;
 			sourceTree = "<group>";
@@ -161,7 +164,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1330;
-				LastUpgradeCheck = 1400;
+				LastUpgradeCheck = 1420;
 				TargetAttributes = {
 					9669DC5727D5565000DE5FAB = {
 						CreatedOnToolsVersion = 13.2.1;
@@ -215,10 +218,11 @@
 				96A3D83A29B52328007AF78A /* ImagePicker.swift in Sources */,
 				96BDA2F9283D29E300A4DFF3 /* LogView.swift in Sources */,
 				9669DC7127D55F4700DE5FAB /* RomView.swift in Sources */,
-				96BDA2F3283D216500A4DFF3 /* General View.swift in Sources */,
+				96BDA2F3283D216500A4DFF3 /* GeneralView.swift in Sources */,
 				96DE71D327EB9C170090E7A0 /* SettingsView.swift in Sources */,
 				96C54E6D285930D7003B4A2D /* GlobalFunctions.swift in Sources */,
 				960D46F627D6850D0056E393 /* BuildingSteps.swift in Sources */,
+				96EBED1329BA51970033771E /* UpdatesSettingsView.swift in Sources */,
 				960A559729B29DC600F5CC37 /* PlayHover.swift in Sources */,
 				96BDA2F7283D283200A4DFF3 /* CrashView.swift in Sources */,
 				960A559929B2A50100F5CC37 /* LauncherEditView.swift in Sources */,
@@ -267,6 +271,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -330,6 +335,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -362,9 +368,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"sm_osx/Preview Content\"";
 				DEVELOPMENT_TEAM = 25RK3JMVLT;
-				ENABLE_HARDENED_RUNTIME = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "sm-osx-Info.plist";
@@ -375,7 +382,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.2.6.1;
+				MARKETING_VERSION = 1.2.7;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.CubingStudios.sm-osx";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -394,9 +401,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"sm_osx/Preview Content\"";
 				DEVELOPMENT_TEAM = 25RK3JMVLT;
-				ENABLE_HARDENED_RUNTIME = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "sm-osx-Info.plist";
@@ -407,7 +415,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.2.6.1;
+				MARKETING_VERSION = 1.2.7;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.CubingStudios.sm-osx";
 				PRODUCT_NAME = "$(TARGET_NAME)";

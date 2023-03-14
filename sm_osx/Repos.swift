@@ -8,7 +8,7 @@
 import Foundation
 
 enum Repo: String {
-    case sm64ex = "https://github.com/EmeraldLoc/sm64ex.git"
+    case sm64ex = "https://github.com/sm64pc/sm64ex.git"
     case sm64ex_master = "https://github.com/EmeraldLoc/sm64ex.git --branch master"
     case sm64ex_alo = "https://github.com/EmeraldLoc/sm64ex-alo.git"
     case moonshine = "https://github.com/EmeraldLoc/sm64-moonshine"

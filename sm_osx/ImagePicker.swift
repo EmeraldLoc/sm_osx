@@ -18,16 +18,26 @@ struct ImagePicker: View {
                 openPanel.begin { (result) -> Void in
                     if result.rawValue == NSApplication.ModalResponse.OK.rawValue {
                         let selectedPath = openPanel.url!.path
-                        image = selectedPath
+                        withAnimation {
+                            image = selectedPath
+                        }
                     }
                 }
             }
             
             Button {
-                image = nil
+                withAnimation {
+                    image = nil
+                }
             } label: {
                 Image(systemName: "trash")
             }.disabled(image == nil)
+            
+            if image != nil {
+                Image(nsImage: NSImage(contentsOf: URL(fileURLWithPath: image ?? ""))!)
+                    .resizable()
+                    .frame(width: 35.56, height: 20)
+            }
         }
     }
 }

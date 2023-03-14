@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "Menu Bar Icon.svg",
+      "filename" : "sm_osx.pdf",
       "idiom" : "universal"
     }
   ],
@@ -10,6 +10,7 @@
     "version" : 1
   },
   "properties" : {
+    "compression-type" : "automatic",
     "preserves-vector-representation" : true,
     "template-rendering-intent" : "template"
   }

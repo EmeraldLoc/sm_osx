@@ -12,6 +12,7 @@ struct MenuCommands: Commands {
     @Binding var updateAlert: Bool
     @Binding var showAddRepos: Bool
     @State var launcherRepos = [LauncherRepos]()
+    @Binding var noUpdateAlert: Bool
     @StateObject var dataController: DataController
     let moc = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
     
@@ -57,10 +58,20 @@ struct MenuCommands: Commands {
         
         CommandMenu("Updater") {
             Button("Check for Updates") {
-                checkForUpdates(updateAlert: &updateAlert)
+                Task {
+                    let result = await checkForUpdates()
+                    
+                    if result == 0 {
+                        noUpdateAlert = true
+                    } else {
+                        updateAlert = true
+                    }
+                }
             }
             
             Link("Check Latest Changelog", destination: URL(string: "https://github.com/EmeraldLoc/sm_osx/releases/latest")!)
         }
+        
+        CommandGroup(replacing: .newItem) { }
     }
 }

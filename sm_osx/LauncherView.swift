@@ -32,7 +32,8 @@ struct LauncherView: View {
     @State var logIndex = 0
     @State var homebrewText = ""
     @State var isLogging = false
-    let timer = Timer.publish(every: 300, on: .main, in: .common).autoconnect()
+    @Binding var noUpdateAlert: Bool
+    @State var noUpdateAlertEmpty = false
     let rom: UTType = .init(filenameExtension: "z64") ?? UTType.unixExecutable
     let layout = [GridItem(.adaptive(minimum: 260))]
     
@@ -336,6 +337,10 @@ struct LauncherView: View {
                             .frame(maxWidth: .infinity)
                     }.frame(width: 70)
                 }
+            }.alert("You are up to date!", isPresented: $noUpdateAlert) {
+                
+            } message: {
+                Text("You are up to  date, your current version is \(currentVersion)")
             }
         }.onAppear {
             
@@ -371,7 +376,17 @@ struct LauncherView: View {
                 print("Failed: \(error)")
             }
             
-            checkForUpdates(updateAlert: &updateAlert)
+            if checkUpdateAuto {
+                Task {
+                    let result = await checkForUpdates()
+                    
+                    if result == 0 {
+                        noUpdateAlert = true
+                    } else {
+                        updateAlert = true
+                    }
+                }
+            }
 
             try? print(shell.shell("cd ~/ && mkdir SM64Repos"))
             
@@ -398,6 +413,8 @@ struct LauncherView: View {
             }
             
             Button("Not now", role: .cancel) {}
+        } message: {
+            Text("A new update is now avalible.")
         }.sheet(isPresented: $repoView) {
             RepoView(repoView: $repoView)
                 .frame(minWidth: 650, idealWidth: 750, maxWidth: 850, minHeight: 400, idealHeight: 500, maxHeight: 550)
@@ -405,10 +422,6 @@ struct LauncherView: View {
             CrashView(beginLogging: $beginLogging, crashStatus: $crashStatus, index: $crashIndex)
         }.sheet(isPresented: $beginLogging) {
             LogView(index: $logIndex)
-        }.onReceive(timer) { _ in
-            if checkUpdateAuto {
-                checkForUpdates(updateAlert: &updateAlert)
-            }
         }.frame(minWidth: 300, minHeight: 250)
     }
 }
