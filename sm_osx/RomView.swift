@@ -130,7 +130,7 @@ struct RomView: View {
         //install dependencies
         
         if (repo == .sm64ex_coop || repo == .sm64ex_coop_dev || repo == .moon64) && isArm() {
-            commandsCompile = "echo 'Installing Deps' && brew uninstall glew sdl2; arch -x86_64 /bin/zsh -cl '/usr/local/bin/brew install make mingw-w64 gcc gcc@9 sdl2 pkg-config glew glfw3 libusb audiofile coreutils wget'; "
+            commandsCompile = "echo 'Installing Deps' && brew uninstall glew sdl2; arch -x86_64 /bin/zsh -cl '/usr/local/bin/brew install make mingw-w64 gcc gcc@9 sdl2 pkg-config glew glfw3 libusb audiofile coreutils wget'; brew install make mingw-w64 gcc pkg-config glfw3 libusb audiofile coreutils wget; "
         }
         else {
             commandsCompile = "echo 'Installing Deps' && brew install make mingw-w64 gcc sdl2 pkg-config glew glfw3 libusb audiofile coreutils wget; "
