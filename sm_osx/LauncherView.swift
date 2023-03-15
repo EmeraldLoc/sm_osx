@@ -149,14 +149,14 @@ struct LauncherView: View {
                                         print(LauncherRepo.path ?? "")
                                     } label: {
                                         if !launcherRepos.isEmpty {
-                                            if launcherRepos[i].imagePath == nil {
+                                            if launcherRepos[i].imagePath == nil || NSImage(contentsOf: URL(fileURLWithPath: LauncherRepo.imagePath ?? "")) == nil {
                                                 GroupBox {
                                                     Text(LauncherRepo.title ?? "")
                                                         .frame(width: 250, height: 140)
                                                 }.playHover()
                                             } else {
                                                 VStack {
-                                                    Image(nsImage: NSImage(contentsOf: URL(fileURLWithPath: LauncherRepo.imagePath ?? ""))!)
+                                                    Image(nsImage: NSImage(contentsOf: URL(fileURLWithPath: LauncherRepo.imagePath ?? "")) ?? NSImage())
                                                         .resizable()
                                                         .aspectRatio(contentMode: .fill)
                                                         .frame(width: 250, height: 150)
