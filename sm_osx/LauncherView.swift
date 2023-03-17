@@ -12,6 +12,7 @@ import UserNotifications
 
 struct LauncherView: View {
     
+    @EnvironmentObject var network: NetworkMonitor
     @Binding var repoView: Bool
     @AppStorage("devMode") var devMode = false
     var shell = Shell()
@@ -32,6 +33,7 @@ struct LauncherView: View {
     @State var logIndex = 0
     @State var homebrewText = ""
     @State var isLogging = false
+    @State var showPackageInstall = false
     @Binding var noUpdateAlert: Bool
     @State var noUpdateAlertEmpty = false
     let rom: UTType = .init(filenameExtension: "z64") ?? UTType.unixExecutable
@@ -153,20 +155,22 @@ struct LauncherView: View {
                                                 GroupBox {
                                                     Text(LauncherRepo.title ?? "")
                                                         .frame(width: 250, height: 140)
-                                                }.playHover()
+                                                }
                                             } else {
                                                 VStack {
                                                     Image(nsImage: NSImage(contentsOf: URL(fileURLWithPath: LauncherRepo.imagePath ?? "")) ?? NSImage())
                                                         .resizable()
-                                                        .aspectRatio(contentMode: .fill)
-                                                        .frame(width: 250, height: 150)
-                                                        .playHover()
-                                                    
-                                                    Text(LauncherRepo.title ?? "Unknown Title")
+                                                        //.aspectRatio(contentMode: .fill)
+                                                        
                                                 }
                                             }
                                         }
-                                    }.buttonStyle(.plain)
+                                    }.buttonStyle(PlayHover())
+                                    
+                                    if launcherRepos[i].imagePath != nil || NSImage(contentsOf: URL(fileURLWithPath: LauncherRepo.imagePath ?? "")) != nil {
+                                        
+                                        Text(LauncherRepo.title ?? "Unknown Title")
+                                    }
                                     
                                     Spacer()
                                     
@@ -235,7 +239,7 @@ struct LauncherView: View {
                                     }
                                 }
                             }
-                        }
+                        }.padding(15)
                     }.padding()
                 }
                 else {
@@ -285,7 +289,6 @@ struct LauncherView: View {
                         Text("Select Rom")
                     }.buttonStyle(.borderedProminent)
                 }
-
                 
                 Text(homebrewText)
                     .padding(.horizontal)
@@ -336,10 +339,10 @@ struct LauncherView: View {
                         Text("Repos")
                             .frame(maxWidth: .infinity)
                     }.frame(width: 70)
+                    
+                    
                 }
-            }.alert("You are up to date!", isPresented: $noUpdateAlert) {
-                
-            } message: {
+            }.alert("You are up to date!", isPresented: $noUpdateAlert) {} message: {
                 Text("You are up to  date, your current version is \(currentVersion)")
             }
         }.onAppear {
@@ -405,7 +408,7 @@ struct LauncherView: View {
             
         }.alert("An Update is Avalible", isPresented: $updateAlert) {
             Button("Update", role: .none) {
-                try? shell.shell("cd ~/Downloads && wget https://github.com/EmeraldLoc/sm_osx/releases/latest/download/sm_osx.zip && unzip sm_osx.zip && rm -rf sm_osx.zip /Applications/sm_osx.app && mv sm_osx.app /Applications && open /Applications/sm_osx.app")
+                print(try? shell.shell("cd \(Bundle.main.resourcePath ?? "~/") && open sm_osx_updater.app"))
                 
                 exit(0)
             }

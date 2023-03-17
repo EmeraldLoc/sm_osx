@@ -40,7 +40,7 @@ public func checkForUpdates() async -> Int {
     var latestVersion = ""
     
     do {
-        latestVersion = try await Shell().shell("curl -s https://raw.githubusercontent.com/EmeraldLoc/sm_osx/main/CurVer")
+        latestVersion = try Shell().shell("curl -s https://raw.githubusercontent.com/EmeraldLoc/sm_osx/main/CurVer")
     }
     catch {
         print("Failed: \(error)")

@@ -47,6 +47,9 @@ struct CompilationView: View {
             
             Text(compilationStatusString)
                 .onChange(of: compilationStatus) { _ in
+                    
+                    print(compilationStatus)
+                    
                     switch compilationStatus {
                     case .instDependencies:
                         compilationStatusString = "Installing Dependencies..."
@@ -128,37 +131,7 @@ struct CompilationView: View {
                         }
                     }
                     
-                    if log.contains("Installing Deps") {
-                        compilationStatus = .instDependencies
-                        
-                        log = prevLog
-                    }
-                    else if log.contains("Started Clone") {
-                        compilationStatus = .instRepo
-                        
-                        log = prevLog
-                    }
-                    else if log.contains("Patching Files") {
-                        compilationStatus = .patching
-                        
-                        log = prevLog
-                    }
-                    else if log.contains("Rom Files Done") {
-                        compilationStatus = .copyingFiles
-                        
-                        log = prevLog
-                    }
-                    else if log.contains("Compiling Now") {
-                        compilationStatus = .compiling
-                        
-                        log = prevLog
-                    }
-                    else if log.contains("Finishing Up") {
-                        compilationStatus = .finishingUp
-                        
-                        log = prevLog
-                    }
-                    else if log.contains("Finished Doin Stonks") {
+                    if log.contains("Finished Doin Stonks") {
                         task.terminate()
                         
                         log = prevLog
@@ -166,18 +139,18 @@ struct CompilationView: View {
                         compilationStatus = .finished
                         
                         if try! shell.shell("ls ~/SM64Repos/\(execPath)/sm64.us.f3dex2e | echo y", true) == "y\n" && repo != .moon64 {
-
+                            
                             let content = UNMutableNotificationContent()
                             content.title = "Build Finished Successfully"
                             content.subtitle = "The build \(repo) has finished successfully."
                             content.sound = UNNotificationSound.default
-
+                            
                             // show this notification instantly
                             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.0001, repeats: false)
-
+                            
                             // choose a random identifier
                             let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-
+                            
                             // add our notification request
                             UNUserNotificationCenter.current().add(request)
                             
@@ -213,13 +186,13 @@ struct CompilationView: View {
                             content.title = "Build Finished Successfully"
                             content.subtitle = "The build \(repo) has finished successfully."
                             content.sound = UNNotificationSound.default
-
+                            
                             // show this notification instantly
                             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.0001, repeats: false)
-
+                            
                             // choose a random identifier
                             let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-
+                            
                             // add our notification request
                             UNUserNotificationCenter.current().add(request)
                             
@@ -255,13 +228,13 @@ struct CompilationView: View {
                             content.title = "Build Failed"
                             content.subtitle = "The build \(repo) has failed."
                             content.sound = UNNotificationSound.default
-
+                            
                             // show this notification instantly
                             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.0001, repeats: false)
-
+                            
                             // choose a random identifier
                             let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-
+                            
                             // add our notification request
                             UNUserNotificationCenter.current().add(request)
                             
@@ -273,6 +246,41 @@ struct CompilationView: View {
                             try? shell.shell("cd ~/SM64Repos && rm -rf \(repo)", false)
                         }
                     }
+                    else if log.contains("Finishing Up") {
+                        compilationStatus = .finishingUp
+                        
+                        log = prevLog
+                    }
+                    else if log.contains("Compiling Now") {
+                        compilationStatus = .compiling
+                        
+                        print(compilationStatus)
+                        
+                        log = prevLog
+                    }
+                    else if log.contains("Patching Files") {
+                        compilationStatus = .patching
+                        
+                        log = prevLog
+                    }
+                    else if log.contains("Rom Files Done") {
+                        compilationStatus = .copyingFiles
+                        
+                        log = prevLog
+                    }
+                    else if log.contains("Started Clone") {
+                        compilationStatus = .instRepo
+                        
+                        log = prevLog
+                    }
+                    else if log.contains("Installing Deps") {
+                        compilationStatus = .instDependencies
+                        
+                        log = prevLog
+                    }
+                    
+                    
+                    
                 } else {
                     print("Error decoding data. why do I program...: \(pipe.availableData)")
                 }

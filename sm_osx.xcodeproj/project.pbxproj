@@ -20,6 +20,7 @@
 		9669DC6D27D55CD200DE5FAB /* Patches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9669DC6C27D55CD200DE5FAB /* Patches.swift */; };
 		9669DC6F27D55D5300DE5FAB /* PatchesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9669DC6E27D55D5300DE5FAB /* PatchesView.swift */; };
 		9669DC7127D55F4700DE5FAB /* RomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9669DC7027D55F4700DE5FAB /* RomView.swift */; };
+		9697DF5B29C3883D008FD602 /* sm_osx_updater.app in Resources */ = {isa = PBXBuildFile; fileRef = 9697DF5A29C3883D008FD602 /* sm_osx_updater.app */; };
 		96A3D83A29B52328007AF78A /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96A3D83929B52328007AF78A /* ImagePicker.swift */; };
 		96AC85B1286670B800CCFF58 /* MenuBarCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AC85B0286670B800CCFF58 /* MenuBarCommands.swift */; };
 		96BB22E327E274F700057915 /* RepoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96BB22E227E274F700057915 /* RepoView.swift */; };
@@ -31,6 +32,7 @@
 		96C54E6D285930D7003B4A2D /* GlobalFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C54E6C285930D7003B4A2D /* GlobalFunctions.swift */; };
 		96CF3D4227DBD8C7008A26F5 /* CompilationSpeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96CF3D4127DBD8C7008A26F5 /* CompilationSpeed.swift */; };
 		96DE71D327EB9C170090E7A0 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96DE71D227EB9C170090E7A0 /* SettingsView.swift */; };
+		96E529D729C511F000E8E14D /* InternetChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96E529D629C511F000E8E14D /* InternetChecker.swift */; };
 		96EBED1329BA51970033771E /* UpdatesSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96EBED1229BA51970033771E /* UpdatesSettingsView.swift */; };
 /* End PBXBuildFile section */
 
@@ -50,6 +52,7 @@
 		9669DC6C27D55CD200DE5FAB /* Patches.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Patches.swift; sourceTree = "<group>"; };
 		9669DC6E27D55D5300DE5FAB /* PatchesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatchesView.swift; sourceTree = "<group>"; };
 		9669DC7027D55F4700DE5FAB /* RomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RomView.swift; sourceTree = "<group>"; };
+		9697DF5A29C3883D008FD602 /* sm_osx_updater.app */ = {isa = PBXFileReference; lastKnownFileType = wrapper.application; path = sm_osx_updater.app; sourceTree = "<group>"; };
 		96A3D83929B52328007AF78A /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		96AC85B0286670B800CCFF58 /* MenuBarCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarCommands.swift; sourceTree = "<group>"; };
 		96BB22E227E274F700057915 /* RepoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoView.swift; sourceTree = "<group>"; };
@@ -62,6 +65,7 @@
 		96CF3D4127DBD8C7008A26F5 /* CompilationSpeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompilationSpeed.swift; sourceTree = "<group>"; };
 		96DE71D227EB9C170090E7A0 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		96DE71D427EB9C7D0090E7A0 /* sm-osx-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "sm-osx-Info.plist"; sourceTree = SOURCE_ROOT; };
+		96E529D629C511F000E8E14D /* InternetChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetChecker.swift; sourceTree = "<group>"; };
 		96EBED1229BA51970033771E /* UpdatesSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdatesSettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -79,6 +83,7 @@
 		9669DC4F27D5565000DE5FAB = {
 			isa = PBXGroup;
 			children = (
+				9697DF5A29C3883D008FD602 /* sm_osx_updater.app */,
 				9669DC5A27D5565000DE5FAB /* sm_osx */,
 				9669DC5927D5565000DE5FAB /* Products */,
 			);
@@ -122,6 +127,7 @@
 				960A559829B2A50100F5CC37 /* LauncherEditView.swift */,
 				96A3D83929B52328007AF78A /* ImagePicker.swift */,
 				96EBED1229BA51970033771E /* UpdatesSettingsView.swift */,
+				96E529D629C511F000E8E14D /* InternetChecker.swift */,
 			);
 			path = sm_osx;
 			sourceTree = "<group>";
@@ -197,6 +203,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9669DC6327D5565100DE5FAB /* Preview Assets.xcassets in Resources */,
+				9697DF5B29C3883D008FD602 /* sm_osx_updater.app in Resources */,
 				9669DC6027D5565100DE5FAB /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -226,6 +233,7 @@
 				960A559729B29DC600F5CC37 /* PlayHover.swift in Sources */,
 				96BDA2F7283D283200A4DFF3 /* CrashView.swift in Sources */,
 				960A559929B2A50100F5CC37 /* LauncherEditView.swift in Sources */,
+				96E529D729C511F000E8E14D /* InternetChecker.swift in Sources */,
 				9669DC6F27D55D5300DE5FAB /* PatchesView.swift in Sources */,
 				9669DC6B27D5581F00DE5FAB /* Repos.swift in Sources */,
 				96BB22E327E274F700057915 /* RepoView.swift in Sources */,
@@ -382,7 +390,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.2.7.2;
+				MARKETING_VERSION = 1.2.8;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.CubingStudios.sm-osx";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -415,7 +423,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.2.7.2;
+				MARKETING_VERSION = 1.2.8;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.CubingStudios.sm-osx";
 				PRODUCT_NAME = "$(TARGET_NAME)";
