@@ -10,6 +10,7 @@ import SwiftUI
 @main
 struct sm_osxApp: App {
     
+    @StateObject var networkMonitor = NetworkMonitor()
     @StateObject private var dataController = DataController()
     @AppStorage("showMenuExtra") var showMenuExtra = true
     @State var existingRepo = URL(string: "")
@@ -21,6 +22,7 @@ struct sm_osxApp: App {
         
         WindowGroup {
             LauncherView(repoView: $showAddRepos, updateAlert: $updateAlert, noUpdateAlert: $noUpdateAlert)
+                .environmentObject(networkMonitor)
                 .environment(\.managedObjectContext, dataController.container.viewContext)
                 .onAppear {
                     NSWindow.allowsAutomaticWindowTabbing = false
@@ -30,10 +32,11 @@ struct sm_osxApp: App {
             
             MenuCommands(updateAlert: $updateAlert, showAddRepos: $showAddRepos, noUpdateAlert: $noUpdateAlert, dataController: dataController)
         }
-
+        
         Settings {
             SettingsView(noUpdateAlert: $noUpdateAlert, updateAlert: $updateAlert)
                 .environment(\.managedObjectContext, dataController.container.viewContext)
+                .environmentObject(networkMonitor)
         }
         
         menuExtras(dataController: dataController, updateAlert: $updateAlert, noUpdateAlert: $noUpdateAlert, showAddRepos: $showAddRepos)

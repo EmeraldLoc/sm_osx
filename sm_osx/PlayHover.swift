@@ -1,32 +1,27 @@
-//
 
 import SwiftUI
 
-struct PlayHover: ViewModifier {
+struct PlayHover: ButtonStyle {
     @State private var isHovered = false
     
-    func body(content: Content) -> some View {
-        ZStack {
-            content
-                .overlay(.black.opacity(isHovered ? 0.7 : 0))
-                .clipShape(RoundedRectangle(cornerRadius: 15))
-                .onHover { isHovered in
-                    withAnimation {
-                        self.isHovered = isHovered
-                    }
+    func makeBody(configuration: Configuration) -> some View {
+        return configuration.label
+            .frame(width: 250, height: 150)
+            .overlay(.black.opacity(isHovered ? 0.7 : 0))
+            .overlay(content: {
+                if isHovered {
+                    Image(systemName: "play.fill")
+                        .font(.title)
                 }
-            
-            if isHovered {
-                Image(systemName: "arrowtriangle.forward.fill")
-                    .font(.title)
+            })
+            .clipShape(RoundedRectangle(cornerRadius: 15))
+            .shadow(color: .black, radius: configuration.isPressed ? 3 : isHovered ? 7 : 5)
+            .scaleEffect(configuration.isPressed ? 0.95 : isHovered ? 1.03 : 1)
+            .animation(.linear(duration: 0.2), value: configuration.isPressed)
+            .onHover { hovered in
+                withAnimation(.linear(duration: 0.2)) {
+                    isHovered = hovered
+                }
             }
-        }
-    }
-}
-
-
-extension View {
-    func playHover() -> some View {
-        self.modifier(PlayHover())
     }
 }

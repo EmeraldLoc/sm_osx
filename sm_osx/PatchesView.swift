@@ -24,6 +24,7 @@ struct PatchesView: View {
     @State var starRoad = false
     @Binding var repoView: Bool
     @State var patches = [Patches]()
+    @AppStorage("devMode") var devMode = true
     
     var body: some View {
         NavigationView {
@@ -100,17 +101,19 @@ struct PatchesView: View {
                                     }
                                 }
                                 
-                                Toggle(isOn: $isOmm) {
-                                    Text("Oddysey Mario Moveset")
-                                        .lineLimit(nil)
-                                }.onChange(of: isOmm) { _ in
-                                    
-                                    if isOmm {
-                                        patches.append(.omm)
-                                    }
-                                    else {
-                                        if let i = patches.firstIndex(of: .omm) {
-                                            patches.remove(at: i)
+                                if devMode {
+                                    Toggle(isOn: $isOmm) {
+                                        Text("Oddysey Mario Moveset")
+                                            .lineLimit(nil)
+                                    }.onChange(of: isOmm) { _ in
+                                        
+                                        if isOmm {
+                                            patches.append(.omm)
+                                        }
+                                        else {
+                                            if let i = patches.firstIndex(of: .omm) {
+                                                patches.remove(at: i)
+                                            }
                                         }
                                     }
                                 }

@@ -10,7 +10,7 @@ import UserNotifications
 
 struct GeneralView: View {
     
-    func depsShell(_ command: String, _ waitTillExit: Bool = false) {
+    public func depsShell(_ command: String, _ waitTillExit: Bool = false) {
         let task = Process()
         
         task.executableURL = URL(fileURLWithPath: "/bin/zsh")
@@ -55,6 +55,7 @@ struct GeneralView: View {
     }
     
     @FetchRequest(sortDescriptors:[SortDescriptor(\.title)]) var launcherRepos: FetchedResults<LauncherRepos>
+    @EnvironmentObject var network: NetworkMonitor
     @AppStorage("launchEntry") var launchEntry = true
     @AppStorage("compilationSpeed") var compilationSpeed: Speed = .normal
     @AppStorage("keepRepo") var keepRepo = false
@@ -98,7 +99,7 @@ struct GeneralView: View {
                                 }
                             }
                             
-                            withAnimation(.spring()) {
+                            withAnimation() {
                                 isInstallingDeps = true
                             }
                             
@@ -109,12 +110,11 @@ struct GeneralView: View {
                             }
                         }) {
                             Text("Install Package Dependencies")
-                        }.buttonStyle(.bordered).padding(.bottom)
+                        }.buttonStyle(.bordered).padding(.bottom).disabled(!network.isConnected)
                         
                         ProgressView()
                             .progressViewStyle(.linear)
                             .padding(.bottom)
-                            .scaleEffect(isInstallingDeps ? 1 : 0.2)
                             .opacity(isInstallingDeps ? 1 : 0)
                     }
                 }

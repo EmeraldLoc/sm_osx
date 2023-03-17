@@ -115,7 +115,6 @@ struct RomView: View {
     @State var shell = Shell()
     @State var execPath = ""
     @Binding var repoView: Bool
-    @AppStorage("romURL") var romURL = URL(fileURLWithPath: "")
     @AppStorage("keepRepo") var keepRepo = false
     @AppStorage("compilationSpeed") var compilationSpeed: Speed = .normal
     @AppStorage("launchEntry") var launcherEntry = true
@@ -160,10 +159,6 @@ struct RomView: View {
             if patch.contains(.omm) {
                 commandsCompile.append("cd ~/SM64Repos/\(repo) && wget https://raw.githubusercontent.com/PeachyPeachSM64/sm64ex-omm/master/patch/omm.patch && wget https://raw.githubusercontent.com/PeachyPeachSM64/sm64ex-omm/nightly/omm.mk && wget https://raw.githubusercontent.com/PeachyPeachSM64/sm64ex-omm/nightly/omm_defines.mk && git apply --reject --ignore-whitespace 'omm.patch'; ")
             }
-        
-            if patch.contains(.highfps) {
-                commandsCompile.append("cd ~/SM64Repos/\(repo) && cp enhancements/60fps_ex.patch 60fps_ex.patch && git apply --reject --ignore-whitespace '60fps_ex.patch' && ")
-            }
             
             if patch.contains(.timeTrials) {
                 commandsCompile.append("cd ~/SM64Repos/\(repo) && wget https://sm64pc.info/downloads/patches/time_trials.2.4.hotfix.patch && git apply --reject --ignore-whitespace 'time_trials.2.4.hotfix.patch' && ")
@@ -177,7 +172,7 @@ struct RomView: View {
                 commandsCompile.append("cd ~/SM64Repos/\(repo) && wget https://sm64pc.info/downloads/patches/Extended.Moveset.v1.03b.sm64ex.patch && git apply --reject --ignore-whitespace 'Extended.Moveset.v1.03b.sm64ex.patch' && ")
             }
         }
-        
+
         if repo == .sm64ex_alo {
             if patch.contains(.star_road) {
                 commandsCompile.append("cd ~/SM64Repos/\(repo) && wget -O star_road_release.patch http://drive.google.com/uc\\?id\\=1kXskWESOTUJDoeCGVV9JMUkn0tLd_GXO && git apply --reject --ignore-whitespace star_road_release.patch && ")
@@ -194,7 +189,7 @@ struct RomView: View {
         }
 
         commandsCompile.append("echo 'Compiling Now' && ")
-        
+
         if repo == .sm64ex_coop || repo == .sm64ex_coop_dev {
             commandsCompile.append("cd ~/SM64Repos/\(repo) && arch -x86_64 /bin/zsh -cl 'gmake OSX_BUILD=1 TARGET_ARCH=x86_64-apple-darwin TARGET_BITS=64 USE_APP=0 EXTERNAL_DATA=0 DEBUG=\(debug) COLOR=0 \(compSpeed.rawValue)' && ")
         }
