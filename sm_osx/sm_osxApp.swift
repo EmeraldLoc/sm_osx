@@ -1,11 +1,6 @@
-//
-//  sm_osxApp.swift
-//  sm_osx
-//
-//  Created by Caleb Elmasri on 3/6/22.
-//
 
 import SwiftUI
+import Sparkle
 
 @main
 struct sm_osxApp: App {
@@ -17,6 +12,13 @@ struct sm_osxApp: App {
     @State var showAddRepos = false
     @State var updateAlert = false
     @State var noUpdateAlert = false
+    let updaterController: SPUStandardUpdaterController
+    
+    init() {
+        // If you want to start the updater manually, pass false to startingUpdater and call .startUpdater() later
+        // This is where you can also pass an updater delegate if you need one
+        updaterController = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
+    }
     
     var body: some Scene {
         
@@ -30,11 +32,11 @@ struct sm_osxApp: App {
         }.commands {
             SidebarCommands()
             
-            MenuCommands(updateAlert: $updateAlert, showAddRepos: $showAddRepos, noUpdateAlert: $noUpdateAlert, dataController: dataController)
+            MenuCommands(showAddRepos: $showAddRepos, dataController: dataController, updaterController: updaterController)
         }
         
         Settings {
-            SettingsView(noUpdateAlert: $noUpdateAlert, updateAlert: $updateAlert)
+            SettingsView(updater: updaterController.updater)
                 .environment(\.managedObjectContext, dataController.container.viewContext)
                 .environmentObject(networkMonitor)
         }

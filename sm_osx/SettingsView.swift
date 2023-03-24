@@ -1,16 +1,14 @@
-//
-//  SettingsView.swift
-//  sm_osx
-//
-//  Created by Caleb Elmasri on 3/23/22.
-//
 
 import SwiftUI
+import Sparkle
 
 struct SettingsView: View {
-    @State var defaultView = true
-    @Binding var noUpdateAlert: Bool
-    @Binding var updateAlert: Bool
+    private let updater: SPUUpdater
+
+    init(updater: SPUUpdater) {
+        self.updater = updater
+    }
+    
     var body: some View {
         TabView {
             GeneralView()
@@ -18,7 +16,7 @@ struct SettingsView: View {
                     Label("General", systemImage: "gearshape")
                 }
             
-            UpdatesSettingsView(noUpdateAlert: $noUpdateAlert, updateAlert: $updateAlert)
+            UpdatesSettingsView(updater: updater)
                 .tabItem {
                     Label("Updates", systemImage: "arrow.down.circle")
                 }

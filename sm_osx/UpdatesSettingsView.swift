@@ -1,32 +1,32 @@
-//
 
 import SwiftUI
+import Sparkle
 
 struct UpdatesSettingsView: View {
     
-    @AppStorage("checkUpdateAuto") var checkUpdateAuto = true
-    @Binding var noUpdateAlert: Bool
-    @Binding var updateAlert: Bool
+    private let updater: SPUUpdater
+    
+    @State private var automaticallyChecksForUpdates: Bool
+    @State private var automaticallyDownloadsUpdates: Bool
+    
+    init(updater: SPUUpdater) {
+        self.updater = updater
+        self.automaticallyChecksForUpdates = updater.automaticallyChecksForUpdates
+        self.automaticallyDownloadsUpdates = updater.automaticallyDownloadsUpdates
+    }
     
     var body: some View {
-        VStack {
-            List {
-                Toggle(isOn: $checkUpdateAuto) {
-                    Text("Check for Updates Automatically")
+        List {
+            Toggle("Automatically Check for Updates", isOn: $automaticallyChecksForUpdates)
+                .onChange(of: automaticallyChecksForUpdates) { newValue in
+                    updater.automaticallyChecksForUpdates = newValue
                 }
-                
-                Button("Check for Updates") {
-                    Task {
-                        let result = await checkForUpdates()
-                        
-                        if result == 0 {
-                            noUpdateAlert = true
-                        } else {
-                            updateAlert = true
-                        }
-                    }
+            
+            Toggle("Automatically Download Updates", isOn: $automaticallyDownloadsUpdates)
+                .disabled(!automaticallyChecksForUpdates)
+                .onChange(of: automaticallyDownloadsUpdates) { newValue in
+                    updater.automaticallyDownloadsUpdates = newValue
                 }
-            }
         }
     }
 }

@@ -1,19 +1,13 @@
-//
-//  MenuBarView.swift
-//  sm_osx
-//
-//  Created by Caleb Elmasri on 6/24/22.
-//
 
 import SwiftUI
+import Sparkle
 
 struct MenuCommands: Commands {
     @State var existingRepo = URL(string: "")
-    @Binding var updateAlert: Bool
     @Binding var showAddRepos: Bool
     @State var launcherRepos = [LauncherRepos]()
-    @Binding var noUpdateAlert: Bool
     @StateObject var dataController: DataController
+    var updaterController: SPUStandardUpdaterController
     let moc = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
     
     private func fetchLaunchers() -> [LauncherRepos] {
@@ -57,17 +51,7 @@ struct MenuCommands: Commands {
         }
         
         CommandMenu("Updater") {
-            Button("Check for Updates") {
-                Task {
-                    let result = await checkForUpdates()
-                    
-                    if result == 0 {
-                        noUpdateAlert = true
-                    } else {
-                        updateAlert = true
-                    }
-                }
-            }
+            CheckForUpdatesView(updater: updaterController.updater)
             
             Link("Check Latest Changelog", destination: URL(string: "https://github.com/EmeraldLoc/sm_osx/releases/latest")!)
         }

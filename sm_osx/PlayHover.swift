@@ -12,6 +12,7 @@ struct PlayHover: ButtonStyle {
                 if isHovered {
                     Image(systemName: "play.fill")
                         .font(.title)
+                        .foregroundColor(.white)
                 }
             })
             .clipShape(RoundedRectangle(cornerRadius: 15))
