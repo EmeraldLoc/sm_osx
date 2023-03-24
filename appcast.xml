@@ -1,0 +1,22 @@
+<?xml version="1.0" standalone="yes"?>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+    <channel>
+        <title>sm_osx</title>
+        <item>
+            <title>1.2.9</title>
+            <pubDate>Fri, 24 Mar 2023 16:03:38 -0500</pubDate>
+            <sparkle:version>1</sparkle:version>
+            <sparkle:shortVersionString>1.2.9</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>12.1</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/EmeraldLoc/sm_osx/releases/latest/download/sm_osx.zip" length="1567970" type="application/octet-stream" sparkle:edSignature="R6oEzhaOvifHsmyF/esdiB/YUBlf6DkunTJ76GZVzqUA1BW4uPIxsW7cchXVPO9iO+C0k7og6MlteR9Gp8p3Cg=="/>
+        </item>
+        <item>
+            <title>1.2.8</title>
+            <pubDate>Fri, 24 Mar 2023 15:47:48 -0500</pubDate>
+            <sparkle:version>0</sparkle:version>
+            <sparkle:shortVersionString>1.2.8</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>12.1</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/EmeraldLoc/sm_osx/releases/latest/download/sm_osx.zip" length="1567373" type="application/octet-stream" sparkle:edSignature="cd5NTijHNIsCMMbbQMHOShwYXfgHHFjZh6YB/ir9zfAVtr4UE8x0VBetvLHDG9UXNMfxTi46sUcud/HrLDkhBw=="/>
+        </item>
+    </channel>
+</rss>
