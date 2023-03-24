@@ -74,8 +74,10 @@ struct GeneralView: View {
                         Text("Keep Previously Compiled Repo By Default")
                     }
                     
-                    Toggle(isOn: $showMenuExtra) {
-                        Text("Show in Menu Bar")
+                    if #available(macOS 13.0, *) {
+                        Toggle(isOn: $showMenuExtra) {
+                            Text("Show in Menu Bar")
+                        }
                     }
                     
                     Picker("Default Speed", selection: $compilationSpeed) {
