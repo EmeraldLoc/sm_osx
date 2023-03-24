@@ -35,6 +35,7 @@
 		96CF3D4227DBD8C7008A26F5 /* CompilationSpeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96CF3D4127DBD8C7008A26F5 /* CompilationSpeed.swift */; };
 		96DE71D327EB9C170090E7A0 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96DE71D227EB9C170090E7A0 /* SettingsView.swift */; };
 		96E529D729C511F000E8E14D /* InternetChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96E529D629C511F000E8E14D /* InternetChecker.swift */; };
+		96E96D8629CE3E96009CAF74 /* export.plist in Resources */ = {isa = PBXBuildFile; fileRef = 96E96D8529CE3E96009CAF74 /* export.plist */; };
 		96EBED1329BA51970033771E /* UpdatesSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96EBED1229BA51970033771E /* UpdatesSettingsView.swift */; };
 /* End PBXBuildFile section */
 
@@ -69,6 +70,7 @@
 		96DE71D227EB9C170090E7A0 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		96DE71D427EB9C7D0090E7A0 /* sm-osx-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "sm-osx-Info.plist"; sourceTree = SOURCE_ROOT; };
 		96E529D629C511F000E8E14D /* InternetChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetChecker.swift; sourceTree = "<group>"; };
+		96E96D8529CE3E96009CAF74 /* export.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = export.plist; sourceTree = "<group>"; };
 		96EBED1229BA51970033771E /* UpdatesSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdatesSettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -104,6 +106,7 @@
 		9669DC5A27D5565000DE5FAB /* sm_osx */ = {
 			isa = PBXGroup;
 			children = (
+				96E96D8429CE3E80009CAF74 /* Config */,
 				96DE71D427EB9C7D0090E7A0 /* sm-osx-Info.plist */,
 				9669DC5B27D5565000DE5FAB /* sm_osxApp.swift */,
 				9669DC5F27D5565100DE5FAB /* Assets.xcassets */,
@@ -143,6 +146,14 @@
 				9669DC6227D5565100DE5FAB /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		96E96D8429CE3E80009CAF74 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				96E96D8529CE3E96009CAF74 /* export.plist */,
+			);
+			path = Config;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -209,6 +220,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				96E96D8629CE3E96009CAF74 /* export.plist in Resources */,
 				9669DC6327D5565100DE5FAB /* Preview Assets.xcassets in Resources */,
 				9697DF5B29C3883D008FD602 /* sm_osx_updater.app in Resources */,
 				9669DC6027D5565100DE5FAB /* Assets.xcassets in Resources */,
@@ -383,7 +395,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 0;
+				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"sm_osx/Preview Content\"";
 				DEVELOPMENT_TEAM = 25RK3JMVLT;
@@ -398,7 +410,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.2.8;
+				MARKETING_VERSION = 1.2.9;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.CubingStudios.sm-osx";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -416,7 +428,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 0;
+				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"sm_osx/Preview Content\"";
 				DEVELOPMENT_TEAM = 25RK3JMVLT;
@@ -431,7 +443,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.2.8;
+				MARKETING_VERSION = 1.2.9;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.CubingStudios.sm-osx";
 				PRODUCT_NAME = "$(TARGET_NAME)";
