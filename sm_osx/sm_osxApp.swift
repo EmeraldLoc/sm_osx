@@ -10,20 +10,16 @@ struct sm_osxApp: App {
     @AppStorage("showMenuExtra") var showMenuExtra = true
     @State var existingRepo = URL(string: "")
     @State var showAddRepos = false
-    @State var updateAlert = false
-    @State var noUpdateAlert = false
     let updaterController: SPUStandardUpdaterController
     
     init() {
-        // If you want to start the updater manually, pass false to startingUpdater and call .startUpdater() later
-        // This is where you can also pass an updater delegate if you need one
         updaterController = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
     }
     
     var body: some Scene {
         
         WindowGroup {
-            LauncherView(repoView: $showAddRepos, updateAlert: $updateAlert, noUpdateAlert: $noUpdateAlert)
+            LauncherView(repoView: $showAddRepos)
                 .environmentObject(networkMonitor)
                 .environment(\.managedObjectContext, dataController.container.viewContext)
                 .onAppear {
@@ -41,7 +37,7 @@ struct sm_osxApp: App {
                 .environmentObject(networkMonitor)
         }
         
-        menuExtras(dataController: dataController, updateAlert: $updateAlert, noUpdateAlert: $noUpdateAlert, showAddRepos: $showAddRepos)
+        menuExtras(dataController: dataController, updaterController: updaterController, showAddRepos: $showAddRepos)
     }
 }
 
@@ -50,8 +46,7 @@ struct menuExtras: Scene {
     
     @State var dataController: DataController
     let moc = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
-    @Binding var updateAlert: Bool
-    @Binding var noUpdateAlert: Bool
+    var updaterController: SPUStandardUpdaterController
     @Binding var showAddRepos: Bool
     @AppStorage("showMenuExtra") var showMenuExtra = true
     
@@ -91,17 +86,7 @@ struct menuExtras: Scene {
                 
                 Divider()
                 
-                Button("Check for Updates") {
-                    Task {
-                        let result = await checkForUpdates()
-                        
-                        if result == 0 {
-                            noUpdateAlert = true
-                        } else {
-                            updateAlert = true
-                        }
-                    }
-                }
+                CheckForUpdatesView(updater: updaterController.updater)
                 
                 Link("Check Latest Changelog", destination: URL(string: "https://github.com/EmeraldLoc/sm_osx/releases/latest")!)
             } label: {

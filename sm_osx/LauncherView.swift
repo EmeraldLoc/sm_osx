@@ -18,7 +18,6 @@ struct LauncherView: View {
     var shell = Shell()
     @Environment(\.managedObjectContext) var moc
     @FetchRequest(sortDescriptors:[SortDescriptor(\.title)]) var launcherRepos: FetchedResults<LauncherRepos>
-    @Binding var updateAlert: Bool
     @State var existingRepo = URL(string: "")
     @State var latestVersion = ""
     @State var crashStatus = false
@@ -34,8 +33,6 @@ struct LauncherView: View {
     @State var homebrewText = ""
     @State var isLogging = false
     @State var showPackageInstall = false
-    @Binding var noUpdateAlert: Bool
-    @State var noUpdateAlertEmpty = false
     let rom: UTType = .init(filenameExtension: "z64") ?? UTType.unixExecutable
     let layout = [GridItem(.adaptive(minimum: 260))]
     
@@ -342,8 +339,6 @@ struct LauncherView: View {
                     
                     
                 }
-            }.alert("You are up to date!", isPresented: $noUpdateAlert) {} message: {
-                Text("You are up to  date, your current version is \(currentVersion)")
             }
         }.onAppear {
             
@@ -378,16 +373,6 @@ struct LauncherView: View {
             catch {
                 print("Failed: \(error)")
             }
-            
-            if checkUpdateAuto {
-                Task {
-                    let result = await checkForUpdates()
-                    
-                    if result == 1 {
-                        updateAlert = true
-                    }
-                }
-            }
 
             try? print(shell.shell("cd ~/ && mkdir SM64Repos"))
             
@@ -406,16 +391,6 @@ struct LauncherView: View {
                 launcherRepos[i].log = ""
             }
             
-        }.alert("An Update is Avalible", isPresented: $updateAlert) {
-            Button("Update", role: .none) {
-                print(try? shell.shell("cd \(Bundle.main.resourcePath ?? "~/") && open sm_osx_updater.app"))
-                
-                exit(0)
-            }
-            
-            Button("Not now", role: .cancel) {}
-        } message: {
-            Text("A new update is now avalible.")
         }.sheet(isPresented: $repoView) {
             RepoView(repoView: $repoView)
                 .frame(minWidth: 650, idealWidth: 750, maxWidth: 850, minHeight: 400, idealHeight: 500, maxHeight: 550)

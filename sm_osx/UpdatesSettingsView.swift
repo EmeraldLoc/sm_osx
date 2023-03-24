@@ -27,6 +27,8 @@ struct UpdatesSettingsView: View {
                 .onChange(of: automaticallyDownloadsUpdates) { newValue in
                     updater.automaticallyDownloadsUpdates = newValue
                 }
+            
+            CheckForUpdatesView(updater: updater)
         }
     }
 }
