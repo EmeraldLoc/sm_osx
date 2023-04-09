@@ -3,6 +3,7 @@ import SwiftUI
 
 struct PlayHover: ButtonStyle {
     @State private var isHovered = false
+    let image: String
     
     func makeBody(configuration: Configuration) -> some View {
         return configuration.label
@@ -16,7 +17,7 @@ struct PlayHover: ButtonStyle {
                 }
             })
             .clipShape(RoundedRectangle(cornerRadius: 15))
-            .shadow(color: .black, radius: configuration.isPressed ? 3 : isHovered ? 7 : 5)
+            .shadow(color: .black, radius: NSImage(contentsOf: URL(fileURLWithPath: image)) == nil ? 0 : configuration.isPressed ? 3 : isHovered ? 7 : 5)
             .scaleEffect(configuration.isPressed ? 0.95 : isHovered ? 1.03 : 1)
             .animation(.linear(duration: 0.2), value: configuration.isPressed)
             .onHover { hovered in

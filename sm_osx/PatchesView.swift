@@ -23,6 +23,7 @@ struct PatchesView: View {
     @State var isQOLFix = false
     @State var starRoad = false
     @Binding var repoView: Bool
+    @Binding var reloadMenuBarLauncher: Bool
     @State var patches = [Patches]()
     @AppStorage("devMode") var devMode = true
     
@@ -235,7 +236,7 @@ struct PatchesView: View {
                             }
                         }
                         
-                        NavigationLink(destination:RomView(patch: patches, repo: repo, repoView: $repoView)) {
+                        NavigationLink(destination:RomView(patch: patches, repo: repo, repoView: $repoView, reloadMenuBarLauncher: $reloadMenuBarLauncher)) {
                             Text("Next")
                         }
                     }

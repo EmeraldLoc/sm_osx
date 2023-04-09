@@ -17,6 +17,7 @@ struct CompilationView: View {
     @Binding var repo: Repo
     @Binding var execPath: String
     @Binding var doLauncher: Bool
+    @Binding var reloadMenuBarLauncher: Bool
     @State var shell = Shell()
     @State var log = ""
     @State var totalLog = ""
@@ -172,6 +173,8 @@ struct CompilationView: View {
                                 
                                 do {
                                     try moc.save()
+                                    
+                                    reloadMenuBarLauncher = true
                                 }
                                 catch {
                                     print(error)
@@ -214,6 +217,8 @@ struct CompilationView: View {
                                 
                                 do {
                                     try moc.save()
+                                    
+                                    reloadMenuBarLauncher = true
                                 }
                                 catch {
                                     print(error)

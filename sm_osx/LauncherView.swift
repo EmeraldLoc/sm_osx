@@ -14,81 +14,54 @@ struct LauncherView: View {
     
     @EnvironmentObject var network: NetworkMonitor
     @Binding var repoView: Bool
-    @AppStorage("devMode") var devMode = false
-    var shell = Shell()
     @Environment(\.managedObjectContext) var moc
+    @Environment(\.openWindow) var openWindow
     @FetchRequest(sortDescriptors:[SortDescriptor(\.title)]) var launcherRepos: FetchedResults<LauncherRepos>
     @State var existingRepo = URL(string: "")
-    @State var latestVersion = ""
-    @State var crashStatus = false
-    @State var crashLog = ""
-    @State var readableCrashLog = ""
     @State var allowAddingRepos = true
-    @State var beginLogging = false
     @AppStorage("firstLaunch") var firstLaunch = true
     @AppStorage("checkUpdateAuto") var checkUpdateAuto = true
     @State var romURL = URL(string: "")
-    @State var crashIndex = 0
-    @State var logIndex = 0
     @State var homebrewText = ""
     @State var isLogging = false
     @State var showPackageInstall = false
+    @Binding var reloadMenuBarLauncher: Bool
     let rom: UTType = .init(filenameExtension: "z64") ?? UTType.unixExecutable
     let layout = [GridItem(.adaptive(minimum: 260))]
     
-    func launcherShell(_ command: String, index: Int, isLogging: Bool = false) throws -> String {
-        self.launcherRepos[index].log = ""
+    private func launcherShell(_ command: String) {
         
-        let task = Process()
+        let process = Process()
         var output = ""
-        task.launchPath = "/bin/zsh"
-        task.arguments = ["-cl", command]
-
+        process.launchPath = "/bin/zsh"
+        process.arguments = ["-cl", "\(command)"]
+        
         let pipe = Pipe()
-        task.standardOutput = pipe
-        task.standardError = pipe
+        process.standardOutput = pipe
+        process.standardError = pipe
         let outHandle = pipe.fileHandleForReading
-        outHandle.waitForDataInBackgroundAndNotify()
-
-        var obs1 : NSObjectProtocol?
-        obs1 = NotificationCenter.default.addObserver(forName: Notification.Name.NSFileHandleDataAvailable, object: outHandle, queue: nil) {  notification -> Void in
-            let data = outHandle.availableData
-            
-            if data.count > 0 {
-                if let str = String(data: data, encoding: .utf8) {
-                    output.append(str)
-                    
-                    self.launcherRepos[index].log!.append(str)
+        
+        outHandle.readabilityHandler = { pipe in
+            if let line = String(data: pipe.availableData, encoding: .utf8) {
+                output.append(line)
+            } else {
+                print("Error decoding data, aaaa: \(pipe.availableData)")
+            }
+        }
+        
+        NotificationCenter.default.addObserver(forName: Process.didTerminateNotification, object: process, queue: nil, using: { _ in
+            if process.terminationStatus != 0 {
+                
+                if NSApp.activationPolicy() == .prohibited {
+                    showApp()
                 }
-                outHandle.waitForDataInBackgroundAndNotify()
-            } else   {
-               print("EOF on stdout from process")
-               NotificationCenter.default.removeObserver(obs1 as Any)
-            }
-        }
-
-        var obs2 : NSObjectProtocol?
-        obs2 = NotificationCenter.default.addObserver(forName: Process.didTerminateNotification, object: task, queue: nil) { notification -> Void in
-            print("terminated")
-            
-            if task.terminationStatus != 0 {
-                self.launcherRepos[index].log?.append("\n A Crash has happend. Termination Status: \(task.terminationStatus)")
                 
-                crashIndex = index
-                
-                self.crashStatus = true
+                openWindow(id: "crash-log", value: output)
             }
-            
-            NotificationCenter.default.removeObserver(obs2 as Any)
-        }
+        })
         
-        try? task.run()
-        
-        return(output)
+        try? process.run()
     }
-
-    
-    
     
     func showOpenPanelForRom() -> URL? {
         let openPanel = NSOpenPanel()
@@ -142,13 +115,13 @@ struct LauncherView: View {
                                         for i in 0...launcherRepos.count - 1 {
                                             launcherRepos[i].isEditing = false
                                         }
-                                        
-                                        try? launcherShell("\(LauncherRepo.path ?? "its broken") \(LauncherRepo.args ?? "")", index: i)
-                                        
+
+                                        try? launcherShell("\(LauncherRepo.path ?? "its broken") \(LauncherRepo.args ?? "")")
+                                                                                
                                         print(LauncherRepo.path ?? "")
                                     } label: {
                                         if !launcherRepos.isEmpty {
-                                            if launcherRepos[i].imagePath == nil || NSImage(contentsOf: URL(fileURLWithPath: LauncherRepo.imagePath ?? "")) == nil {
+                                            if NSImage(contentsOf: URL(fileURLWithPath: LauncherRepo.imagePath ?? "")) == nil {
                                                 GroupBox {
                                                     Text(LauncherRepo.title ?? "")
                                                         .frame(width: 250, height: 140)
@@ -157,12 +130,10 @@ struct LauncherView: View {
                                                 VStack {
                                                     Image(nsImage: NSImage(contentsOf: URL(fileURLWithPath: LauncherRepo.imagePath ?? "")) ?? NSImage())
                                                         .resizable()
-                                                        //.aspectRatio(contentMode: .fill)
-                                                        
                                                 }
                                             }
                                         }
-                                    }.buttonStyle(PlayHover())
+                                    }.buttonStyle(PlayHover(image: LauncherRepo.imagePath ?? ""))
                                     
                                     if launcherRepos[i].imagePath != nil || NSImage(contentsOf: URL(fileURLWithPath: LauncherRepo.imagePath ?? "")) != nil {
                                         
@@ -180,17 +151,14 @@ struct LauncherView: View {
                                                 launcherRepos[i].isEditing = false
                                             }
                                             
-                                            try? launcherShell("\(LauncherRepo.path ?? "its broken") \(LauncherRepo.args ?? "")", index: i)
                                             
-                                            logIndex = i
-                                            
-                                            beginLogging = true
+                                            openWindow(id: "regular-log", value: i)
                                             
                                             print(LauncherRepo.path ?? "")
                                         }) {
                                             Text("Log")
                                             
-                                            Image(systemName: "arrow.right.circle.fill")
+                                            Image(systemName: "play.fill")
                                         }
                                         
                                         Button(action: {
@@ -207,7 +175,7 @@ struct LauncherView: View {
                                             
                                             do {
                                                 try moc.save()
-                                                print("Repo Correctly Removed")
+                                                reloadMenuBarLauncher = true
                                             }
                                             catch {
                                                 print("Error: its broken: \(error)")
@@ -272,7 +240,7 @@ struct LauncherView: View {
                         romURL? = URL(fileURLWithPath: romURL?.path.replacingOccurrences(of: " ", with: #"\ "#
                                                                                          , options: .literal, range: nil) ?? "")
                         
-                        try? shell.shell("cp \(romURL?.path ?? "") ~/SM64Repos/baserom.us.z64")
+                        try? Shell().shell("cp \(romURL?.path ?? "") ~/SM64Repos/baserom.us.z64")
                         
                         if let doesExist = try? checkRom("ls ~/SM64Repos/baserom.us.z64") {
                             if doesExist {
@@ -326,6 +294,8 @@ struct LauncherView: View {
                                 
                                 do {
                                     try moc.save()
+                                    
+                                    reloadMenuBarLauncher = true
                                 }
                                 catch {
                                     print("it BROKE \(error)")
@@ -342,10 +312,8 @@ struct LauncherView: View {
             }
         }.onAppear {
             
-            devMode = false
-            
-            let detectArmBrewInstall = try? shell.shell("which brew")
-            let detectIntelBrewInstall = try? shell.shell("which /usr/local/bin/brew")
+            let detectArmBrewInstall = try? Shell().shell("which brew")
+            let detectIntelBrewInstall = try? Shell().shell("which /usr/local/bin/brew")
             
             if (detectArmBrewInstall?.contains("/opt/homebrew/bin/brew") ?? false && detectIntelBrewInstall == "/usr/local/bin/brew\n" && isArm()) || (detectIntelBrewInstall == "/usr/local/bin/brew\n" && !isArm())  {
                     homebrewText = ""
@@ -374,30 +342,32 @@ struct LauncherView: View {
                 print("Failed: \(error)")
             }
 
-            try? print(shell.shell("cd ~/ && mkdir SM64Repos"))
-            
-            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
-                if success {
-                    print("All set!")
-                } else if let error = error {
-                    print(error.localizedDescription)
-                }
-            }
+            try? Shell().shell("cd ~/ && mkdir SM64Repos")
             
             if launcherRepos.isEmpty { return }
             
             for i in 0...launcherRepos.count - 1 {
                 launcherRepos[i].isEditing = false
-                launcherRepos[i].log = ""
+                print(launcherRepos[i].id)
+                
+                let launchID = UserDefaults.standard.string(forKey: "launch-repo-id") ?? ""
+                
+                if launchID == launcherRepos[i].id?.uuidString {
+                    try? launcherShell("\(launcherRepos[i].path ?? "its broken") \(launcherRepos[i].args ?? "")")
+                }
+            }
+            
+            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
+                if success {
+                    print("Finished Launch Sequence")
+                } else if let error = error {
+                    print(error)
+                }
             }
             
         }.sheet(isPresented: $repoView) {
-            RepoView(repoView: $repoView)
+            RepoView(repoView: $repoView, reloadMenuBarLauncher: $reloadMenuBarLauncher)
                 .frame(minWidth: 650, idealWidth: 750, maxWidth: 850, minHeight: 400, idealHeight: 500, maxHeight: 550)
-        }.sheet(isPresented: $crashStatus) {
-            CrashView(beginLogging: $beginLogging, crashStatus: $crashStatus, index: $crashIndex)
-        }.sheet(isPresented: $beginLogging) {
-            LogView(index: $logIndex)
         }.frame(minWidth: 300, minHeight: 250)
     }
 }

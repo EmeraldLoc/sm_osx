@@ -1,43 +1,53 @@
-//
-//  LogView.swift
-//  sm_osx
-//
-//  Created by Caleb Elmasri on 5/24/22.
-//
 
 import SwiftUI
 
 struct LogView: View {
     
-    @State var readableCrashLog = ""
-    @Binding var index: Int
+    let index: Int
+    @State var log = ""
     @Environment(\.dismiss) var dismiss
     @FetchRequest(sortDescriptors:[SortDescriptor(\.title)]) var launcherRepos: FetchedResults<LauncherRepos>
-    
+    let shell = Shell()
+
     var body: some View {
         VStack {
-            
-            Text(launcherRepos[index].title ?? "")
+            Text("\(launcherRepos[index].title ?? "No Name")")
                 .padding(.top)
+                .font(.title3)
             
-            TextEditor(text: $readableCrashLog)
-                .frame(minWidth: 350, minHeight: 350)
-                .onChange(of: readableCrashLog) { _ in
-                    readableCrashLog = launcherRepos[index].log ?? "Error, failed to log. We are sorry for the inconvience"
-                }.onChange(of: launcherRepos[index].log) { _ in
-                    readableCrashLog = launcherRepos[index].log ?? "Error, failed to log. We are sorry for the inconvience"
+            GroupBox {
+                VStack {
+                    TextEditor(text: .constant(log))
+                        .scrollContentBackground(.hidden)
+                        .scrollIndicators(.never)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                 }
-                .onAppear {
-                    print("Index is: \(String(index))")
-                    
-                    readableCrashLog = launcherRepos[index].log ?? "Error, failed to log. We are sorry for the inconvience"
-                }.padding(.top)
+            }.padding(.horizontal)
             
-            Spacer()
+            Button("Close") {
+                dismiss()
+            }.padding(.bottom)
+        }.onAppear {
+
+            let task = Process()
             
-            Button("Finish") {
-                dismiss.callAsFunction()
-            }.padding()
+            task.launchPath = "/bin/sh"
+            task.arguments = ["-c", "\(launcherRepos[index].path ?? "its broken") \(launcherRepos[index].args ?? "")"]
+            
+            let pipe = Pipe()
+            task.standardOutput = pipe
+            task.standardError = pipe
+            let outHandle = pipe.fileHandleForReading
+            
+            outHandle.readabilityHandler = { pipe in
+                if let line = String(data: pipe.availableData, encoding: .utf8) {
+                    log.append(line)
+                } else {
+                    print("Error decoding data, aaaa: \(pipe.availableData)")
+                }
+            }
+            
+            try? task.run()
         }
     }
 }

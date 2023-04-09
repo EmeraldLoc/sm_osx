@@ -8,93 +8,6 @@
 import SwiftUI
 import UserNotifications
 
-class Shell {
-    
-    @Binding var log: String
-    
-    init(log: Binding<String> = .constant("")) {
-        _log = log
-    }
-    
-    func intelShell(_ command: String, _ waitTillExit: Bool = true) throws -> String {
-        let task = Process()
-        var output = ""
-
-        task.executableURL = URL(fileURLWithPath: "/bin/zsh")
-        task.arguments = ["-cl", "arch -x86_64 /bin/zsh -cl '\(command)'"]
-        
-        let pipe = Pipe()
-        task.standardOutput = pipe
-        task.standardError = pipe
-        let outHandle = pipe.fileHandleForReading
-
-        outHandle.readabilityHandler = { pipe in
-            if let line = String(data: pipe.availableData, encoding: String.Encoding.utf8) {
-                // Update your view with the new text here
-                
-                output.append(line)
-            } else {
-                print("Error decoding data. why do I program...: \(pipe.availableData)")
-            }
-        }
-        
-        try task.run()
-        if waitTillExit {
-            task.waitUntilExit()
-        }
-        
-        return output
-    }
-    
-    func scriptShell(_ command: String) throws -> String {
-        
-        var error: NSDictionary?
-        var returnOutput = ""
-        
-        if let scriptObject = NSAppleScript(source: "do shell script \"arch -arm64 /bin/zsh -cl '\(command)' 2>&1\" ") {
-            let output = scriptObject.executeAndReturnError(&error)
-            returnOutput.append(output.stringValue ?? "")
-            print(output.stringValue ?? "")
-            self.log.append(output.stringValue ?? "")
-            if (error != nil) {
-                print("error: \(String(describing: error))")
-            }
-        }
-        
-        return returnOutput
-    }
-    
-    func shell(_ command: String, _ waitTillExit: Bool = true) throws -> String {
-        let task = Process()
-        var output = ""
-
-        task.executableURL = URL(fileURLWithPath: "/bin/zsh")
-        task.arguments = ["-cl", command]
-        
-        let pipe = Pipe()
-        task.standardOutput = pipe
-        task.standardError = pipe
-        let outHandle = pipe.fileHandleForReading
-
-        outHandle.readabilityHandler = { pipe in
-            if let line = String(data: pipe.availableData, encoding: String.Encoding.utf8) {
-                // Update your view with the new text here
-                
-                output.append(line)
-            } else {
-                print("Error decoding data. why do I program...: \(pipe.availableData)")
-            }
-        }
-        
-        try task.run()
-        if waitTillExit {
-            task.waitUntilExit()
-        }
-        
-        return output
-    }
-}
-
 struct RomView: View {
     
     var patch: Array<Patches>
@@ -115,6 +28,7 @@ struct RomView: View {
     @State var shell = Shell()
     @State var execPath = ""
     @Binding var repoView: Bool
+    @Binding var reloadMenuBarLauncher: Bool
     @AppStorage("keepRepo") var keepRepo = false
     @AppStorage("compilationSpeed") var compilationSpeed: Speed = .normal
     @AppStorage("launchEntry") var launcherEntry = true
@@ -281,7 +195,7 @@ struct RomView: View {
                     Button("Compile") {
                         compile()
                     }.padding(.top, 3).sheet(isPresented: $startedCompilation) {
-                        CompilationView(compileCommands: $commandsCompile, repo: $repo, execPath: $execPath, doLauncher: $doLauncher)
+                        CompilationView(compileCommands: $commandsCompile, repo: $repo, execPath: $execPath, doLauncher: $doLauncher, reloadMenuBarLauncher: $reloadMenuBarLauncher)
                     }
                 }
             }

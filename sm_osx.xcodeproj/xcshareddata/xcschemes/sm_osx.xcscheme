@@ -50,6 +50,12 @@
             ReferencedContainer = "container:sm_osx.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <CommandLineArguments>
+         <CommandLineArgument
+            argument = "-launch-repo-id 78F9FFCA-FB5D-495E-80C4-7380D3360D9F"
+            isEnabled = "NO">
+         </CommandLineArgument>
+      </CommandLineArguments>
       <LocationScenarioReference
          identifier = "com.apple.dt.IDEFoundation.CurrentLocationScenarioIdentifier"
          referenceType = "1">

@@ -13,6 +13,7 @@ final class CheckForUpdatesViewModel: ObservableObject {
 
 struct CheckForUpdatesView: View {
     @ObservedObject private var checkForUpdatesViewModel: CheckForUpdatesViewModel
+    @EnvironmentObject var network: NetworkMonitor
     private let updater: SPUUpdater
     
     init(updater: SPUUpdater) {
@@ -24,5 +25,6 @@ struct CheckForUpdatesView: View {
     var body: some View {
         Button("Check for Updates", action: updater.checkForUpdates)
             .disabled(!checkForUpdatesViewModel.canCheckForUpdates)
+            .disabled(!network.isConnected)
     }
 }

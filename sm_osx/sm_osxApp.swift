@@ -8,106 +8,77 @@ struct sm_osxApp: App {
     @StateObject var networkMonitor = NetworkMonitor()
     @StateObject private var dataController = DataController()
     @AppStorage("showMenuExtra") var showMenuExtra = true
+    @AppStorage("devMode") var devMode = false
     @State var existingRepo = URL(string: "")
+    @State var reloadMenuBarLauncher = false
     @State var showAddRepos = false
     let updaterController: SPUStandardUpdaterController
     
     init() {
         updaterController = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
+        
+        devMode = false
     }
     
     var body: some Scene {
         
-        WindowGroup {
-            LauncherView(repoView: $showAddRepos)
+        WindowGroup() {
+            LauncherView(repoView: $showAddRepos, reloadMenuBarLauncher: $reloadMenuBarLauncher)
                 .environmentObject(networkMonitor)
                 .environment(\.managedObjectContext, dataController.container.viewContext)
                 .onAppear {
+                    if showMenuExtra {
+                        NSApp.setActivationPolicy(.regular)
+                    }
+                    
                     NSWindow.allowsAutomaticWindowTabbing = false
                 }
+                .onDisappear {
+                    if showMenuExtra {
+                        NSApp.setActivationPolicy(.prohibited)
+                    }
+                }.onOpenURL { url in
+                    print(url.absoluteString)
+                }
+
+            
         }.commands {
             SidebarCommands()
             
-            MenuCommands(showAddRepos: $showAddRepos, dataController: dataController, updaterController: updaterController)
+            MenuCommands(showAddRepos: $showAddRepos, reloadMenuBarLauncher: $reloadMenuBarLauncher, dataController: dataController, updaterController: updaterController)
+        }
+        
+        WindowGroup("Crash Log", id: "crash-log", for: String.self) { s in
+            if s.wrappedValue != nil {
+                CrashView(log: s.wrappedValue!)
+                    .frame(minWidth: 420, idealWidth: 420, minHeight: 400, idealHeight: 400)
+                    .environment(\.managedObjectContext, dataController.container.viewContext)
+                    .onAppear {
+                        NSWindow.allowsAutomaticWindowTabbing = false
+                    }
+            }
+        }
+        
+        WindowGroup("Game Log", id: "regular-log", for: Int.self) { i in
+            if i.wrappedValue != nil {
+                LogView(index: i.wrappedValue!)
+                    .frame(minWidth: 420, idealWidth: 420, minHeight: 400, idealHeight: 400)
+                    .environment(\.managedObjectContext, dataController.container.viewContext)
+                    .onAppear {
+                        NSWindow.allowsAutomaticWindowTabbing = false
+                    }
+            }
         }
         
         Settings {
             SettingsView(updater: updaterController.updater)
                 .environment(\.managedObjectContext, dataController.container.viewContext)
                 .environmentObject(networkMonitor)
+                .onAppear {
+                    NSWindow.allowsAutomaticWindowTabbing = false
+                }
         }
         
-        menuExtras(dataController: dataController, updaterController: updaterController, showAddRepos: $showAddRepos)
-    }
-}
-
-
-struct menuExtras: Scene {
-    
-    @State var dataController: DataController
-    let moc = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
-    var updaterController: SPUStandardUpdaterController
-    @Binding var showAddRepos: Bool
-    @AppStorage("showMenuExtra") var showMenuExtra = true
-    
-    private func fetchLaunchers() -> [LauncherRepos] {
-        let fetchRequest: NSFetchRequest<LauncherRepos>
-        fetchRequest = LauncherRepos.fetchRequest()
-        
-        let context = dataController.container.viewContext
-        
-        let objects = try? context.fetch(fetchRequest)
-        
-        return objects ?? []
-    }
-    
-    
-    var body: some Scene {
-        if #available(macOS 13.0, *) {
-            return MenuBarExtra() {
-                ForEach(fetchLaunchers()) { Launcher in
-                    Button(Launcher.title ?? "") {
-                        
-                        let launcherRepos = fetchLaunchers()
-                        
-                        for iE in 0...launcherRepos.count - 1 {
-                            launcherRepos[iE].isEditing = false
-                        }
-                        
-                        try? Shell().shell("\(Launcher.path ?? "its broken") \(Launcher.args ?? "")", false)
-                    }
-                }
-                
-                Divider()
-                
-                Button("Add New Repo") {
-                    showAddRepos = true
-                }
-                
-                Divider()
-                
-                CheckForUpdatesView(updater: updaterController.updater)
-                
-                Link("Check Latest Changelog", destination: URL(string: "https://github.com/EmeraldLoc/sm_osx/releases/latest")!)
-            } label: {
-                if showMenuExtra {
-                    let image: NSImage = {
-                        let ratio = $0.size.height / $0.size.width
-                        $0.size.height = 16
-                        $0.size.width = 16
-                        return $0
-                    }(NSImage(named: "menu_bar_icon")!)
-                    
-                    Image(nsImage: image)
-                        .resizable()
-                        .frame(width: 16, height: 16)
-                } else {
-                    //if this stops working in later versions it was probably a bug :/
-                    Image("menu_bar_icon")
-                }
-            }
-        } else {
-            return WindowGroup { EmptyView() }
-        }
+        menuExtras(updaterController: updaterController, dataController: dataController, showAddRepos: $showAddRepos, reloadMenuBarLauncher: $reloadMenuBarLauncher)
     }
 }

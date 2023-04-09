@@ -12,19 +12,18 @@
 		960A559729B29DC600F5CC37 /* PlayHover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 960A559629B29DC600F5CC37 /* PlayHover.swift */; };
 		960A559929B2A50100F5CC37 /* LauncherEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 960A559829B2A50100F5CC37 /* LauncherEditView.swift */; };
 		960D46F627D6850D0056E393 /* BuildingSteps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 960D46F527D6850D0056E393 /* BuildingSteps.swift */; };
+		963074FA29DF28AA00234B23 /* Shell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963074F929DF28AA00234B23 /* Shell.swift */; };
 		963F238327F8B211004E010E /* LauncherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963F238227F8B211004E010E /* LauncherView.swift */; };
 		963F238627F8B942004E010E /* DataStore.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 963F238427F8B942004E010E /* DataStore.xcdatamodeld */; };
 		963F238827F8BA01004E010E /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963F238727F8BA01004E010E /* DataController.swift */; };
 		9669DC5C27D5565000DE5FAB /* sm_osxApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9669DC5B27D5565000DE5FAB /* sm_osxApp.swift */; };
 		9669DC6027D5565100DE5FAB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9669DC5F27D5565100DE5FAB /* Assets.xcassets */; };
-		9669DC6327D5565100DE5FAB /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9669DC6227D5565100DE5FAB /* Preview Assets.xcassets */; };
 		9669DC6B27D5581F00DE5FAB /* Repos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9669DC6A27D5581F00DE5FAB /* Repos.swift */; };
 		9669DC6D27D55CD200DE5FAB /* Patches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9669DC6C27D55CD200DE5FAB /* Patches.swift */; };
 		9669DC6F27D55D5300DE5FAB /* PatchesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9669DC6E27D55D5300DE5FAB /* PatchesView.swift */; };
 		9669DC7127D55F4700DE5FAB /* RomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9669DC7027D55F4700DE5FAB /* RomView.swift */; };
-		9697DF5B29C3883D008FD602 /* sm_osx_updater.app in Resources */ = {isa = PBXBuildFile; fileRef = 9697DF5A29C3883D008FD602 /* sm_osx_updater.app */; };
 		96A3D83A29B52328007AF78A /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96A3D83929B52328007AF78A /* ImagePicker.swift */; };
-		96AC85B1286670B800CCFF58 /* MenuBarCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AC85B0286670B800CCFF58 /* MenuBarCommands.swift */; };
+		96AC85B1286670B800CCFF58 /* MenuCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AC85B0286670B800CCFF58 /* MenuCommands.swift */; };
 		96BB22E327E274F700057915 /* RepoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96BB22E227E274F700057915 /* RepoView.swift */; };
 		96BDA2F3283D216500A4DFF3 /* GeneralView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96BDA2F2283D216500A4DFF3 /* GeneralView.swift */; };
 		96BDA2F5283D221700A4DFF3 /* DeveloperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96BDA2F4283D221700A4DFF3 /* DeveloperView.swift */; };
@@ -44,21 +43,20 @@
 		960A559629B29DC600F5CC37 /* PlayHover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayHover.swift; sourceTree = "<group>"; };
 		960A559829B2A50100F5CC37 /* LauncherEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LauncherEditView.swift; sourceTree = "<group>"; };
 		960D46F527D6850D0056E393 /* BuildingSteps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildingSteps.swift; sourceTree = "<group>"; };
+		963074F929DF28AA00234B23 /* Shell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shell.swift; sourceTree = "<group>"; };
 		963F238227F8B211004E010E /* LauncherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LauncherView.swift; sourceTree = "<group>"; };
 		963F238527F8B942004E010E /* DataStore.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataStore.xcdatamodel; sourceTree = "<group>"; };
 		963F238727F8BA01004E010E /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		9669DC5827D5565000DE5FAB /* sm_osx.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = sm_osx.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9669DC5B27D5565000DE5FAB /* sm_osxApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sm_osxApp.swift; sourceTree = "<group>"; };
 		9669DC5F27D5565100DE5FAB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		9669DC6227D5565100DE5FAB /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		9669DC6427D5565100DE5FAB /* sm_osx.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = sm_osx.entitlements; sourceTree = "<group>"; };
 		9669DC6A27D5581F00DE5FAB /* Repos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Repos.swift; sourceTree = "<group>"; };
 		9669DC6C27D55CD200DE5FAB /* Patches.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Patches.swift; sourceTree = "<group>"; };
 		9669DC6E27D55D5300DE5FAB /* PatchesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatchesView.swift; sourceTree = "<group>"; };
 		9669DC7027D55F4700DE5FAB /* RomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RomView.swift; sourceTree = "<group>"; };
-		9697DF5A29C3883D008FD602 /* sm_osx_updater.app */ = {isa = PBXFileReference; lastKnownFileType = wrapper.application; path = sm_osx_updater.app; sourceTree = "<group>"; };
 		96A3D83929B52328007AF78A /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
-		96AC85B0286670B800CCFF58 /* MenuBarCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarCommands.swift; sourceTree = "<group>"; };
+		96AC85B0286670B800CCFF58 /* MenuCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuCommands.swift; sourceTree = "<group>"; };
 		96BB22E227E274F700057915 /* RepoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoView.swift; sourceTree = "<group>"; };
 		96BDA2F2283D216500A4DFF3 /* GeneralView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralView.swift; sourceTree = "<group>"; };
 		96BDA2F4283D221700A4DFF3 /* DeveloperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeveloperView.swift; sourceTree = "<group>"; };
@@ -89,7 +87,6 @@
 		9669DC4F27D5565000DE5FAB = {
 			isa = PBXGroup;
 			children = (
-				9697DF5A29C3883D008FD602 /* sm_osx_updater.app */,
 				9669DC5A27D5565000DE5FAB /* sm_osx */,
 				9669DC5927D5565000DE5FAB /* Products */,
 			);
@@ -107,11 +104,16 @@
 			isa = PBXGroup;
 			children = (
 				96E96D8429CE3E80009CAF74 /* Config */,
-				96DE71D427EB9C7D0090E7A0 /* sm-osx-Info.plist */,
-				9669DC5B27D5565000DE5FAB /* sm_osxApp.swift */,
 				9669DC5F27D5565100DE5FAB /* Assets.xcassets */,
+				963F238427F8B942004E010E /* DataStore.xcdatamodeld */,
+				96DE71D427EB9C7D0090E7A0 /* sm-osx-Info.plist */,
 				9669DC6427D5565100DE5FAB /* sm_osx.entitlements */,
-				9669DC6127D5565100DE5FAB /* Preview Content */,
+				9669DC5B27D5565000DE5FAB /* sm_osxApp.swift */,
+				96AC85B0286670B800CCFF58 /* MenuCommands.swift */,
+				96BDA2F2283D216500A4DFF3 /* GeneralView.swift */,
+				96EBED1229BA51970033771E /* UpdatesSettingsView.swift */,
+				96BDA2F4283D221700A4DFF3 /* DeveloperView.swift */,
+				963F238227F8B211004E010E /* LauncherView.swift */,
 				9669DC6A27D5581F00DE5FAB /* Repos.swift */,
 				9669DC6C27D55CD200DE5FAB /* Patches.swift */,
 				9669DC6E27D55D5300DE5FAB /* PatchesView.swift */,
@@ -120,32 +122,19 @@
 				96CF3D4127DBD8C7008A26F5 /* CompilationSpeed.swift */,
 				96BB22E227E274F700057915 /* RepoView.swift */,
 				96DE71D227EB9C170090E7A0 /* SettingsView.swift */,
-				963F238227F8B211004E010E /* LauncherView.swift */,
-				963F238427F8B942004E010E /* DataStore.xcdatamodeld */,
-				963F238727F8BA01004E010E /* DataController.swift */,
 				96BEADAD2839986200FF72E3 /* CompilationView.swift */,
-				96BDA2F2283D216500A4DFF3 /* GeneralView.swift */,
-				96BDA2F4283D221700A4DFF3 /* DeveloperView.swift */,
 				96BDA2F6283D283200A4DFF3 /* CrashView.swift */,
 				96BDA2F8283D29E300A4DFF3 /* LogView.swift */,
 				96C54E6C285930D7003B4A2D /* GlobalFunctions.swift */,
-				96AC85B0286670B800CCFF58 /* MenuBarCommands.swift */,
 				960A559629B29DC600F5CC37 /* PlayHover.swift */,
 				960A559829B2A50100F5CC37 /* LauncherEditView.swift */,
 				96A3D83929B52328007AF78A /* ImagePicker.swift */,
-				96EBED1229BA51970033771E /* UpdatesSettingsView.swift */,
 				96E529D629C511F000E8E14D /* InternetChecker.swift */,
+				963F238727F8BA01004E010E /* DataController.swift */,
 				9601BB1B29CB82240060BD24 /* UpdaterView.swift */,
+				963074F929DF28AA00234B23 /* Shell.swift */,
 			);
 			path = sm_osx;
-			sourceTree = "<group>";
-		};
-		9669DC6127D5565100DE5FAB /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				9669DC6227D5565100DE5FAB /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
 			sourceTree = "<group>";
 		};
 		96E96D8429CE3E80009CAF74 /* Config */ = {
@@ -186,7 +175,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1330;
+				LastSwiftUpdateCheck = 1420;
 				LastUpgradeCheck = 1420;
 				TargetAttributes = {
 					9669DC5727D5565000DE5FAB = {
@@ -221,8 +210,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				96E96D8629CE3E96009CAF74 /* export.plist in Resources */,
-				9669DC6327D5565100DE5FAB /* Preview Assets.xcassets in Resources */,
-				9697DF5B29C3883D008FD602 /* sm_osx_updater.app in Resources */,
 				9669DC6027D5565100DE5FAB /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -234,7 +221,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				96AC85B1286670B800CCFF58 /* MenuBarCommands.swift in Sources */,
+				96AC85B1286670B800CCFF58 /* MenuCommands.swift in Sources */,
 				9669DC6D27D55CD200DE5FAB /* Patches.swift in Sources */,
 				963F238827F8BA01004E010E /* DataController.swift in Sources */,
 				963F238627F8B942004E010E /* DataStore.xcdatamodeld in Sources */,
@@ -256,6 +243,7 @@
 				9601BB1C29CB82240060BD24 /* UpdaterView.swift in Sources */,
 				9669DC6F27D55D5300DE5FAB /* PatchesView.swift in Sources */,
 				9669DC6B27D5581F00DE5FAB /* Repos.swift in Sources */,
+				963074FA29DF28AA00234B23 /* Shell.swift in Sources */,
 				96BB22E327E274F700057915 /* RepoView.swift in Sources */,
 				9669DC5C27D5565000DE5FAB /* sm_osxApp.swift in Sources */,
 				96BDA2F5283D221700A4DFF3 /* DeveloperView.swift in Sources */,
@@ -410,6 +398,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 1.2.9;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.CubingStudios.sm-osx";
@@ -443,6 +432,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 1.2.9;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.CubingStudios.sm-osx";

@@ -8,6 +8,7 @@ struct UpdatesSettingsView: View {
     
     @State private var automaticallyChecksForUpdates: Bool
     @State private var automaticallyDownloadsUpdates: Bool
+    @EnvironmentObject var networkMonitor: NetworkMonitor
     
     init(updater: SPUUpdater) {
         self.updater = updater
@@ -29,6 +30,13 @@ struct UpdatesSettingsView: View {
                 }
             
             CheckForUpdatesView(updater: updater)
+                
+            Button(action: {
+                //Use Old NSWorkspace to open url because for some reason the Environment object for openURL decides to break the initializer, and you cant make a Link look like a button :(
+                NSWorkspace.shared.open(URL(string:"https://github.com/EmeraldLoc/sm_osx/releases/latest")!)
+            }) {
+                Text("Check Latest Changelog")
+            }
         }
     }
 }

@@ -1,4 +1,3 @@
-//
 
 import SwiftUI
 import PhotosUI
@@ -27,8 +26,28 @@ struct LauncherEditView: View {
                 existingRepo = showExecFilePanel()
             }
             
+            Button("Create App Shortcut") {
+                let name = launcherRepos[i].title ?? "no name"
+                let id = launcherRepos[i].id?.uuidString ?? ""                
+                let script = """
+                
+                #!/bin/sh
+                
+                cd \(Bundle.main.bundlePath)/../
+                
+                open sm_osx.app
+                
+                openwin() { osascript -e "tell application \"$1\" to activate" -e 'tell application "System Events" to keystroke "\(i)" using command down and shift down'; }
+                
+                openwin sm_osx.app
+
+                """
+                
+                try? Shell().shell("cd /Applications && rm -rf \(name).app && echo '\(script)' > \(name).app && chmod +x \(name).app", false)
+            }
+            
             ImagePicker(text: "Change Image", image: $image)
-                .padding(.bottom).padding(.horizontal)
+                .padding([.horizontal, .bottom])
             
             Button("Save") {
                 
@@ -52,7 +71,7 @@ struct LauncherEditView: View {
                 Text("Cancel")
                     .foregroundColor(.red)
             }.padding(.bottom).padding(.horizontal)
-        }.frame(width: 250, height: 200)
+        }.frame(width: 250, height: 250)
             .onAppear {
                 repoTitle = launcherRepos[i].title ?? ""
                 repoArgs = launcherRepos[i].args ?? ""

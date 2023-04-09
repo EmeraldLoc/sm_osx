@@ -33,22 +33,22 @@ public func showExecFilePanel() -> URL? {
     return response == .OK ? openPanel.url : nil
 }
 
-public func checkForUpdates() async -> Int {
+public func showApp() {
+    NSApp.setActivationPolicy(.regular)
     
-    print(currentVersion)
-    
-    var latestVersion = ""
-    
-    do {
-        latestVersion = try Shell().shell("curl -s https://raw.githubusercontent.com/EmeraldLoc/sm_osx/main/CurVer")
-    }
-    catch {
-        print("Failed: \(error)")
+    for window in NSApplication.shared.windows {
+        if window.title == "sm_osx" {
+            window.orderFront(nil)
+        }
     }
     
-    if latestVersion != "\(currentVersion)\n" && !latestVersion.isEmpty {
-        return 1
-    } else {
-        return 0
+    let deadline = DispatchTime.now() + .microseconds(1)
+    
+    DispatchQueue.main.asyncAfter(deadline: deadline) {
+        for window in NSApplication.shared.windows {
+            if window.title == "sm_osx" {
+                window.orderFrontRegardless()
+            }
+        }
     }
 }
