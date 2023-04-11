@@ -52,3 +52,12 @@ public func showApp() {
         }
     }
 }
+
+func restart() {
+    let path = Bundle.main.bundlePath
+    let process = Process()
+    process.launchPath = "/usr/bin/open"
+    process.arguments = [path]
+    process.launch()
+    exit(0)
+}

@@ -2,7 +2,6 @@
 import SwiftUI
 
 class Shell {
-    
     private func fetchLaunchers(using dataController: DataController) -> [LauncherRepos] {
         let fetchRequest: NSFetchRequest<LauncherRepos>
         fetchRequest = LauncherRepos.fetchRequest()
@@ -43,12 +42,12 @@ class Shell {
         return output
     }
     
-    func scriptShell(_ command: String) throws -> String {
+    func appleScript(_ command: String) async -> String {
         
         var error: NSDictionary?
         var returnOutput = ""
         
-        if let scriptObject = NSAppleScript(source: "do shell script \"arch -arm64 /bin/zsh -cl '\(command)' 2>&1\" ") {
+        if let scriptObject = NSAppleScript(source: command) {
             let output = scriptObject.executeAndReturnError(&error)
             returnOutput.append(output.stringValue ?? "")
             print(output.stringValue ?? "")
@@ -74,8 +73,6 @@ class Shell {
         
         outHandle.readabilityHandler = { pipe in
             if let line = String(data: pipe.availableData, encoding: String.Encoding.utf8) {
-                // Update your view with the new text here
-                
                 output.append(line)
             } else {
                 print("Error decoding data. why do I program...: \(pipe.availableData)")
@@ -83,6 +80,7 @@ class Shell {
         }
         
         try process.run()
+        
         if waitTillExit {
             process.waitUntilExit()
         }

@@ -131,6 +131,7 @@ struct menuExtras: Scene {
     @Binding var showAddRepos: Bool
     @Binding var reloadMenuBarLauncher: Bool
     @AppStorage("showMenuExtra") var showMenuExtra = true
+    @AppStorage("firstLaunch") var firstLaunch = true
     @StateObject var networkMonitor = NetworkMonitor()
     @Environment(\.openWindow) var openWindow
     
@@ -223,7 +224,7 @@ struct menuExtras: Scene {
                 }
             }
         } label: {
-            if showMenuExtra {
+            if showMenuExtra && !firstLaunch {
                 let image: NSImage = {
                     let ratio = $0.size.height / $0.size.width
                     $0.size.height = 16
