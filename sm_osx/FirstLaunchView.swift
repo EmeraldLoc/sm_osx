@@ -18,7 +18,6 @@ struct FirstLaunchView: View {
                     .frame(minWidth: 150, maxWidth: 150, minHeight: 150, maxHeight: 150)
                     .transition(.scale)
             }
-                
             
             if status == .starting {
                 Text("Starting...")
@@ -46,16 +45,17 @@ struct FirstLaunchView: View {
                     }.onReceive(timer, perform: { _ in
                         //some people hate this timer, but if you make a pr, im not accepting it, because I like it :)
                         
-                        startingTimer += 1
-                        
-                        if startingTimer >= 2 {
-                            withAnimation {
-                                startingTimer = 0
-                                
-                                status = .launcherView
+                        if !showAppNotInApplicationsFolderAlert {
+                            startingTimer += 1
+                            
+                            if startingTimer >= 2 {
+                                withAnimation {
+                                    startingTimer = 0
+                                    
+                                    status = .launcherView
+                                }
                             }
                         }
-                        
                     })
             } else if status == .launcherView {
                 VStack {
