@@ -1,9 +1,3 @@
-//
-//  General View.swift
-//  sm_osx
-//
-//  Created by Caleb Elmasri on 5/24/22.
-//
 
 import SwiftUI
 import UserNotifications
@@ -60,12 +54,20 @@ struct GeneralView: View {
     @AppStorage("compilationSpeed") var compilationSpeed: Speed = .normal
     @AppStorage("keepRepo") var keepRepo = false
     @AppStorage("showMenuExtra") var showMenuExtra = true
+    @AppStorage("isGrid") var isGrid = false
     @State var isInstallingDeps = false
     
     var body: some View {
         ZStack {
             VStack {
                 List {
+                    Picker("Launcher View", selection: $isGrid.animation()) {
+                        Text("Grid")
+                            .tag(true)
+                        
+                        Text("List")
+                            .tag(false)
+                    }.frame(idealWidth: 200, maxWidth: 200)
                     Toggle(isOn: $launchEntry) {
                         Text("Create Launcher Entry By Default")
                     }
@@ -112,10 +114,12 @@ struct GeneralView: View {
                             Text("Install Package Dependencies")
                         }.buttonStyle(.bordered).padding(.bottom).disabled(!network.isConnected)
                         
-                        ProgressView()
-                            .progressViewStyle(.linear)
-                            .padding(.bottom)
-                            .opacity(isInstallingDeps ? 1 : 0)
+                        if isInstallingDeps {
+                            ProgressView()
+                                .progressViewStyle(.linear)
+                                .padding(.bottom)
+                                .transition(.scale)
+                        }
                     }
                 }
             }

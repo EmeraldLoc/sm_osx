@@ -1,9 +1,3 @@
-//
-//  DeveloperView.swift
-//  sm_osx
-//
-//  Created by Caleb Elmasri on 5/24/22.
-//
 
 import SwiftUI
 
@@ -13,7 +7,7 @@ struct DeveloperView: View {
     
     var body: some View {
         List {
-            Toggle(isOn: $devMode) {
+            Toggle(isOn: $devMode.animation()) {
                 Text("Enable development repos (Not recommended)")
             }
         }

@@ -1,9 +1,4 @@
-//
-//  CompilationSpeed.swift
-//  sm_osx
-//
-//  Created by Caleb Elmasri on 3/11/22.
-//
+
 
 import Foundation
 

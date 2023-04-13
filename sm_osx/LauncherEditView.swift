@@ -9,9 +9,11 @@ struct LauncherEditView: View {
     @State var i: Int
     @State var image: String? = nil
     @Environment(\.dismiss) var dismiss
+    @Environment(\.openWindow) var openWindow
     @Environment(\.managedObjectContext) var moc
     @FetchRequest(sortDescriptors:[SortDescriptor(\.title)]) var launcherRepos: FetchedResults<LauncherRepos>
     @Binding var existingRepo: URL?
+    @Binding var reloadMenuBarLauncher: Bool
     
     var body: some View {
         VStack {
@@ -26,42 +28,28 @@ struct LauncherEditView: View {
                 existingRepo = showExecFilePanel()
             }
             
-            Button("Create App Shortcut") {
-                let name = launcherRepos[i].title ?? "no name"
-                let id = launcherRepos[i].id?.uuidString ?? ""                
-                let script = """
-                
-                #!/bin/sh
-                
-                cd \(Bundle.main.bundlePath)/../
-                
-                open sm_osx.app
-                
-                openwin() { osascript -e "tell application \"$1\" to activate" -e 'tell application "System Events" to keystroke "\(i)" using command down and shift down'; }
-                
-                openwin sm_osx.app
-
-                """
-                
-                try? Shell().shell("cd /Applications && rm -rf \(name).app && echo '\(script)' > \(name).app && chmod +x \(name).app", false)
+            Button("Create Repo Shortcut") {
+                openWindow(id: "shortcut", value: i)
             }
             
             ImagePicker(text: "Change Image", image: $image)
                 .padding([.horizontal, .bottom])
             
             Button("Save") {
-                
-                launcherRepos[i].isEditing = false
-                launcherRepos[i].title = repoTitle
-                launcherRepos[i].args = repoArgs
-                launcherRepos[i].path = existingRepo?.path
-                launcherRepos[i].imagePath = image
-                
-                do {
-                    try moc.save()
-                }
-                catch {
-                    print("Its broken \(error)")
+                withAnimation {
+                    launcherRepos[i].isEditing = false
+                    launcherRepos[i].title = repoTitle
+                    launcherRepos[i].args = repoArgs
+                    launcherRepos[i].path = existingRepo?.path
+                    launcherRepos[i].imagePath = image
+                    reloadMenuBarLauncher = true
+                    
+                    do {
+                        try moc.save()
+                    }
+                    catch {
+                        print("Its broken \(error)")
+                    }
                 }
             }.buttonStyle(.borderedProminent)
             

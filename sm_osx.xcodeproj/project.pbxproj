@@ -19,12 +19,16 @@
 		963F238327F8B211004E010E /* LauncherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963F238227F8B211004E010E /* LauncherView.swift */; };
 		963F238627F8B942004E010E /* DataStore.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 963F238427F8B942004E010E /* DataStore.xcdatamodeld */; };
 		963F238827F8BA01004E010E /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963F238727F8BA01004E010E /* DataController.swift */; };
+		964C6F7729E889C100506DBD /* CreateAppShortcutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964C6F7629E889C100506DBD /* CreateAppShortcutView.swift */; };
 		9669DC5C27D5565000DE5FAB /* sm_osxApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9669DC5B27D5565000DE5FAB /* sm_osxApp.swift */; };
 		9669DC6027D5565100DE5FAB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9669DC5F27D5565100DE5FAB /* Assets.xcassets */; };
 		9669DC6B27D5581F00DE5FAB /* Repos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9669DC6A27D5581F00DE5FAB /* Repos.swift */; };
 		9669DC6D27D55CD200DE5FAB /* Patches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9669DC6C27D55CD200DE5FAB /* Patches.swift */; };
 		9669DC6F27D55D5300DE5FAB /* PatchesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9669DC6E27D55D5300DE5FAB /* PatchesView.swift */; };
 		9669DC7127D55F4700DE5FAB /* RomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9669DC7027D55F4700DE5FAB /* RomView.swift */; };
+		96892C8129E5CDF00083526B /* LauncherListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96892C8029E5CDF00083526B /* LauncherListView.swift */; };
+		96892C8329E5D5E90083526B /* LauncherGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96892C8229E5D5E90083526B /* LauncherGridView.swift */; };
+		96892C8529E5E4280083526B /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96892C8429E5E4280083526B /* AboutView.swift */; };
 		96A3D83A29B52328007AF78A /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96A3D83929B52328007AF78A /* ImagePicker.swift */; };
 		96AC85B1286670B800CCFF58 /* MenuCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AC85B0286670B800CCFF58 /* MenuCommands.swift */; };
 		96BB22E327E274F700057915 /* RepoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96BB22E227E274F700057915 /* RepoView.swift */; };
@@ -34,6 +38,8 @@
 		96BDA2F9283D29E300A4DFF3 /* LogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96BDA2F8283D29E300A4DFF3 /* LogView.swift */; };
 		96BEADAE2839986200FF72E3 /* CompilationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96BEADAD2839986200FF72E3 /* CompilationView.swift */; };
 		96C54E6D285930D7003B4A2D /* GlobalFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C54E6C285930D7003B4A2D /* GlobalFunctions.swift */; };
+		96CCFB7529E7152100BE8CC7 /* LauncherScript.sdef in Resources */ = {isa = PBXBuildFile; fileRef = 96CCFB7429E7152100BE8CC7 /* LauncherScript.sdef */; };
+		96CCFB7729E7158B00BE8CC7 /* LaunchScriptCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96CCFB7629E7158B00BE8CC7 /* LaunchScriptCommand.swift */; };
 		96CF3D4227DBD8C7008A26F5 /* CompilationSpeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96CF3D4127DBD8C7008A26F5 /* CompilationSpeed.swift */; };
 		96DE71D327EB9C170090E7A0 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96DE71D227EB9C170090E7A0 /* SettingsView.swift */; };
 		96E529D729C511F000E8E14D /* InternetChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96E529D629C511F000E8E14D /* InternetChecker.swift */; };
@@ -53,6 +59,7 @@
 		963F238227F8B211004E010E /* LauncherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LauncherView.swift; sourceTree = "<group>"; };
 		963F238527F8B942004E010E /* DataStore.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataStore.xcdatamodel; sourceTree = "<group>"; };
 		963F238727F8BA01004E010E /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
+		964C6F7629E889C100506DBD /* CreateAppShortcutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAppShortcutView.swift; sourceTree = "<group>"; };
 		9669DC5827D5565000DE5FAB /* sm_osx.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = sm_osx.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9669DC5B27D5565000DE5FAB /* sm_osxApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sm_osxApp.swift; sourceTree = "<group>"; };
 		9669DC5F27D5565100DE5FAB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -61,6 +68,9 @@
 		9669DC6C27D55CD200DE5FAB /* Patches.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Patches.swift; sourceTree = "<group>"; };
 		9669DC6E27D55D5300DE5FAB /* PatchesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatchesView.swift; sourceTree = "<group>"; };
 		9669DC7027D55F4700DE5FAB /* RomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RomView.swift; sourceTree = "<group>"; };
+		96892C8029E5CDF00083526B /* LauncherListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LauncherListView.swift; sourceTree = "<group>"; };
+		96892C8229E5D5E90083526B /* LauncherGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LauncherGridView.swift; sourceTree = "<group>"; };
+		96892C8429E5E4280083526B /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		96A3D83929B52328007AF78A /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		96AC85B0286670B800CCFF58 /* MenuCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuCommands.swift; sourceTree = "<group>"; };
 		96BB22E227E274F700057915 /* RepoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoView.swift; sourceTree = "<group>"; };
@@ -70,6 +80,8 @@
 		96BDA2F8283D29E300A4DFF3 /* LogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogView.swift; sourceTree = "<group>"; };
 		96BEADAD2839986200FF72E3 /* CompilationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompilationView.swift; sourceTree = "<group>"; };
 		96C54E6C285930D7003B4A2D /* GlobalFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalFunctions.swift; sourceTree = "<group>"; };
+		96CCFB7429E7152100BE8CC7 /* LauncherScript.sdef */ = {isa = PBXFileReference; lastKnownFileType = text; path = LauncherScript.sdef; sourceTree = "<group>"; };
+		96CCFB7629E7158B00BE8CC7 /* LaunchScriptCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScriptCommand.swift; sourceTree = "<group>"; };
 		96CF3D4127DBD8C7008A26F5 /* CompilationSpeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompilationSpeed.swift; sourceTree = "<group>"; };
 		96DE71D227EB9C170090E7A0 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		96DE71D427EB9C7D0090E7A0 /* sm-osx-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "sm-osx-Info.plist"; sourceTree = SOURCE_ROOT; };
@@ -142,6 +154,12 @@
 				9601BB1B29CB82240060BD24 /* UpdaterView.swift */,
 				963074F929DF28AA00234B23 /* Shell.swift */,
 				9621F4DA29E4A441007BE51D /* FirstLaunchView.swift */,
+				96892C8029E5CDF00083526B /* LauncherListView.swift */,
+				96892C8229E5D5E90083526B /* LauncherGridView.swift */,
+				96892C8429E5E4280083526B /* AboutView.swift */,
+				96CCFB7429E7152100BE8CC7 /* LauncherScript.sdef */,
+				96CCFB7629E7158B00BE8CC7 /* LaunchScriptCommand.swift */,
+				964C6F7629E889C100506DBD /* CreateAppShortcutView.swift */,
 			);
 			path = sm_osx;
 			sourceTree = "<group>";
@@ -218,6 +236,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				96CCFB7529E7152100BE8CC7 /* LauncherScript.sdef in Resources */,
 				96E96D8629CE3E96009CAF74 /* export.plist in Resources */,
 				9621F4ED29E4C33F007BE51D /* HomebrewInstaller.scpt in Resources */,
 				9621F4EF29E4CCBC007BE51D /* IntelHomebrewInstaller.scpt in Resources */,
@@ -234,7 +253,10 @@
 			files = (
 				96AC85B1286670B800CCFF58 /* MenuCommands.swift in Sources */,
 				9669DC6D27D55CD200DE5FAB /* Patches.swift in Sources */,
+				964C6F7729E889C100506DBD /* CreateAppShortcutView.swift in Sources */,
+				96892C8129E5CDF00083526B /* LauncherListView.swift in Sources */,
 				963F238827F8BA01004E010E /* DataController.swift in Sources */,
+				96892C8529E5E4280083526B /* AboutView.swift in Sources */,
 				963F238627F8B942004E010E /* DataStore.xcdatamodeld in Sources */,
 				96BEADAE2839986200FF72E3 /* CompilationView.swift in Sources */,
 				96CF3D4227DBD8C7008A26F5 /* CompilationSpeed.swift in Sources */,
@@ -242,6 +264,7 @@
 				96A3D83A29B52328007AF78A /* ImagePicker.swift in Sources */,
 				96BDA2F9283D29E300A4DFF3 /* LogView.swift in Sources */,
 				9621F4DB29E4A441007BE51D /* FirstLaunchView.swift in Sources */,
+				96892C8329E5D5E90083526B /* LauncherGridView.swift in Sources */,
 				9669DC7127D55F4700DE5FAB /* RomView.swift in Sources */,
 				96BDA2F3283D216500A4DFF3 /* GeneralView.swift in Sources */,
 				96DE71D327EB9C170090E7A0 /* SettingsView.swift in Sources */,
@@ -258,6 +281,7 @@
 				963074FA29DF28AA00234B23 /* Shell.swift in Sources */,
 				96BB22E327E274F700057915 /* RepoView.swift in Sources */,
 				9669DC5C27D5565000DE5FAB /* sm_osxApp.swift in Sources */,
+				96CCFB7729E7158B00BE8CC7 /* LaunchScriptCommand.swift in Sources */,
 				96BDA2F5283D221700A4DFF3 /* DeveloperView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

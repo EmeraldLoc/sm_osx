@@ -1,9 +1,3 @@
-//
-//  Patches.swift
-//  sm_osx
-//
-//  Created by Caleb Elmasri on 3/6/22.
-//
 
 import Foundation
 

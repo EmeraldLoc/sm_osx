@@ -13,6 +13,7 @@ struct MenuCommands: Commands {
     @Environment(\.openWindow) var openWindow
     var updaterController: SPUStandardUpdaterController
     let moc = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     private func launcherShell(_ command: String) {
         
@@ -94,20 +95,6 @@ struct MenuCommands: Commands {
             }
         }
         
-        CommandMenu("Repos") {
-            Button("Add New Repo") {
-                showAddRepos = true
-            }
-        }
-        
-        CommandMenu("Updater") {
-            CheckForUpdatesView(updater: updaterController.updater)
-                .environmentObject(networkMonitor)
-            
-            Link("Check Latest Changelog", destination: URL(string: "https://github.com/EmeraldLoc/sm_osx/releases/latest")!)
-                .disabled(!networkMonitor.isConnected)
-        }
-        
         CommandGroup(replacing: .appTermination) {
             Button("Quit sm_osx") {
                 if showMenuExtra {
@@ -119,6 +106,30 @@ struct MenuCommands: Commands {
         }
         
         CommandGroup(replacing: .toolbar) { }
+        
+        CommandGroup(replacing: .appInfo) {
+            Button("About sm_osx") {
+                openWindow(id: "about")
+            }
+        }
+        
+        CommandGroup(replacing: .newItem) { }
+        
+        CommandGroup(after: .appSettings) {
+            Section {
+                CheckForUpdatesView(updater: updaterController.updater)
+                    .environmentObject(networkMonitor)
+                
+                Link("Check Latest Changelog", destination: URL(string: "https://github.com/EmeraldLoc/sm_osx/releases/latest")!)
+                    .disabled(!networkMonitor.isConnected)
+            }
+        }
+        
+        CommandGroup(after: .newItem) {
+            Button("Add New Repo") {
+                showAddRepos = true
+            }
+        }
     }
 }
 
@@ -133,6 +144,7 @@ struct menuExtras: Scene {
     @AppStorage("showMenuExtra") var showMenuExtra = true
     @AppStorage("firstLaunch") var firstLaunch = true
     @StateObject var networkMonitor = NetworkMonitor()
+    @ObservedObject var launchRepoAppleScript = LaunchRepoAppleScript.shared
     @Environment(\.openWindow) var openWindow
     
     private func launcherShell(_ command: String) {
@@ -226,7 +238,6 @@ struct menuExtras: Scene {
         } label: {
             if showMenuExtra && !firstLaunch {
                 let image: NSImage = {
-                    let ratio = $0.size.height / $0.size.width
                     $0.size.height = 16
                     $0.size.width = 16
                     return $0
@@ -243,9 +254,16 @@ struct menuExtras: Scene {
                         launcherRepos = fetchLaunchers()
                         
                         reloadMenuBarLauncher = false
+                    }.onChange(of: launchRepoAppleScript.repoID) { repoID in
+                        for i in 0...launcherRepos.count - 1 {
+                            if launcherRepos[i].id?.uuidString == repoID {
+                                launcherShell("\(launcherRepos[i].path ?? "its broken") \(launcherRepos[i].args ?? "")")
+                                
+                                launchRepoAppleScript.repoID = ""
+                            }
+                        }
                     }
             } else {
-                //if this stops working in later versions it was probably a bug :/
                 Image("menu_bar_icon")
             }
         }

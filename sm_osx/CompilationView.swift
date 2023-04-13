@@ -1,9 +1,3 @@
-//
-//  CompilationView.swift
-//  sm_osx
-//
-//  Created by Caleb Elmasri on 5/21/22.
-//
 
 import SwiftUI
 import UserNotifications

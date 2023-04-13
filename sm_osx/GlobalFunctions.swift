@@ -1,9 +1,3 @@
-//
-//  GlobalFunctions.swift
-//  sm_osx
-//
-//  Created by Caleb Elmasri on 6/14/22.
-//
 
 import Foundation
 import UniformTypeIdentifiers
@@ -38,19 +32,10 @@ public func showApp() {
     
     for window in NSApplication.shared.windows {
         if window.title == "sm_osx" {
-            window.orderFront(nil)
+            window.orderFrontRegardless()
         }
     }
-    
-    let deadline = DispatchTime.now() + .microseconds(1)
-    
-    DispatchQueue.main.asyncAfter(deadline: deadline) {
-        for window in NSApplication.shared.windows {
-            if window.title == "sm_osx" {
-                window.orderFrontRegardless()
-            }
-        }
-    }
+
 }
 
 func restart() {

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dictionary SYSTEM "file://localhost/System/Library/DTDs/sdef.dtd">
+<dictionary title="sm_osx Terminology">
+    <suite name="sm_osx Scripting Suite" code="SMox" description="Standard suite for application communication.">
+        <command name="launch" code="LaunchRp" description="Save something.">
+            <cocoa class="sm_osx.LaunchScriptCommand"/>
+            <parameter name="repo" code="RePo" type="text" description="The file path in which to save the document.">
+                <cocoa key="Repo"/>
+            </parameter>
+            <result type="text" description="Echoes back the filepath supplied."/>
+        </command>
+    </suite>
+</dictionary>

@@ -4,16 +4,21 @@ import SwiftUI
 struct FirstLaunchView: View {
     
     @State var status = FirstLaunchStatus.none
+    @State var startingTimer = 0
     @State var showAppNotInApplicationsFolderAlert = false
     @AppStorage("firstLaunch") var firstLaunch = true
+    @AppStorage("isGrid") var isGrid = false
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     var body: some View {
         VStack {
-            Image("logo")
-                .resizable()
-                .frame(minWidth: 150, maxWidth: 150, minHeight: 150, maxHeight: 150)
-                .opacity(status == .none ? 0 : 1)
+            if status != .none {
+                Image("logo")
+                    .resizable()
+                    .frame(minWidth: 150, maxWidth: 150, minHeight: 150, maxHeight: 150)
+                    .transition(.scale)
+            }
+                
             
             if status == .starting {
                 Text("Starting...")
@@ -21,11 +26,11 @@ struct FirstLaunchView: View {
                         let path = "/Applications/sm_osx.app"
                         if !FileManager.default.fileExists(atPath: path) {
                             showAppNotInApplicationsFolderAlert = true
-                        } else { status = .checkingHomebrewInstallation }
+                        }
                     }.alert("sm_osx is not in the Applications Folder, would you like to quit the app to move it?", isPresented: $showAppNotInApplicationsFolderAlert) {
                         Button(role: .cancel) {
                             withAnimation {
-                                status = .checkingHomebrewInstallation
+                                status = .launcherView
                             }
                         } label: {
                             Text("No")
@@ -38,7 +43,45 @@ struct FirstLaunchView: View {
                         }.keyboardShortcut(.defaultAction)
                     } message: {
                         Text("It's recommended that you move the app to the Applications Folder.")
+                    }.onReceive(timer, perform: { _ in
+                        //some people hate this timer, but if you make a pr, im not accepting it, because I like it :)
+                        
+                        startingTimer += 1
+                        
+                        if startingTimer >= 2 {
+                            withAnimation {
+                                startingTimer = 0
+                                
+                                status = .launcherView
+                            }
+                        }
+                        
+                    })
+            } else if status == .launcherView {
+                VStack {
+                    Text("Select Launcher View")
+                    
+                    Text("This can be changed at anytime in Settings")
+                        .font(.caption)
+                    
+                    HStack {
+                        Button("Grid") {
+                            withAnimation {
+                                isGrid = true
+                                
+                                status = .checkingHomebrewInstallation
+                            }
+                        }
+                        
+                        Button("List") {
+                            withAnimation {
+                                isGrid = false
+                                
+                                status = .checkingHomebrewInstallation
+                            }
+                        }
                     }
+                }
             } else if status == .checkingHomebrewInstallation {
                 Text("Checking Homebrew Installation...")
                     .onAppear {
@@ -101,7 +144,7 @@ struct FirstLaunchView: View {
                         }
                     }.onReceive(timer) { _ in
                         if ((try? Shell().shell("which /usr/local/bin/brew")) ?? "").contains("/usr/local/bin/brew\n") {
-                            withAnimation {
+                            withAnimation(.linear(duration: 0.4)) {
                                 status = .installingDeps
                             }
                         }
@@ -113,9 +156,9 @@ struct FirstLaunchView: View {
                         var dependenciesCommand = ""
                         
                         if isArm() {
-                            dependenciesCommand = "brew install make mingw-w64 gcc sdl2 pkg-config glew glfw libusb audiofile coreutils wget; /usr/local/bin/brew install make mingw-w64 gcc sdl2 pkg-config glew glfw libusb audiofile coreutils wget; echo 'sm_osx: Finished Installing Deps'"
+                            dependenciesCommand = "brew install fileicon make mingw-w64 gcc sdl2 pkg-config glew glfw libusb audiofile coreutils wget; /usr/local/bin/brew install make mingw-w64 gcc sdl2 pkg-config glew glfw libusb audiofile coreutils wget; echo 'sm_osx: Finished Installing Deps'"
                         } else {
-                            dependenciesCommand = "brew install make mingw-w64 gcc sdl2 pkg-config glew glfw libusb audiofile coreutils wget; echo 'sm_osx: Finished Installing Deps'"
+                            dependenciesCommand = "brew install fileicon make mingw-w64 gcc sdl2 pkg-config glew glfw libusb audiofile coreutils wget; echo 'sm_osx: Finished Installing Deps'"
                         }
                         
                         let process = Process()
@@ -151,15 +194,22 @@ struct FirstLaunchView: View {
             } else if status == .finishingUp {
                 Text("Finishing Up...").onAppear {
                     try? Shell().shell("cd ~/ && mkdir SM64Repos")
+                }.onReceive(timer, perform: { _ in
+                    startingTimer += 1
                     
-                    firstLaunch = false
+                    if startingTimer >= 2 {
+                        withAnimation {
+                            firstLaunch = false
+                            
+                            restart()
+                        }
+                    }
                     
-                    restart()
-                }
+                })
             }
             
         }.onAppear {
-            withAnimation(.easeOut(duration: 0.75)) {
+            withAnimation(.easeOut(duration: 0.4)) {
                 status = .starting
             }
         }
@@ -169,6 +219,7 @@ struct FirstLaunchView: View {
 enum FirstLaunchStatus {
     case none
     case starting
+    case launcherView
     case checkingHomebrewInstallation
     case checkingIntelHomebrewInstallation
     case installingDeps

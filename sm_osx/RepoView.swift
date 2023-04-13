@@ -1,9 +1,4 @@
-//
-//  RepoView.swift
-//  sm_osx
-//
-//  Created by Caleb Elmasri on 3/16/22.
-//
+
 
 import SwiftUI
 

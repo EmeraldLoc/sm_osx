@@ -2,11 +2,17 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>OSAScriptingDefinition</key>
+	<string>LauncherScript</string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
 	<key>SUFeedURL</key>
 	<string>https://raw.githubusercontent.com/EmeraldLoc/sm_osx/main/appcast.xml</string>
 	<key>SUPublicEDKey</key>
 	<string>bspgzeN2KrtpfKZbGP2bweZgCIis9bQAA1lSEk0bwgU=</string>
 	<key>UILaunchScreen</key>
 	<false/>
+	<key>NSAppleScriptEnabled</key>
+	<true/>
 </dict>
 </plist>

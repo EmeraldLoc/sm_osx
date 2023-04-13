@@ -1,9 +1,3 @@
-//
-//  DataController.swift
-//  sm_osx
-//
-//  Created by Caleb Elmasri on 4/2/22.
-//
 
 import Foundation
 import CoreData

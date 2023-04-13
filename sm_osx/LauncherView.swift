@@ -1,9 +1,3 @@
-//
-//  LauncherView.swift
-//  sm_osx
-//
-//  Created by Caleb Elmasri on 4/2/22.
-//
 
 import SwiftUI
 import AppKit
@@ -21,13 +15,15 @@ struct LauncherView: View {
     @State var allowAddingRepos = true
     @AppStorage("firstLaunch") var firstLaunch = true
     @AppStorage("checkUpdateAuto") var checkUpdateAuto = true
+    @AppStorage("isGrid") var isGrid = false
+    @AppStorage("showMenuExtra") var showMenuExtra = true
     @State var romURL = URL(string: "")
     @State var homebrewText = ""
     @State var isLogging = false
     @State var showPackageInstall = false
     @Binding var reloadMenuBarLauncher: Bool
+    @ObservedObject var launchRepoAppleScript = LaunchRepoAppleScript.shared
     let rom: UTType = .init(filenameExtension: "z64") ?? UTType.unixExecutable
-    let layout = [GridItem(.adaptive(minimum: 260))]
     
     private func launcherShell(_ command: String) {
         
@@ -102,110 +98,22 @@ struct LauncherView: View {
             VStack {
                 if !launcherRepos.isEmpty {
                     ScrollView {
-                        LazyVGrid(columns: layout) {
-                            ForEach(launcherRepos) { LauncherRepo in
-                                VStack {
+                        if isGrid {
+                            LauncherGridView(reloadMenuBarLauncher: $reloadMenuBarLauncher, existingRepo: $existingRepo)
+                        } else {
+                            LauncherListView(reloadMenuBarLauncher: $reloadMenuBarLauncher, existingRepo: $existingRepo)
+                        }
+                    }.padding().onChange(of: launchRepoAppleScript.repoID) { repoID in
+                        if !showMenuExtra {
+                            for i in 0...launcherRepos.count - 1 {
+                                if launcherRepos[i].id?.uuidString == repoID {
+                                    launcherShell("\(launcherRepos[i].path ?? "its broken") \(launcherRepos[i].args ?? "")")
                                     
-                                    let i = launcherRepos.firstIndex(of: LauncherRepo) ?? 0
-                                    
-                                    Button {
-                                        
-                                        if launcherRepos.isEmpty { return }
-                                        
-                                        for i in 0...launcherRepos.count - 1 {
-                                            launcherRepos[i].isEditing = false
-                                        }
-
-                                        try? launcherShell("\(LauncherRepo.path ?? "its broken") \(LauncherRepo.args ?? "")")
-                                                                                
-                                        print(LauncherRepo.path ?? "")
-                                    } label: {
-                                        if !launcherRepos.isEmpty {
-                                            if NSImage(contentsOf: URL(fileURLWithPath: LauncherRepo.imagePath ?? "")) == nil {
-                                                GroupBox {
-                                                    Text(LauncherRepo.title ?? "")
-                                                        .frame(width: 250, height: 140)
-                                                }
-                                            } else {
-                                                VStack {
-                                                    Image(nsImage: NSImage(contentsOf: URL(fileURLWithPath: LauncherRepo.imagePath ?? "")) ?? NSImage())
-                                                        .resizable()
-                                                }
-                                            }
-                                        }
-                                    }.buttonStyle(PlayHover(image: LauncherRepo.imagePath ?? ""))
-                                    
-                                    if launcherRepos[i].imagePath != nil || NSImage(contentsOf: URL(fileURLWithPath: LauncherRepo.imagePath ?? "")) != nil {
-                                        
-                                        Text(LauncherRepo.title ?? "Unknown Title")
-                                    }
-                                    
-                                    Spacer()
-                                    
-                                    Menu {
-                                        Button(action: {
-                                            
-                                            if launcherRepos.isEmpty { return }
-                                            
-                                            for i in 0...launcherRepos.count - 1 {
-                                                launcherRepos[i].isEditing = false
-                                            }
-                                            
-                                            
-                                            openWindow(id: "regular-log", value: i)
-                                            
-                                            print(LauncherRepo.path ?? "")
-                                        }) {
-                                            Text("Log")
-                                            
-                                            Image(systemName: "play.fill")
-                                        }
-                                        
-                                        Button(action: {
-                                            
-                                            if launcherRepos.isEmpty { return }
-                                            
-                                            for i in 0...launcherRepos.count - 1 {
-                                                launcherRepos[i].isEditing = false
-                                            }
-                                            
-                                            let launcherRepo = launcherRepos[i]
-                                            
-                                            moc.delete(launcherRepo)
-                                            
-                                            do {
-                                                try moc.save()
-                                                reloadMenuBarLauncher = true
-                                            }
-                                            catch {
-                                                print("Error: its broken: \(error)")
-                                            }
-                                        }) {
-                                            Text("Remove Repo")
-                                        }
-                                        
-                                        Button(action: {
-                                            
-                                            if launcherRepos.isEmpty { return }
-                                            
-                                            for iEdit in 0...launcherRepos.count - 1 {
-                                                launcherRepos[iEdit].isEditing = false
-                                            }
-                                            
-                                            launcherRepos[i].isEditing = true
-                                        }) {
-                                            Text("Edit \(Image(systemName: "pencil"))")
-                                        }
-                                            
-                                    } label: {
-                                        Text("Options")
-                                    }.frame(width: 210).sheet(isPresented: .constant(LauncherRepo.isEditing)) {
-                                        LauncherEditView(i: i, existingRepo: $existingRepo)
-                                    }
+                                    launchRepoAppleScript.repoID = ""
                                 }
                             }
-                        }.padding(15)
-                    }.padding()
+                        }
+                    }
                 }
                 else {
                     
