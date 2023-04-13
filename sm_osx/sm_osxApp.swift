@@ -101,6 +101,14 @@ struct sm_osxApp: App {
                     }
             }
         }.commands {
+            if firstLaunch {
+                CommandGroup(replacing: .appSettings) {
+                    Text("Settings..")
+                        .keyboardShortcut(".")
+                        .disabled(true)
+                }
+            }
+            
             CommandGroup(replacing: .saveItem) {}
         }
         
@@ -114,6 +122,14 @@ struct sm_osxApp: App {
                     }
             }
         }.commands {
+            if firstLaunch {
+                CommandGroup(replacing: .appSettings) {
+                    Text("Settings..")
+                        .keyboardShortcut(".")
+                        .disabled(true)
+                }
+            }
+            
             CommandGroup(replacing: .saveItem) {}
         }
         
@@ -126,6 +142,14 @@ struct sm_osxApp: App {
                     }
             }
         }.commands {
+            if firstLaunch {
+                CommandGroup(replacing: .appSettings) {
+                    Text("Settings..")
+                        .keyboardShortcut(".")
+                        .disabled(true)
+                }
+            }
+            
             CommandGroup(replacing: .saveItem) {}
         }
         
@@ -144,6 +168,14 @@ struct sm_osxApp: App {
                     }
                 }.frame(width: 400, height: 250)
         }.windowResizability(.contentSize).windowStyle(.hiddenTitleBar).commands {
+            if firstLaunch {
+                CommandGroup(replacing: .appSettings) {
+                    Text("Settings..")
+                        .keyboardShortcut(".")
+                        .disabled(true)
+                }
+            }
+            
             CommandGroup(replacing: .saveItem) {}
         }
         
@@ -155,6 +187,13 @@ struct sm_osxApp: App {
                     NSWindow.allowsAutomaticWindowTabbing = false
                 }
         }.commands {
+            if firstLaunch {
+                CommandGroup(replacing: .appSettings) {
+                    Text("Settings..")
+                        .disabled(true)
+                }
+            }
+            
             CommandGroup(replacing: .saveItem) {}
         }
         
