@@ -8,6 +8,7 @@ struct LauncherEditView: View {
     @State var repoArgs = ""
     @State var i: Int
     @State var image: String? = nil
+    @State var createRepoShortcutSheet = false
     @Environment(\.dismiss) var dismiss
     @Environment(\.openWindow) var openWindow
     @Environment(\.managedObjectContext) var moc
@@ -29,7 +30,7 @@ struct LauncherEditView: View {
             }
             
             Button("Create Repo Shortcut") {
-                openWindow(id: "shortcut", value: i)
+                createRepoShortcutSheet = true
             }
             
             ImagePicker(text: "Change Image", image: $image)
@@ -57,14 +58,17 @@ struct LauncherEditView: View {
                 launcherRepos[i].isEditing = false
             } label: {
                 Text("Cancel")
-                    .foregroundColor(.red)
             }.padding(.bottom).padding(.horizontal)
-        }.frame(width: 250, height: 250)
-            .onAppear {
-                repoTitle = launcherRepos[i].title ?? ""
-                repoArgs = launcherRepos[i].args ?? ""
-                existingRepo = URL(string: launcherRepos[i].path ?? "")
-                image = launcherRepos[i].imagePath
-            }
+        }
+        .frame(width: 250, height: 250)
+        .onAppear {
+            repoTitle = launcherRepos[i].title ?? ""
+            repoArgs = launcherRepos[i].args ?? ""
+            existingRepo = URL(string: launcherRepos[i].path ?? "")
+            image = launcherRepos[i].imagePath
+        }.sheet(isPresented: $createRepoShortcutSheet) {
+            CreateAppShortcutView(i: i)
+                .frame(width: 200, height: 200)
+        }
     }
 }

@@ -28,7 +28,6 @@ struct LogView: View {
                 dismiss()
             }.padding(.bottom)
         }.onAppear {
-
             let task = Process()
             
             task.launchPath = "/bin/sh"

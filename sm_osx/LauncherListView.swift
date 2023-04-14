@@ -124,7 +124,7 @@ struct LauncherListView: View {
                 }
             }.sheet(isPresented: .constant(LauncherRepo.isEditing)) {
                 LauncherEditView(i: i, existingRepo: $existingRepo, reloadMenuBarLauncher: $reloadMenuBarLauncher)
-            }
+            }.padding(.horizontal)
         }
     }
 }

@@ -8,20 +8,16 @@ struct CreateAppShortcutView: View {
     @State var iconPath = ""
     @State var appName = ""
     @State var isInstallingAppShortcut = false
+    @State var notAnimatedIsInstallingAppShortcut = false
     @Environment(\.dismiss) var dismiss
     @FetchRequest(sortDescriptors:[SortDescriptor(\.title)]) var launcherRepos: FetchedResults<LauncherRepos>
 
     var body: some View {
-        
         VStack {
-            HStack {
-                Text("App Name: ")
-                
-                TextField("App Name", text: $appName)
-                    .onAppear {
-                        appName = launcherRepos[i].title ?? ""
-                    }.frame(maxWidth: 200)
-            }.padding(.top)
+            TextField("App Name", text: $appName)
+                .onAppear {
+                    appName = launcherRepos[i].title ?? ""
+                }.frame(maxWidth: 200).padding([.top, .horizontal])
             
             Button("Pick Icon") {
                 let panel = NSOpenPanel()
@@ -36,15 +32,20 @@ struct CreateAppShortcutView: View {
             
             Button("Create Shortcut") {
                 
-                isInstallingAppShortcut = true
+                withAnimation {
+                    isInstallingAppShortcut = true
+                }
+                
+                notAnimatedIsInstallingAppShortcut = true
                 
                 try? Shell().shell("brew install fileicon")
                 
                 let id = launcherRepos[i].id?.uuidString ?? ""
                 let script = """
-#!/bin/sh
-osascript -e 'tell application "sm_osx" to launch repo "\(id)"'
-"""
+                #!/bin/sh
+                osascript -e 'tell application "sm_osx" to menu bar "Yes"'
+                osascript -e 'tell application "sm_osx" to launch repo "\(id)"'
+                """
                 
                 let filePath = "/Applications/\(appName).app"
                 
@@ -58,17 +59,23 @@ osascript -e 'tell application "sm_osx" to launch repo "\(id)"'
                 attributes[.posixPermissions] = 0o755
                 
                 FileManager.default.createFile(atPath: filePath, contents: script.data(using: .utf8), attributes: attributes)
-
-                print(iconPath)
                 
-                try? Shell().shell("fileicon set /Applications/\(appName).app \(iconPath)")
+                if !iconPath.isEmpty {
+                    try? Shell().shell("fileicon set /Applications/\(appName).app \(iconPath)")
+                }
                 
                 dismiss()
             }.buttonStyle(.borderedProminent)
             
-            Button("Cancel", role: .destructive) {
+            Button("Cancel") {
                 dismiss()
-            }.padding(.bottom)
+            }.padding(.bottom).disabled(notAnimatedIsInstallingAppShortcut)
+            
+            if isInstallingAppShortcut {
+                ProgressView()
+                    .progressViewStyle(.linear)
+                    .padding(.horizontal)
+            }
         }
     }
 }

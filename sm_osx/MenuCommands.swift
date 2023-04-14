@@ -10,6 +10,7 @@ struct MenuCommands: Commands {
     @StateObject var dataController: DataController
     @StateObject var networkMonitor = NetworkMonitor()
     @AppStorage("showMenuExtra") var showMenuExtra = true
+    @AppStorage("keepInMenuBar") var keepInMenuBar = true
     @Environment(\.openWindow) var openWindow
     var updaterController: SPUStandardUpdaterController
     let moc = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
@@ -97,7 +98,7 @@ struct MenuCommands: Commands {
         
         CommandGroup(replacing: .appTermination) {
             Button("Quit sm_osx") {
-                if showMenuExtra {
+                if showMenuExtra && keepInMenuBar {
                     NSApp.setActivationPolicy(.prohibited)
                 } else {
                     exit(0)
@@ -143,6 +144,7 @@ struct menuExtras: Scene {
     @Binding var reloadMenuBarLauncher: Bool
     @AppStorage("showMenuExtra") var showMenuExtra = true
     @AppStorage("firstLaunch") var firstLaunch = true
+    @AppStorage("transparentBar") var transparentBar = TitlebarAppearence.normal
     @StateObject var networkMonitor = NetworkMonitor()
     @ObservedObject var launchRepoAppleScript = LaunchRepoAppleScript.shared
     @Environment(\.openWindow) var openWindow
@@ -250,6 +252,16 @@ struct menuExtras: Scene {
                         launcherRepos = fetchLaunchers()
                         
                         reloadMenuBarLauncher = false
+                        
+                        if transparentBar == TitlebarAppearence.unified {
+                            for window in NSApplication.shared.windows {
+                                window.titlebarAppearsTransparent = true
+                            }
+                        } else if transparentBar == TitlebarAppearence.normal {
+                            for window in NSApplication.shared.windows {
+                                window.titlebarAppearsTransparent = false
+                            }
+                        }
                     }.onChange(of: reloadMenuBarLauncher) { _ in
                         launcherRepos = fetchLaunchers()
                         
@@ -260,6 +272,31 @@ struct menuExtras: Scene {
                                 launcherShell("\(launcherRepos[i].path ?? "its broken") \(launcherRepos[i].args ?? "")")
                                 
                                 launchRepoAppleScript.repoID = ""
+                            }
+                        }
+                    }.onChange(of: launchRepoAppleScript.didOpenApp) { didOpenApp in
+                        if didOpenApp {
+                            print("Changed App to Menu Bar Mode")
+                            NSApp.setActivationPolicy(.prohibited)
+                        }
+                    }.onChange(of: transparentBar) { _ in
+                        if transparentBar == TitlebarAppearence.unified {
+                            for window in NSApplication.shared.windows {
+                                window.titlebarAppearsTransparent = true
+                            }
+                        } else if transparentBar == TitlebarAppearence.normal {
+                            for window in NSApplication.shared.windows {
+                                window.titlebarAppearsTransparent = false
+                            }
+                        }
+                    }.onReceive(NotificationCenter.default.publisher(for: NSWindow.didBecomeKeyNotification)) { _ in
+                        if transparentBar == TitlebarAppearence.unified {
+                            for window in NSApplication.shared.windows {
+                                window.titlebarAppearsTransparent = true
+                            }
+                        } else if transparentBar == TitlebarAppearence.normal {
+                            for window in NSApplication.shared.windows {
+                                window.titlebarAppearsTransparent = false
                             }
                         }
                     }

@@ -17,6 +17,7 @@ struct LauncherView: View {
     @AppStorage("checkUpdateAuto") var checkUpdateAuto = true
     @AppStorage("isGrid") var isGrid = false
     @AppStorage("showMenuExtra") var showMenuExtra = true
+    @AppStorage("transparentBar") var transparentBar = TitlebarAppearence.normal
     @State var romURL = URL(string: "")
     @State var homebrewText = ""
     @State var isLogging = false
@@ -94,45 +95,15 @@ struct LauncherView: View {
     }
     
     var body: some View {
-        ZStack {
-            VStack {
+        VStack {
+            ScrollView {
                 if !launcherRepos.isEmpty {
-                    ScrollView {
-                        if isGrid {
-                            LauncherGridView(reloadMenuBarLauncher: $reloadMenuBarLauncher, existingRepo: $existingRepo)
-                        } else {
-                            LauncherListView(reloadMenuBarLauncher: $reloadMenuBarLauncher, existingRepo: $existingRepo)
-                        }
-                    }.padding().onChange(of: launchRepoAppleScript.repoID) { repoID in
-                        if !showMenuExtra {
-                            for i in 0...launcherRepos.count - 1 {
-                                if launcherRepos[i].id?.uuidString == repoID {
-                                    launcherShell("\(launcherRepos[i].path ?? "its broken") \(launcherRepos[i].args ?? "")")
-                                    
-                                    launchRepoAppleScript.repoID = ""
-                                }
-                            }
-                        }
-                    }
-                }
-                else {
-                    
-                    Spacer()
-                    
-                    if !allowAddingRepos {
-                        Text("You have no repos, add a repo to begin!")
-                            .font(.title2)
-                            .multilineTextAlignment(.center)
-                            .padding()
+                    if isGrid {
+                        LauncherGridView(reloadMenuBarLauncher: $reloadMenuBarLauncher, existingRepo: $existingRepo)
                     } else {
-                        Text("Please select your sm64 rom.")
-                            .font(.title2)
-                            .multilineTextAlignment(.center)
-                            .padding()
+                        LauncherListView(reloadMenuBarLauncher: $reloadMenuBarLauncher, existingRepo: $existingRepo)
                     }
                 }
-                
-                Spacer()
                 
                 if allowAddingRepos {
                     Button(action:{
@@ -162,61 +133,87 @@ struct LauncherView: View {
                         Text("Select Rom")
                     }.buttonStyle(.borderedProminent)
                 }
-                
+            }.padding(.top, 0.1).onChange(of: launchRepoAppleScript.repoID) { repoID in
+                if !showMenuExtra {
+                    for i in 0...launcherRepos.count - 1 {
+                        if launcherRepos[i].id?.uuidString == repoID {
+                            launcherShell("\(launcherRepos[i].path ?? "its broken") \(launcherRepos[i].args ?? "")")
+                            
+                            launchRepoAppleScript.repoID = ""
+                        }
+                    }
+                }
+            }
+            
+            if launcherRepos.isEmpty {
+                if !allowAddingRepos {
+                    Text("You have no repos, add a repo to begin!")
+                        .font(.title2)
+                        .multilineTextAlignment(.center)
+                        .padding()
+                } else {
+                    Text("Please select your sm64 rom.")
+                        .font(.title2)
+                        .multilineTextAlignment(.center)
+                        .padding()
+                }
+            }
+            
+            if !homebrewText.isEmpty {
                 Text(homebrewText)
                     .padding(.horizontal)
-            }.toolbar {
-                ToolbarItem {
-                    Menu {
-                        Button(action: {
-                            
-                            if !launcherRepos.isEmpty {
-                                for i in 0...launcherRepos.count - 1 {
-                                    launcherRepos[i].isEditing = false
-                                }
-                            }
-                            
-                            repoView = true
-                        }) {
-                            Text("Add New Repo")
-                        }.buttonStyle(.borderedProminent).disabled(allowAddingRepos)
+            }
+        }.toolbar {
+            ToolbarItem {
+                Menu {
+                    Button(action: {
                         
-                        Button("Add Existing Repo") {
-                            
-                            if !launcherRepos.isEmpty {
-                                for i in 0...launcherRepos.count - 1 {
-                                    launcherRepos[i].isEditing = false
-                                }
-                            }
-                            
-                            existingRepo = showExecFilePanel()
-                            
-                            if existingRepo != nil {
-                                
-                                let repo = LauncherRepos(context: moc)
-                                
-                                repo.title = "New Repo \(launcherRepos.count)"
-                                repo.path = existingRepo?.path
-                                repo.args = ""
-                                repo.id = UUID()
-                                
-                                do {
-                                    try moc.save()
-                                    
-                                    reloadMenuBarLauncher = true
-                                }
-                                catch {
-                                    print("it BROKE \(error)")
-                                }
+                        if !launcherRepos.isEmpty {
+                            for i in 0...launcherRepos.count - 1 {
+                                launcherRepos[i].isEditing = false
                             }
                         }
-                    } label: {
-                        Text("Repos")
-                            .frame(maxWidth: .infinity)
-                    }.frame(width: 70)
+                        
+                        repoView = true
+                    }) {
+                        Text("Add New Repo")
+                    }.buttonStyle(.borderedProminent).disabled(allowAddingRepos)
                     
-                    
-                }
+                    Button("Add Existing Repo") {
+                        
+                        if !launcherRepos.isEmpty {
+                            for i in 0...launcherRepos.count - 1 {
+                                launcherRepos[i].isEditing = false
+                            }
+                        }
+                        
+                        existingRepo = showExecFilePanel()
+                        
+                        if existingRepo != nil {
+                            
+                            let repo = LauncherRepos(context: moc)
+                            
+                            repo.title = "New Repo \(launcherRepos.count)"
+                            repo.path = existingRepo?.path
+                            repo.args = ""
+                            repo.id = UUID()
+                            
+                            do {
+                                try moc.save()
+                                
+                                reloadMenuBarLauncher = true
+                            }
+                            catch {
+                                print("it BROKE \(error)")
+                            }
+                        }
+                    }
+                } label: {
+                    Text("Repos")
+                        .frame(maxWidth: .infinity)
+                }.frame(width: 70)
+                
+                
             }
         }.onAppear {
             
@@ -252,16 +249,13 @@ struct LauncherView: View {
 
             try? Shell().shell("cd ~/ && mkdir SM64Repos")
             
-            if launcherRepos.isEmpty { return }
-            
-            for i in 0...launcherRepos.count - 1 {
-                launcherRepos[i].isEditing = false
-                print(launcherRepos[i].id)
-                
-                let launchID = UserDefaults.standard.string(forKey: "launch-repo-id") ?? ""
-                
-                if launchID == launcherRepos[i].id?.uuidString {
-                    try? launcherShell("\(launcherRepos[i].path ?? "its broken") \(launcherRepos[i].args ?? "")")
+            if transparentBar == TitlebarAppearence.unified {
+                for window in NSApplication.shared.windows {
+                    window.titlebarAppearsTransparent = true
+                }
+            } else if transparentBar == TitlebarAppearence.normal {
+                for window in NSApplication.shared.windows {
+                    window.titlebarAppearsTransparent = false
                 }
             }
             
@@ -273,6 +267,38 @@ struct LauncherView: View {
                 }
             }
             
+            if launcherRepos.isEmpty { return }
+            
+            for i in 0...launcherRepos.count - 1 {
+                launcherRepos[i].isEditing = false
+                
+                let launchID = UserDefaults.standard.string(forKey: "launch-repo-id") ?? ""
+                
+                if launchID == launcherRepos[i].id?.uuidString {
+                    try? launcherShell("\(launcherRepos[i].path ?? "its broken") \(launcherRepos[i].args ?? "")")
+                }
+            }
+            
+        }.onChange(of: transparentBar) { _ in
+            if transparentBar == TitlebarAppearence.unified {
+                for window in NSApplication.shared.windows {
+                    window.titlebarAppearsTransparent = true
+                }
+            } else if transparentBar == TitlebarAppearence.normal {
+                for window in NSApplication.shared.windows {
+                    window.titlebarAppearsTransparent = false
+                }
+            }
+        }.onReceive(NotificationCenter.default.publisher(for: NSWindow.didBecomeKeyNotification)) { _ in
+            if transparentBar == TitlebarAppearence.unified {
+                for window in NSApplication.shared.windows {
+                    window.titlebarAppearsTransparent = true
+                }
+            } else if transparentBar == TitlebarAppearence.normal {
+                for window in NSApplication.shared.windows {
+                    window.titlebarAppearsTransparent = false
+                }
+            }
         }.sheet(isPresented: $repoView) {
             RepoView(repoView: $repoView, reloadMenuBarLauncher: $reloadMenuBarLauncher)
                 .frame(minWidth: 650, idealWidth: 750, maxWidth: 850, minHeight: 400, idealHeight: 500, maxHeight: 550)

@@ -11,8 +11,10 @@ struct sm_osxApp: App {
     @StateObject var networkMonitor = NetworkMonitor()
     @StateObject private var dataController = DataController()
     @AppStorage("showMenuExtra") var showMenuExtra = true
+    @AppStorage("keepInMenuBar") var keepInMenuBar = true
     @AppStorage("devMode") var devMode = false
     @AppStorage("firstLaunch") var firstLaunch = true
+    @AppStorage("transparentBar") var transparentBar = TitlebarAppearence.normal
     @State var window: NSWindow!
     @State var aboutWindow: NSWindow!
     @State var existingRepo = URL(string: "")
@@ -21,9 +23,7 @@ struct sm_osxApp: App {
     let updaterController: SPUStandardUpdaterController
     
     init() {
-        updaterController = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
-        
-        devMode = false
+        updaterController = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)        
     }
     
     var body: some Scene {
@@ -51,21 +51,30 @@ struct sm_osxApp: App {
                     .environmentObject(networkMonitor)
                     .environment(\.managedObjectContext, dataController.container.viewContext)
                     .onAppear {
-                        if showMenuExtra {
+                        
+                        for window in NSApp.windows {
+                            if window.title == "sm_osx" {
+                                print("\nWindow Opened!!!\n")
+                            }
+                        }
+                        
+                        if showMenuExtra && keepInMenuBar {
                             NSApp.setActivationPolicy(.regular)
                         }
                         
                         NSWindow.allowsAutomaticWindowTabbing = false
-                    }
-                    .onDisappear {
-                        if showMenuExtra {
-                            NSApp.setActivationPolicy(.prohibited)
-                        } else {
-                            exit(0)
+                    }.frame(minWidth: 350, minHeight: 300).background {
+                        if window == nil {
+                            Color.clear.onReceive(NotificationCenter.default.publisher(for:
+                                                                                        NSWindow.didBecomeKeyNotification)) { notification in
+                                if let window = notification.object as? NSWindow {
+                                    if window.title == "sm_osx" {
+                                        window.delegate = appDelegate
+                                    }
+                                }
+                            }
                         }
-                    }.onOpenURL { url in
-                        print(url.absoluteString)
-                    }.frame(minWidth: 350, minHeight: 300)
+                    }
             }
         }.windowResizability(firstLaunch ? .contentSize : .automatic).commands {
             SidebarCommands()
@@ -132,27 +141,7 @@ struct sm_osxApp: App {
             
             CommandGroup(replacing: .saveItem) {}
         }
-        
-        WindowGroup("Create Repo Shortcut", id: "shortcut", for: Int.self) { i in
-            if i.wrappedValue != nil {
-                CreateAppShortcutView(i: i.wrappedValue!)
-                    .environment(\.managedObjectContext, dataController.container.viewContext)
-                    .onAppear {
-                        NSWindow.allowsAutomaticWindowTabbing = false
-                    }
-            }
-        }.commands {
-            if firstLaunch {
-                CommandGroup(replacing: .appSettings) {
-                    Text("Settings..")
-                        .keyboardShortcut(".")
-                        .disabled(true)
-                }
-            }
-            
-            CommandGroup(replacing: .saveItem) {}
-        }
-        
+
         Window("About", id: "about") {
             AboutView()
                 .background {
@@ -202,7 +191,7 @@ struct sm_osxApp: App {
 }
 
 //why apple, why, WHY. Couldn't find anything that would work in the swiftui lifecycle, so this will do.
-class AppDelegate: NSObject, NSApplicationDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     
     func applicationWillFinishLaunching(_ notification: Notification) {
         flushSavedWindowState()
@@ -221,5 +210,23 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         } catch {
             print("exception: \(error)")
         }
+    }
+    
+    func windowShouldClose(_ sender: NSWindow) -> Bool {
+        let showMenuBarExtra = UserDefaults.standard.bool(forKey: "showMenuExtra")
+        let keepInMenuBar = UserDefaults.standard.bool(forKey: "keepInMenuBar")
+        print("Called")
+        
+        if sender.title == "sm_osx" {
+            if showMenuBarExtra && keepInMenuBar {
+                NSApp.setActivationPolicy(.prohibited)
+                
+                return false
+            } else {
+                exit(0)
+            }
+        }
+        
+        return true
     }
 }

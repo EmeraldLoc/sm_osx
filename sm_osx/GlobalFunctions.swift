@@ -30,12 +30,15 @@ public func showExecFilePanel() -> URL? {
 public func showApp() {
     NSApp.setActivationPolicy(.regular)
     
+    var openedWindow = false
+    
     for window in NSApplication.shared.windows {
         if window.title == "sm_osx" {
             window.orderFrontRegardless()
+            
+            openedWindow = true
         }
     }
-
 }
 
 func restart() {

@@ -6,6 +6,7 @@ struct FirstLaunchView: View {
     @State var status = FirstLaunchStatus.none
     @State var startingTimer = 0
     @State var showAppNotInApplicationsFolderAlert = false
+    @AppStorage("transparentBar") var transparentBar = TitlebarAppearence.normal
     @AppStorage("firstLaunch") var firstLaunch = true
     @AppStorage("isGrid") var isGrid = false
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
@@ -59,26 +60,43 @@ struct FirstLaunchView: View {
                     })
             } else if status == .launcherView {
                 VStack {
-                    Text("Select Launcher View")
+                    Text("Select Launcher Layout")
                     
                     Text("This can be changed at anytime in Settings")
                         .font(.caption)
                     
-                    HStack {
-                        Button("Grid") {
-                            withAnimation {
-                                isGrid = true
-                                
-                                status = .checkingHomebrewInstallation
-                            }
-                        }
+                    Picker("Launcher Layout", selection: $isGrid) {
+                        Text("Grid")
+                            .tag(true)
                         
-                        Button("List") {
-                            withAnimation {
-                                isGrid = false
-                                
-                                status = .checkingHomebrewInstallation
-                            }
+                        Text("List")
+                            .tag(false)
+                    }.frame(idealWidth: 200, maxWidth: 200)
+                    
+                    Button("Continue") {
+                        withAnimation {
+                            status = .titleBarAppearence
+                        }
+                    }
+                }
+            } else if status == .titleBarAppearence {
+                VStack {
+                    Text("Select Titlebar Appearence")
+                    
+                    Text("This can be changed at anytime in Settings")
+                        .font(.caption)
+                    
+                    Picker("Title Bar", selection: $transparentBar) {
+                        Text("Normal")
+                            .tag(TitlebarAppearence.normal)
+                        
+                        Text("Unified")
+                            .tag(TitlebarAppearence.unified)
+                    }.frame(idealWidth: 200, maxWidth: 200)
+                    
+                    Button("Continue") {
+                        withAnimation {
+                            status = .checkingHomebrewInstallation
                         }
                     }
                 }
@@ -214,14 +232,4 @@ struct FirstLaunchView: View {
             }
         }
     }
-}
-
-enum FirstLaunchStatus {
-    case none
-    case starting
-    case launcherView
-    case checkingHomebrewInstallation
-    case checkingIntelHomebrewInstallation
-    case installingDeps
-    case finishingUp
 }

@@ -140,7 +140,7 @@ struct LauncherGridView: View {
                         
                     } label: {
                         Text("Options")
-                    }
+                    }.frame(maxWidth: 250)
                 }.sheet(isPresented: .constant(LauncherRepo.isEditing)) {
                     LauncherEditView(i: i, existingRepo: $existingRepo, reloadMenuBarLauncher: $reloadMenuBarLauncher)
                 }
