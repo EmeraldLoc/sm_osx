@@ -190,11 +190,20 @@ struct sm_osxApp: App {
     }
 }
 
-//why apple, why, WHY. Couldn't find anything that would work in the swiftui lifecycle, so this will do.
 class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     
     func applicationWillFinishLaunching(_ notification: Notification) {
         flushSavedWindowState()
+    }
+    
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        if NSApp.activationPolicy() == .prohibited {
+            NSApp.setActivationPolicy(.regular)
+            
+            showApp()
+        }
+        
+        return true
     }
     
     func flushSavedWindowState() {
