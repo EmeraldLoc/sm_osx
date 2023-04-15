@@ -210,13 +210,11 @@ struct menuExtras: Scene {
                 }
             }
             
-            
             Section {
                 Button("Add New Repo") {
                     showAddRepos = true
                 }
             }
-            
             
             Section {
                 CheckForUpdatesView(updater: updaterController.updater)

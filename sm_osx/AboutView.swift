@@ -1,4 +1,3 @@
-//
 
 import SwiftUI
 
@@ -28,11 +27,5 @@ sm_osx is a app that allows you to compile Super Mario 64 Pc Port repos with eas
                 }
             }
         }
-    }
-}
-
-struct AboutView_Previews: PreviewProvider {
-    static var previews: some View {
-        AboutView()
     }
 }

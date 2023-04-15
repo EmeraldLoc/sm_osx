@@ -7,6 +7,7 @@ struct FirstLaunchView: View {
     @State var startingTimer = 0
     @State var showAppNotInApplicationsFolderAlert = false
     @AppStorage("transparentBar") var transparentBar = TitlebarAppearence.normal
+    @AppStorage("transparency") var transparency = TransparencyAppearence.normal
     @AppStorage("firstLaunch") var firstLaunch = true
     @AppStorage("isGrid") var isGrid = false
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
@@ -96,11 +97,32 @@ struct FirstLaunchView: View {
                     
                     Button("Continue") {
                         withAnimation {
+                            status = .transparencyAppearence
+                        }
+                    }
+                }
+            } else if status == .transparencyAppearence {
+                VStack {
+                    Text("Select Transparency Appearence")
+                    
+                    Text("This can be changed at anytime in Settings")
+                        .font(.caption)
+                    
+                    Picker("Transparency", selection: $transparency) {
+                        Text("Normal")
+                            .tag(TransparencyAppearence.normal)
+                        
+                        Text("More")
+                            .tag(TransparencyAppearence.more)
+                    }.frame(idealWidth: 200, maxWidth: 200)
+                    
+                    Button("Continue") {
+                        withAnimation {
                             status = .checkingHomebrewInstallation
                         }
                     }
                 }
-            } else if status == .checkingHomebrewInstallation {
+            }  else if status == .checkingHomebrewInstallation {
                 Text("Checking Homebrew Installation...")
                     .onAppear {
                         if isArm() {

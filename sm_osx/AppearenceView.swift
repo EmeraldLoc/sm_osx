@@ -5,6 +5,7 @@ struct AppearenceSettingsView: View {
     
     @AppStorage("isGrid") var isGrid = false
     @AppStorage("transparentBar") var transparentBar = TitlebarAppearence.normal
+    @AppStorage("transparency") var transparency = TransparencyAppearence.normal
     
     var body: some View {
         List {
@@ -23,6 +24,14 @@ struct AppearenceSettingsView: View {
                 Text("Unified")
                     .tag(TitlebarAppearence.unified)
             }.frame(idealWidth: 200, maxWidth: 200)
-        }
+            
+            Picker("Transparency", selection: $transparency) {
+                Text("Normal")
+                    .tag(TransparencyAppearence.normal)
+                
+                Text("More")
+                    .tag(TransparencyAppearence.more)
+            }
+        }.transparentListStyle().scrollDisabled(true)
     }
 }

@@ -17,6 +17,7 @@
 		9621F4ED29E4C33F007BE51D /* HomebrewInstaller.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 9621F4EC29E4C33F007BE51D /* HomebrewInstaller.scpt */; };
 		9621F4EF29E4CCBC007BE51D /* IntelHomebrewInstaller.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 9621F4EE29E4CCBC007BE51D /* IntelHomebrewInstaller.scpt */; };
 		963074FA29DF28AA00234B23 /* Shell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963074F929DF28AA00234B23 /* Shell.swift */; };
+		9639868129EB011A00E6218B /* ViewModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9639868029EB011A00E6218B /* ViewModifiers.swift */; };
 		963F238327F8B211004E010E /* LauncherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963F238227F8B211004E010E /* LauncherView.swift */; };
 		963F238627F8B942004E010E /* DataStore.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 963F238427F8B942004E010E /* DataStore.xcdatamodeld */; };
 		963F238827F8BA01004E010E /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963F238727F8BA01004E010E /* DataController.swift */; };
@@ -55,6 +56,7 @@
 		9621F4EC29E4C33F007BE51D /* HomebrewInstaller.scpt */ = {isa = PBXFileReference; lastKnownFileType = file; path = HomebrewInstaller.scpt; sourceTree = "<group>"; };
 		9621F4EE29E4CCBC007BE51D /* IntelHomebrewInstaller.scpt */ = {isa = PBXFileReference; lastKnownFileType = file; path = IntelHomebrewInstaller.scpt; sourceTree = "<group>"; };
 		963074F929DF28AA00234B23 /* Shell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shell.swift; sourceTree = "<group>"; };
+		9639868029EB011A00E6218B /* ViewModifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModifiers.swift; sourceTree = "<group>"; };
 		963F238227F8B211004E010E /* LauncherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LauncherView.swift; sourceTree = "<group>"; };
 		963F238527F8B942004E010E /* DataStore.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataStore.xcdatamodel; sourceTree = "<group>"; };
 		963F238727F8BA01004E010E /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
@@ -154,6 +156,7 @@
 				96CCFB7629E7158B00BE8CC7 /* LaunchScriptCommand.swift */,
 				964C6F7629E889C100506DBD /* CreateAppShortcutView.swift */,
 				961C0A5029E9C6E000D50A80 /* Enums.swift */,
+				9639868029EB011A00E6218B /* ViewModifiers.swift */,
 			);
 			path = sm_osx;
 			sourceTree = "<group>";
@@ -255,6 +258,7 @@
 				963F238327F8B211004E010E /* LauncherView.swift in Sources */,
 				961C0A5129E9C6E000D50A80 /* Enums.swift in Sources */,
 				96A3D83A29B52328007AF78A /* ImagePicker.swift in Sources */,
+				9639868129EB011A00E6218B /* ViewModifiers.swift in Sources */,
 				96BDA2F9283D29E300A4DFF3 /* LogView.swift in Sources */,
 				9621F4DB29E4A441007BE51D /* FirstLaunchView.swift in Sources */,
 				96892C8329E5D5E90083526B /* LauncherGridView.swift in Sources */,

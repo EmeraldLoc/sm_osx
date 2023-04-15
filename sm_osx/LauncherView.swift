@@ -96,7 +96,7 @@ struct LauncherView: View {
     
     var body: some View {
         VStack {
-            ScrollView {
+            List {
                 if !launcherRepos.isEmpty {
                     if isGrid {
                         LauncherGridView(reloadMenuBarLauncher: $reloadMenuBarLauncher, existingRepo: $existingRepo)
@@ -133,7 +133,10 @@ struct LauncherView: View {
                         Text("Select Rom")
                     }.buttonStyle(.borderedProminent)
                 }
-            }.padding(.top, 0.1).onChange(of: launchRepoAppleScript.repoID) { repoID in
+            }
+            .transparentListStyle()
+            .padding(.top, 0.1)
+            .onChange(of: launchRepoAppleScript.repoID) { repoID in
                 if !showMenuExtra {
                     for i in 0...launcherRepos.count - 1 {
                         if launcherRepos[i].id?.uuidString == repoID {

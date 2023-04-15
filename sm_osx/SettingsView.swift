@@ -23,7 +23,7 @@ struct SettingsView: View {
                 .tabItem {
                     Label("Appearence", systemImage: "eye")
                 }
-                .frame(width: 350, height: 90)
+                .frame(width: 350, height: 125)
                 .tag(1)
             
             UpdatesSettingsView(updater: updater)

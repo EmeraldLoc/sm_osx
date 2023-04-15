@@ -10,74 +10,72 @@ struct RepoView: View {
     
     var body: some View {
         NavigationView {
-            ZStack {
-                VStack {
-                    List {
+            VStack {
+                List {
+                    
+                    Text("Select a Repo")
+                        .lineLimit(nil)
+                        .padding(.top, 3)
+                    
+                    NavigationLink(destination: PatchesView(repo: .sm64ex, repoView: $repoView, reloadMenuBarLauncher: $reloadMenuBarLauncher)) {
                         
-                        Text("Select a Repo")
+                        Text("sm64ex")
                             .lineLimit(nil)
-                            .padding(.top, 3)
-
-                        NavigationLink(destination: PatchesView(repo: .sm64ex, repoView: $repoView, reloadMenuBarLauncher: $reloadMenuBarLauncher)) {
+                    }
+                    
+                    if isArm() {
+                        NavigationLink(destination: PatchesView(repo: .sm64ex_master, repoView: $repoView, reloadMenuBarLauncher: $reloadMenuBarLauncher)) {
                             
-                            Text("sm64ex")
-                                .lineLimit(nil)
-                        }
-                        
-                        if isArm() {
-                            NavigationLink(destination: PatchesView(repo: .sm64ex_master, repoView: $repoView, reloadMenuBarLauncher: $reloadMenuBarLauncher)) {
-                                
-                                Text("sm64ex-master (Old)")
-                                    .lineLimit(nil)
-                            }
-                        }
-                        
-                        NavigationLink(destination: PatchesView(repo: .sm64ex_alo, repoView: $repoView, reloadMenuBarLauncher: $reloadMenuBarLauncher)) {
-                            
-                            Text("sm64ex-alo")
-                                .lineLimit(nil)
-                        }
-                        
-                        NavigationLink(destination: PatchesView(repo: .sm64ex_coop, repoView: $repoView, reloadMenuBarLauncher: $reloadMenuBarLauncher)) {
-                            
-                            Text("sm64ex-coop")
-                                .lineLimit(nil)
-                        }
-                        
-                        if devMode {
-                            NavigationLink(destination: PatchesView(repo: .sm64ex_coop_dev, repoView: $repoView, reloadMenuBarLauncher: $reloadMenuBarLauncher)) {
-                                
-                                Text("sm64ex-coop-dev (Only avalible to devs)")
-                                    .lineLimit(nil)
-                            }
-                        }
-                            
-                        NavigationLink(destination: PatchesView(repo: .render96ex, repoView: $repoView, reloadMenuBarLauncher: $reloadMenuBarLauncher)) {
-                            
-                            Text("Render96ex")
-                                .lineLimit(nil)
-                        }
-                        
-                        NavigationLink(destination: PatchesView(repo: .moonshine, repoView: $repoView, reloadMenuBarLauncher: $reloadMenuBarLauncher)) {
-                            
-                            Text("Moonshine")
-                                .lineLimit(nil)
-                        }
-                        
-                        NavigationLink(destination: PatchesView(repo: .moon64, repoView: $repoView, reloadMenuBarLauncher: $reloadMenuBarLauncher)) {
-                            
-                            Text("Moon64 (Discontinued)")
+                            Text("sm64ex-master (Old)")
                                 .lineLimit(nil)
                         }
                     }
                     
-                    Spacer()
+                    NavigationLink(destination: PatchesView(repo: .sm64ex_alo, repoView: $repoView, reloadMenuBarLauncher: $reloadMenuBarLauncher)) {
+                        
+                        Text("sm64ex-alo")
+                            .lineLimit(nil)
+                    }
                     
-                    Button("Cancel") {
-                        repoView = false
-                    }.padding(.vertical)
+                    NavigationLink(destination: PatchesView(repo: .sm64ex_coop, repoView: $repoView, reloadMenuBarLauncher: $reloadMenuBarLauncher)) {
+                        
+                        Text("sm64ex-coop")
+                            .lineLimit(nil)
+                    }
+                    
+                    if devMode {
+                        NavigationLink(destination: PatchesView(repo: .sm64ex_coop_dev, repoView: $repoView, reloadMenuBarLauncher: $reloadMenuBarLauncher)) {
+                            
+                            Text("sm64ex-coop-dev (Only avalible to devs)")
+                                .lineLimit(nil)
+                        }
+                    }
+                    
+                    NavigationLink(destination: PatchesView(repo: .render96ex, repoView: $repoView, reloadMenuBarLauncher: $reloadMenuBarLauncher)) {
+                        
+                        Text("Render96ex")
+                            .lineLimit(nil)
+                    }
+                    
+                    NavigationLink(destination: PatchesView(repo: .moonshine, repoView: $repoView, reloadMenuBarLauncher: $reloadMenuBarLauncher)) {
+                        
+                        Text("Moonshine")
+                            .lineLimit(nil)
+                    }
+                    
+                    NavigationLink(destination: PatchesView(repo: .moon64, repoView: $repoView, reloadMenuBarLauncher: $reloadMenuBarLauncher)) {
+                        
+                        Text("Moon64 (Discontinued)")
+                            .lineLimit(nil)
+                    }
                 }
+                
+                Spacer()
+                
+                Button("Cancel") {
+                    repoView = false
+                }.padding(.vertical)
             }
-        }
+        }.transparentListStyle().transparentBackgroundStyle()
     }
 }

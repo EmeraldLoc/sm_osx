@@ -121,10 +121,11 @@ struct LauncherListView: View {
                     print(LauncherRepo.path ?? "")
                 } label: {
                     Label("Play", systemImage: "play.fill")
+                        .labelStyle(.titleAndIcon)
                 }
             }.sheet(isPresented: .constant(LauncherRepo.isEditing)) {
                 LauncherEditView(i: i, existingRepo: $existingRepo, reloadMenuBarLauncher: $reloadMenuBarLauncher)
-            }.padding(.horizontal)
+            }
         }
     }
 }

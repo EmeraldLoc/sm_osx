@@ -1,7 +1,7 @@
 
 import Foundation
 
-enum Repo: String {
+public enum Repo: String {
     case sm64ex = "https://github.com/sm64pc/sm64ex.git"
     case sm64ex_master = "https://github.com/EmeraldLoc/sm64ex.git --branch master"
     case sm64ex_alo = "https://github.com/EmeraldLoc/sm64ex-alo.git"
@@ -12,7 +12,7 @@ enum Repo: String {
     case sm64ex_coop_dev = "https://github.com/sm64ex-coop-dev/sm64ex-coop.git"
 }
 
-enum Patches: String {
+public enum Patches: String {
     case omm = "https://github.com/PeachyPeachSM64/sm64ex-omm.git"
     case highfps = "60Fps"
     case debug = "Debug"
@@ -28,7 +28,7 @@ enum Patches: String {
     case nothing = ""
 }
 
-enum CompStatus: Double {
+public enum CompStatus: Double {
     case patching = 45
     case instDependencies = 2
     case instRepo = 5
@@ -39,7 +39,7 @@ enum CompStatus: Double {
     case nothing = 0
 }
 
-enum Speed: String {
+public enum Speed: String {
     case slow = ""
     case normal = "-j2"
     case fast = "-j3"
@@ -47,18 +47,24 @@ enum Speed: String {
     case fastest = "-j"
 }
 
-enum FirstLaunchStatus {
+public enum FirstLaunchStatus {
     case none
     case starting
     case launcherView
     case titleBarAppearence
+    case transparencyAppearence
     case checkingHomebrewInstallation
     case checkingIntelHomebrewInstallation
     case installingDeps
     case finishingUp
 }
 
-enum TitlebarAppearence: Int {
+public enum TitlebarAppearence: Int {
     case normal = 0
     case unified = 1
+}
+
+public enum TransparencyAppearence:  String, CaseIterable {
+    case normal
+    case more
 }

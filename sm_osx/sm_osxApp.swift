@@ -15,6 +15,7 @@ struct sm_osxApp: App {
     @AppStorage("devMode") var devMode = false
     @AppStorage("firstLaunch") var firstLaunch = true
     @AppStorage("transparentBar") var transparentBar = TitlebarAppearence.normal
+    @AppStorage("transparency") var transparency = TransparencyAppearence.normal
     @State var window: NSWindow!
     @State var aboutWindow: NSWindow!
     @State var existingRepo = URL(string: "")
@@ -41,6 +42,7 @@ struct sm_osxApp: App {
                                         window.standardWindowButton(.zoomButton)?.isHidden = true
                                         window.titlebarAppearsTransparent = true
                                         window.titleVisibility = .hidden
+                                        window.isMovableByWindowBackground = true
                                     }
                                 }
                             }
@@ -51,13 +53,6 @@ struct sm_osxApp: App {
                     .environmentObject(networkMonitor)
                     .environment(\.managedObjectContext, dataController.container.viewContext)
                     .onAppear {
-                        
-                        for window in NSApp.windows {
-                            if window.title == "sm_osx" {
-                                print("\nWindow Opened!!!\n")
-                            }
-                        }
-                        
                         if showMenuExtra && keepInMenuBar {
                             NSApp.setActivationPolicy(.regular)
                         }
@@ -144,6 +139,7 @@ struct sm_osxApp: App {
 
         Window("About", id: "about") {
             AboutView()
+                .frame(width: 400, height: 250)
                 .background {
                     if aboutWindow == nil {
                         Color.clear.onReceive(NotificationCenter.default.publisher(for:
@@ -151,12 +147,13 @@ struct sm_osxApp: App {
                             if let aboutWindow = notification.object as? NSWindow {
                                 if aboutWindow.title == "About" {
                                     aboutWindow.standardWindowButton(.zoomButton)?.isHidden = true
+                                    aboutWindow.titlebarAppearsTransparent = true
                                 }
                             }
                         }
                     }
-                }.frame(width: 400, height: 250)
-        }.windowResizability(.contentSize).windowStyle(.hiddenTitleBar).commands {
+                }.transparentBackgroundStyle()
+        }.windowResizability(.contentSize).commands {
             if firstLaunch {
                 CommandGroup(replacing: .appSettings) {
                     Text("Settings..")

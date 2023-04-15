@@ -5,8 +5,10 @@ struct LogView: View {
     
     let index: Int
     @State var log = ""
+    @State var launched = false
     @Environment(\.dismiss) var dismiss
     @FetchRequest(sortDescriptors:[SortDescriptor(\.title)]) var launcherRepos: FetchedResults<LauncherRepos>
+    @AppStorage("transparency") var transparency = TransparencyAppearence.normal
     let shell = Shell()
 
     var body: some View {
@@ -28,25 +30,29 @@ struct LogView: View {
                 dismiss()
             }.padding(.bottom)
         }.onAppear {
-            let task = Process()
-            
-            task.launchPath = "/bin/sh"
-            task.arguments = ["-c", "\(launcherRepos[index].path ?? "its broken") \(launcherRepos[index].args ?? "")"]
-            
-            let pipe = Pipe()
-            task.standardOutput = pipe
-            task.standardError = pipe
-            let outHandle = pipe.fileHandleForReading
-            
-            outHandle.readabilityHandler = { pipe in
-                if let line = String(data: pipe.availableData, encoding: .utf8) {
-                    log.append(line)
-                } else {
-                    print("Error decoding data, aaaa: \(pipe.availableData)")
+            if !launched {
+                let task = Process()
+                
+                task.launchPath = "/bin/sh"
+                task.arguments = ["-c", "\(launcherRepos[index].path ?? "its broken") \(launcherRepos[index].args ?? "")"]
+                
+                let pipe = Pipe()
+                task.standardOutput = pipe
+                task.standardError = pipe
+                let outHandle = pipe.fileHandleForReading
+                
+                outHandle.readabilityHandler = { pipe in
+                    if let line = String(data: pipe.availableData, encoding: .utf8) {
+                        log.append(line)
+                    } else {
+                        print("Error decoding data, aaaa: \(pipe.availableData)")
+                    }
                 }
+                
+                try? task.run()
+                
+                launched = true
             }
-            
-            try? task.run()
-        }
+        }.transparentBackgroundStyle()
     }
 }
