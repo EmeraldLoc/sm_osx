@@ -3,28 +3,36 @@ import SwiftUI
 
 struct TransparentListStyle: ViewModifier {
     @AppStorage("transparency") var transparency = TransparencyAppearence.normal
+    @AppStorage("transparencyDuringNotSelected") var transparencyDuringNotSelected = false
     func body(content: Content) -> some View {
         if transparency == .normal {
-            content.listStyle(.automatic)
+            content
         } else if transparency == .more {
-            content.listStyle(.sidebar)
+            if transparencyDuringNotSelected {
+                content
+                    .scrollContentBackground(.hidden)
+                    .background(TransparentWhenNotSelectedVisualEffect().ignoresSafeArea())
+            } else {
+                content
+                    .scrollContentBackground(.hidden)
+                    .background(TransparentWhenSelectedVisualEffect().ignoresSafeArea())
+            }
         }
-    }
-}
-
-extension View {
-    func transparentListStyle() -> some View {
-        modifier(TransparentListStyle())
     }
 }
 
 struct TransparentBackgroundStyle: ViewModifier {
     @AppStorage("transparency") var transparency = TransparencyAppearence.normal
+    @AppStorage("transparencyDuringNotSelected") var transparencyDuringNotSelected = false
     func body(content: Content) -> some View {
         if transparency == .normal {
-            content.background(.background)
+            content
         } else if transparency == .more {
-            content.background(TransparentVisualEffect().ignoresSafeArea())
+            if transparencyDuringNotSelected {
+                content.background(TransparentWhenNotSelectedVisualEffect().ignoresSafeArea())
+            } else {
+                content.background(TransparentWhenSelectedVisualEffect().ignoresSafeArea())
+            }
         }
     }
 }
@@ -33,9 +41,23 @@ extension View {
     func transparentBackgroundStyle() -> some View {
         modifier(TransparentBackgroundStyle())
     }
+    
+    func transparentListStyle() -> some View {
+        modifier(TransparentListStyle())
+    }
 }
 
-struct TransparentVisualEffect: NSViewRepresentable {
+struct TransparentWhenNotSelectedVisualEffect: NSViewRepresentable {
+    func makeNSView(context: Self.Context) -> NSView {
+        let view = NSVisualEffectView()
+        view.state = .active
+        return view
+    }
+    func updateNSView(_ nsView: NSView, context: Context) { }
+}
+
+struct TransparentWhenSelectedVisualEffect: NSViewRepresentable {
     func makeNSView(context: Self.Context) -> NSView { return NSVisualEffectView() }
     func updateNSView(_ nsView: NSView, context: Context) { }
 }
+

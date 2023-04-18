@@ -10,6 +10,6 @@ struct DeveloperView: View {
             Toggle(isOn: $devMode.animation()) {
                 Text("Enable development repos (Not recommended)")
             }
-        }.scrollDisabled(true).transparentListStyle()
+        }.transparentListStyle().scrollDisabled(true)
     }
 }

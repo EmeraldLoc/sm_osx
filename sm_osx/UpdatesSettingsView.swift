@@ -37,6 +37,6 @@ struct UpdatesSettingsView: View {
             }) {
                 Text("Check Latest Changelog")
             }
-        }.scrollDisabled(true).transparentListStyle()
+        }.transparentListStyle().scrollDisabled(true)
     }
 }

@@ -147,7 +147,6 @@ struct sm_osxApp: App {
                             if let aboutWindow = notification.object as? NSWindow {
                                 if aboutWindow.title == "About" {
                                     aboutWindow.standardWindowButton(.zoomButton)?.isHidden = true
-                                    aboutWindow.titlebarAppearsTransparent = true
                                 }
                             }
                         }
@@ -221,7 +220,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     func windowShouldClose(_ sender: NSWindow) -> Bool {
         let showMenuBarExtra = UserDefaults.standard.bool(forKey: "showMenuExtra")
         let keepInMenuBar = UserDefaults.standard.bool(forKey: "keepInMenuBar")
-        print("Called")
         
         if sender.title == "sm_osx" {
             if showMenuBarExtra && keepInMenuBar {

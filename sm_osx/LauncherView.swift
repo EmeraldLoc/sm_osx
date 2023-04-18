@@ -96,56 +96,27 @@ struct LauncherView: View {
     
     var body: some View {
         VStack {
-            List {
-                if !launcherRepos.isEmpty {
+            if !launcherRepos.isEmpty {
+                List {
                     if isGrid {
                         LauncherGridView(reloadMenuBarLauncher: $reloadMenuBarLauncher, existingRepo: $existingRepo)
                     } else {
                         LauncherListView(reloadMenuBarLauncher: $reloadMenuBarLauncher, existingRepo: $existingRepo)
                     }
                 }
-                
-                if allowAddingRepos {
-                    Button(action:{
-                        
-                        if !launcherRepos.isEmpty {
-                            for i in 0...launcherRepos.count - 1 {
-                                launcherRepos[i].isEditing = false
+                .padding(.top, 0.1)
+                .onChange(of: launchRepoAppleScript.repoID) { repoID in
+                    if !showMenuExtra {
+                        for i in 0...launcherRepos.count - 1 {
+                            if launcherRepos[i].id?.uuidString == repoID {
+                                launcherShell("\(launcherRepos[i].path ?? "its broken") \(launcherRepos[i].args ?? "")")
+                                
+                                launchRepoAppleScript.repoID = ""
                             }
-                        }
-                        
-                        romURL = showOpenPanelForRom()
-                        
-                        romURL? = URL(fileURLWithPath: romURL?.path.replacingOccurrences(of: " ", with: #"\ "#
-                                                                                         , options: .literal, range: nil) ?? "")
-                        
-                        try? Shell().shell("cp \(romURL?.path ?? "") ~/SM64Repos/baserom.us.z64")
-                        
-                        if let doesExist = try? checkRom("ls ~/SM64Repos/baserom.us.z64") {
-                            if doesExist {
-                                allowAddingRepos = true
-                            }
-                            else {
-                                allowAddingRepos = false
-                            }
-                        }
-                    }) {
-                        Text("Select Rom")
-                    }.buttonStyle(.borderedProminent)
-                }
-            }
-            .transparentListStyle()
-            .padding(.top, 0.1)
-            .onChange(of: launchRepoAppleScript.repoID) { repoID in
-                if !showMenuExtra {
-                    for i in 0...launcherRepos.count - 1 {
-                        if launcherRepos[i].id?.uuidString == repoID {
-                            launcherShell("\(launcherRepos[i].path ?? "its broken") \(launcherRepos[i].args ?? "")")
-                            
-                            launchRepoAppleScript.repoID = ""
                         }
                     }
                 }
+                .scrollContentBackground(.hidden)
             }
             
             if launcherRepos.isEmpty {
@@ -160,6 +131,35 @@ struct LauncherView: View {
                         .multilineTextAlignment(.center)
                         .padding()
                 }
+            }
+            
+            if allowAddingRepos {
+                Button(action:{
+                    
+                    if !launcherRepos.isEmpty {
+                        for i in 0...launcherRepos.count - 1 {
+                            launcherRepos[i].isEditing = false
+                        }
+                    }
+                    
+                    romURL = showOpenPanelForRom()
+                    
+                    romURL? = URL(fileURLWithPath: romURL?.path.replacingOccurrences(of: " ", with: #"\ "#
+                                                                                     , options: .literal, range: nil) ?? "")
+                    
+                    try? Shell().shell("cp \(romURL?.path ?? "") ~/SM64Repos/baserom.us.z64")
+                    
+                    if let doesExist = try? checkRom("ls ~/SM64Repos/baserom.us.z64") {
+                        if doesExist {
+                            allowAddingRepos = true
+                        }
+                        else {
+                            allowAddingRepos = false
+                        }
+                    }
+                }) {
+                    Text("Select Rom")
+                }.buttonStyle(.borderedProminent)
             }
             
             if !homebrewText.isEmpty {
@@ -305,6 +305,6 @@ struct LauncherView: View {
         }.sheet(isPresented: $repoView) {
             RepoView(repoView: $repoView, reloadMenuBarLauncher: $reloadMenuBarLauncher)
                 .frame(minWidth: 650, idealWidth: 750, maxWidth: 850, minHeight: 400, idealHeight: 500, maxHeight: 550)
-        }.frame(minWidth: 300, minHeight: 250)
+        }.frame(minWidth: 300, minHeight: 250).transparentBackgroundStyle()
     }
 }

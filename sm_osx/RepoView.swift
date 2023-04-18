@@ -76,6 +76,6 @@ struct RepoView: View {
                     repoView = false
                 }.padding(.vertical)
             }
-        }.transparentListStyle().transparentBackgroundStyle()
+        }.transparentBackgroundStyle()
     }
 }
