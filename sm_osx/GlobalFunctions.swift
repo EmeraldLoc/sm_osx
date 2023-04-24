@@ -45,3 +45,9 @@ func restart() {
     process.launch()
     exit(0)
 }
+
+class AddingRepo: ObservableObject {
+    static let shared = AddingRepo()
+    
+    var isCompiling = false
+}

@@ -5,7 +5,7 @@ import SwiftUI
 struct CreateAppShortcutView: View {
     
     let i: Int
-    @State var iconPath = ""
+    @State var iconPath: String? = nil
     @State var appName = ""
     @State var isInstallingAppShortcut = false
     @State var notAnimatedIsInstallingAppShortcut = false
@@ -19,14 +19,7 @@ struct CreateAppShortcutView: View {
                     appName = launcherRepos[i].title ?? ""
                 }.frame(maxWidth: 200).padding([.top, .horizontal])
             
-            Button("Pick Icon") {
-                let panel = NSOpenPanel()
-                panel.allowedContentTypes = [.image]
-                panel.allowsMultipleSelection = false
-                if panel.runModal() == .OK {
-                    iconPath = panel.url?.path() ?? ""
-                }
-            }
+            ImagePicker(text: "Select Icon", launcherImage: false, image: $iconPath)
             
             Spacer()
             
@@ -37,9 +30,7 @@ struct CreateAppShortcutView: View {
                 }
                 
                 notAnimatedIsInstallingAppShortcut = true
-                
-                try? Shell().shell("brew install fileicon")
-                
+                                
                 let id = launcherRepos[i].id?.uuidString ?? ""
                 let script = """
                 #!/bin/sh
@@ -60,8 +51,11 @@ struct CreateAppShortcutView: View {
                 
                 FileManager.default.createFile(atPath: filePath, contents: script.data(using: .utf8), attributes: attributes)
                 
-                if !iconPath.isEmpty {
-                    try? Shell().shell("fileicon set /Applications/\(appName).app \(iconPath)")
+                if iconPath != nil {
+                    if let icon = NSImage(contentsOf: URL(fileURLWithPath: iconPath ?? "")) {
+                        let result = NSWorkspace.shared.setIcon(icon, forFile: "/Applications/\(appName).app", options: [])
+                        print(result)
+                    }
                 }
                 
                 dismiss()

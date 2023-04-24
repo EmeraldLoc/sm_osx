@@ -196,9 +196,9 @@ struct FirstLaunchView: View {
                         var dependenciesCommand = ""
                         
                         if isArm() {
-                            dependenciesCommand = "brew install fileicon make mingw-w64 gcc sdl2 pkg-config glew glfw libusb audiofile coreutils wget; /usr/local/bin/brew install make mingw-w64 gcc sdl2 pkg-config glew glfw libusb audiofile coreutils wget; echo 'sm_osx: Finished Installing Deps'"
+                            dependenciesCommand = "brew install make mingw-w64 gcc sdl2 pkg-config glew glfw libusb audiofile coreutils wget; /usr/local/bin/brew install make mingw-w64 gcc sdl2 pkg-config glew glfw libusb audiofile coreutils wget; echo 'sm_osx: Finished Installing Deps'"
                         } else {
-                            dependenciesCommand = "brew install fileicon make mingw-w64 gcc sdl2 pkg-config glew glfw libusb audiofile coreutils wget; echo 'sm_osx: Finished Installing Deps'"
+                            dependenciesCommand = "brew install make mingw-w64 gcc sdl2 pkg-config glew glfw libusb audiofile coreutils wget; echo 'sm_osx: Finished Installing Deps'"
                         }
                         
                         let process = Process()

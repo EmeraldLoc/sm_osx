@@ -12,6 +12,7 @@ struct MenuCommands: Commands {
     @AppStorage("showMenuExtra") var showMenuExtra = true
     @AppStorage("keepInMenuBar") var keepInMenuBar = true
     @Environment(\.openWindow) var openWindow
+    @ObservedObject var addingRepo = AddingRepo.shared
     var updaterController: SPUStandardUpdaterController
     let moc = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
@@ -103,7 +104,7 @@ struct MenuCommands: Commands {
                 } else {
                     exit(0)
                 }
-            }.keyboardShortcut("q")
+            }.keyboardShortcut("q").disabled(addingRepo.isCompiling)
         }
         
         CommandGroup(replacing: .toolbar) { }
@@ -146,6 +147,7 @@ struct menuExtras: Scene {
     @AppStorage("firstLaunch") var firstLaunch = true
     @AppStorage("transparentBar") var transparentBar = TitlebarAppearence.normal
     @StateObject var networkMonitor = NetworkMonitor()
+    @ObservedObject var addingRepo = AddingRepo.shared
     @ObservedObject var launchRepoAppleScript = LaunchRepoAppleScript.shared
     @Environment(\.openWindow) var openWindow
     
@@ -233,7 +235,7 @@ struct menuExtras: Scene {
             Section {
                 Button("Quit") {
                     exit(0)
-                }
+                }.disabled(addingRepo.isCompiling)
             }
         } label: {
             if showMenuExtra && !firstLaunch {

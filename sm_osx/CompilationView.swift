@@ -18,6 +18,7 @@ struct CompilationView: View {
     @State var height = 125
     @Environment(\.dismiss) var dismiss
     @Environment(\.managedObjectContext) var moc
+    @ObservedObject var addingRepo = AddingRepo.shared
     
     let task = Process()
     
@@ -83,6 +84,8 @@ struct CompilationView: View {
                         
                         log = "Canceling"
                         
+                        task.terminate()
+                        
                         try? shell.shell("cd ~/SM64Repos && rm -rf \(execPath)", false)
                         try? shell.shell("cd ~/SM64Repos && rm -rf \(repo)", false)
                         
@@ -93,6 +96,9 @@ struct CompilationView: View {
             
             
         }.onAppear {
+            
+            addingRepo.isCompiling = true
+            addingRepo.objectWillChange.send()
             
             print("Exec Path: \(execPath)\n Repo Path: \(repo)")
             
@@ -137,7 +143,7 @@ struct CompilationView: View {
                             
                             let content = UNMutableNotificationContent()
                             content.title = "Build Finished Successfully"
-                            content.subtitle = "The build \(repo) has finished successfully."
+                            content.subtitle = "The repo \(repo) has finished building successfully."
                             content.sound = UNNotificationSound.default
                             
                             // show this notification instantly
@@ -286,7 +292,12 @@ struct CompilationView: View {
             }
             
             try? task.run()
-            
-        }.frame(width: 700, height: CGFloat(height))
+                        
+        }
+        .frame(width: 700, height: CGFloat(height))
+        .onDisappear {
+            addingRepo.isCompiling = false
+            addingRepo.objectWillChange.send()
+        }
     }
 }
