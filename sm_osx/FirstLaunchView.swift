@@ -233,7 +233,17 @@ struct FirstLaunchView: View {
                     .frame(width: 300)
             } else if status == .finishingUp {
                 Text("Finishing Up...").onAppear {
-                    try? Shell().shell("cd ~/ && mkdir SM64Repos")
+                    if !FileManager.default.fileExists(atPath: "\(FileManager.default.homeDirectoryForCurrentUser.path())/SM64Repos") {
+                        do {
+                            let path = "\(FileManager.default.homeDirectoryForCurrentUser.path())/SM64Repos"
+                            
+                            try FileManager.default.createDirectory(atPath: "\(FileManager.default.homeDirectoryForCurrentUser.path())/SM64Repos", withIntermediateDirectories: true)
+                            print("Created Folder SM64Repos in the home folder.")
+                        } catch {
+                            print("Error, could not create folder (this is probably ok), error: \(error)")
+                        }
+                    }
+                    
                 }.onReceive(timer, perform: { _ in
                     startingTimer += 1
                     
