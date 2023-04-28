@@ -32,7 +32,7 @@ public func showApp() {
     
     for window in NSApplication.shared.windows {
         if window.title == "sm_osx" {
-            window.orderFrontRegardless()            
+            window.orderFrontRegardless()
         }
     }
 }

@@ -152,7 +152,7 @@ struct sm_osxApp: App {
                         }
                     }
                 }.transparentBackgroundStyle()
-        }.windowResizability(.contentSize).commands {
+        }.commands {
             if firstLaunch {
                 CommandGroup(replacing: .appSettings) {
                     Text("Settings..")

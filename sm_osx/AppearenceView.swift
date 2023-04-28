@@ -4,19 +4,28 @@ import SwiftUI
 struct AppearenceSettingsView: View {
     
     @AppStorage("isGrid") var isGrid = false
+    @AppStorage("compilationAppearence") var compilationAppearence = CompilationAppearence.compact
     @AppStorage("transparentBar") var transparentBar = TitlebarAppearence.normal
     @AppStorage("transparency") var transparency = TransparencyAppearence.normal
     @AppStorage("transparencyDuringNotSelected") var transparencyDuringNotSelected = false
     
     var body: some View {
         List {
-            Picker("Launcher View", selection: $isGrid.animation()) {
+            Picker("Launcher Appearence", selection: $isGrid.animation()) {
                 Text("Grid")
                     .tag(true)
                 
                 Text("List")
                     .tag(false)
-            }.frame(idealWidth: 200, maxWidth: 200)
+            }.frame(maxWidth: 300)
+            
+            Picker("Compilation Appearence", selection: $compilationAppearence.animation()) {
+                Text("Compact")
+                    .tag(CompilationAppearence.compact)
+                    
+                Text("Full")
+                    .tag(CompilationAppearence.full)
+            }.frame(maxWidth: 350)
             
             Picker("Title Bar", selection: $transparentBar.animation()) {
                 Text("Normal")
@@ -24,7 +33,7 @@ struct AppearenceSettingsView: View {
                 
                 Text("Unified")
                     .tag(TitlebarAppearence.unified)
-            }.frame(idealWidth: 200, maxWidth: 200)
+            }.frame(maxWidth: 200)
             
             Picker("Transparency", selection: $transparency) {
                 Text("Normal")

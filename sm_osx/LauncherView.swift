@@ -253,8 +253,6 @@ struct LauncherView: View {
 
             if !FileManager.default.fileExists(atPath: "\(FileManager.default.homeDirectoryForCurrentUser.path())/SM64Repos") {
                 do {
-                    let path = "\(FileManager.default.homeDirectoryForCurrentUser.path())/SM64Repos"
-                    
                     try FileManager.default.createDirectory(atPath: "\(FileManager.default.homeDirectoryForCurrentUser.path())/SM64Repos", withIntermediateDirectories: true)
                     print("Created Folder SM64Repos in the home folder.")
                 } catch {

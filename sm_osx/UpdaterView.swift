@@ -23,8 +23,12 @@ struct CheckForUpdatesView: View {
     }
     
     var body: some View {
-        Button("Check for Updates", action: updater.checkForUpdates)
-            .disabled(!checkForUpdatesViewModel.canCheckForUpdates)
-            .disabled(!network.isConnected)
+        Button("Check for Updates") {
+            updater.checkForUpdates()
+            
+            showApp()
+        }
+        .disabled(!checkForUpdatesViewModel.canCheckForUpdates)
+        .disabled(!network.isConnected)
     }
 }

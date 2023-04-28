@@ -34,7 +34,7 @@ struct ImagePicker: View {
                 Image(systemName: "trash")
             }.disabled(image == nil)
             
-            if image != nil && NSImage(contentsOf: URL(fileURLWithPath: image ?? "")) != nil {
+            if NSImage(contentsOf: URL(fileURLWithPath: image ?? "")) != nil {
                 Image(nsImage: NSImage(contentsOf: URL(fileURLWithPath: image ?? ""))!)
                     .resizable()
                     .frame(width: launcherImage ? 35.56 : 20, height: 20)

@@ -16,28 +16,28 @@ struct SettingsView: View {
                 .tabItem {
                     Label("General", systemImage: "gearshape")
                 }
-                .frame(width: 350, height: 200)
+                .frame(width: 350, height: 175)
                 .tag(0)
             
             AppearenceSettingsView()
                 .tabItem {
                     Label("Appearence", systemImage: "eye")
                 }
-                .frame(width: 350, height: 125)
+                .frame(width: 350, height: 150)
                 .tag(1)
             
             UpdatesSettingsView(updater: updater)
                 .tabItem {
                     Label("Updates", systemImage: "arrow.down.circle")
                 }
-                .frame(width: 350, height: 150)
+                .frame(width: 350, height: 125)
                 .tag(2)
             
             DeveloperView()
                 .tabItem {
                     Label("Developer", systemImage: "hammer")
                 }
-                .frame(width: 350, height: 60)
+                .frame(width: 350, height: 50)
                 .tag(3)
         }
     }

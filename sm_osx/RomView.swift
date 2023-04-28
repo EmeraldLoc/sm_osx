@@ -33,9 +33,7 @@ struct RomView: View {
     @State var commandsCompile = ""
     
     func compile() {
-        
         //install dependencies
-        
         if (repo == .sm64ex_coop || repo == .sm64ex_coop_dev || repo == .moon64) && isArm() {
             commandsCompile = "echo 'Installing Deps' && brew uninstall --ignore-dependencies glew sdl2; arch -x86_64 /bin/zsh -cl '/usr/local/bin/brew install make mingw-w64 gcc gcc@9 sdl2 pkg-config glew glfw libusb audiofile coreutils wget'; brew install make mingw-w64 gcc pkg-config glfw libusb audiofile coreutils wget; "
         }
@@ -44,15 +42,12 @@ struct RomView: View {
         }
         
         //clone the repo
-        
         commandsCompile.append("echo 'Started Clone' && cd ~/SM64Repos && rm -rf \(repo) && git clone \(repo.rawValue) \(repo) && ")
         
         //copy files
-        
         commandsCompile.append("cp baserom.us.z64 \(repo) | echo 'Rom Files Done' && cd \(repo) && ")
         
         //patch
-        
         if !patch.isEmpty {
             commandsCompile.append("echo 'Patching Files' && ")
         }
