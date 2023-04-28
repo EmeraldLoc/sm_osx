@@ -104,7 +104,7 @@ struct LauncherView: View {
                         LauncherListView(reloadMenuBarLauncher: $reloadMenuBarLauncher, existingRepo: $existingRepo)
                     }
                 }
-                .padding(.top, 0.1)
+                .padding(.top, 1)
                 .onChange(of: launchRepoAppleScript.repoID) { repoID in
                     if !showMenuExtra {
                         for i in 0...launcherRepos.count - 1 {
@@ -117,6 +117,7 @@ struct LauncherView: View {
                     }
                 }
                 .scrollContentBackground(.hidden)
+                .scrollIndicators(.never)
             }
             
             if launcherRepos.isEmpty {
@@ -159,7 +160,7 @@ struct LauncherView: View {
                     }
                 }) {
                     Text("Select Rom")
-                }.buttonStyle(.borderedProminent)
+                }.buttonStyle(.borderedProminent).padding(.bottom)
             }
             
             if !homebrewText.isEmpty {
@@ -250,7 +251,14 @@ struct LauncherView: View {
                 print("Failed: \(error)")
             }
 
-            try? Shell().shell("cd ~/ && mkdir SM64Repos")
+            if !FileManager.default.fileExists(atPath: "\(FileManager.default.homeDirectoryForCurrentUser.path())/SM64Repos") {
+                do {
+                    try FileManager.default.createDirectory(atPath: "\(FileManager.default.homeDirectoryForCurrentUser.path())/SM64Repos", withIntermediateDirectories: true)
+                    print("Created Folder SM64Repos in the home folder.")
+                } catch {
+                    print("Error, could not create folder (this is probably ok), error: \(error)")
+                }
+            }
             
             if transparentBar == TitlebarAppearence.unified {
                 for window in NSApplication.shared.windows {
@@ -278,7 +286,7 @@ struct LauncherView: View {
                 let launchID = UserDefaults.standard.string(forKey: "launch-repo-id") ?? ""
                 
                 if launchID == launcherRepos[i].id?.uuidString {
-                    try? launcherShell("\(launcherRepos[i].path ?? "its broken") \(launcherRepos[i].args ?? "")")
+                    launcherShell("\(launcherRepos[i].path ?? "its broken") \(launcherRepos[i].args ?? "")")
                 }
             }
             

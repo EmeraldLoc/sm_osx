@@ -8,7 +8,7 @@ struct sm_osxApp: App {
     
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @Environment(\.openWindow) var openWindow
-    @StateObject var networkMonitor = NetworkMonitor()
+    @StateObject private var networkMonitor = NetworkMonitor()
     @StateObject private var dataController = DataController()
     @AppStorage("showMenuExtra") var showMenuExtra = true
     @AppStorage("keepInMenuBar") var keepInMenuBar = true
@@ -152,7 +152,7 @@ struct sm_osxApp: App {
                         }
                     }
                 }.transparentBackgroundStyle()
-        }.windowResizability(.contentSize).commands {
+        }.commands {
             if firstLaunch {
                 CommandGroup(replacing: .appSettings) {
                     Text("Settings..")

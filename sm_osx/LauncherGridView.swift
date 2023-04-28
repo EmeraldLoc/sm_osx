@@ -58,7 +58,7 @@ struct LauncherGridView: View {
                             launcherRepos[i].isEditing = false
                         }
                         
-                        try? launcherShell("\(LauncherRepo.path ?? "its broken") \(LauncherRepo.args ?? "")")
+                        launcherShell("\(LauncherRepo.path ?? "its broken") \(LauncherRepo.args ?? "")")
                         
                         print(LauncherRepo.path ?? "")
                     } label: {
@@ -77,8 +77,7 @@ struct LauncherGridView: View {
                         }
                     }.buttonStyle(PlayHover(image: LauncherRepo.imagePath ?? ""))
                     
-                    if launcherRepos[i].imagePath != nil || NSImage(contentsOf: URL(fileURLWithPath: LauncherRepo.imagePath ?? "")) != nil {
-                        
+                    if launcherRepos[i].imagePath != nil && NSImage(contentsOf: URL(fileURLWithPath: LauncherRepo.imagePath ?? "")) != nil {
                         Text(LauncherRepo.title ?? "Unknown Title")
                     }
                     
@@ -115,7 +114,9 @@ struct LauncherGridView: View {
                             moc.delete(launcherRepo)
                             
                             do {
-                                try moc.save()
+                                try withAnimation {
+                                    try moc.save()
+                                }
                                 reloadMenuBarLauncher = true
                             }
                             catch {

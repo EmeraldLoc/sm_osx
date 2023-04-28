@@ -33,7 +33,7 @@ struct LauncherEditView: View {
                 createRepoShortcutSheet = true
             }
             
-            ImagePicker(text: "Change Image", image: $image)
+            ImagePicker(text: "Change Image", launcherImage: true, image: $image)
                 .padding([.horizontal, .bottom])
             
             Button("Save") {

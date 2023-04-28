@@ -6,6 +6,7 @@ struct FirstLaunchView: View {
     @State var status = FirstLaunchStatus.none
     @State var startingTimer = 0
     @State var showAppNotInApplicationsFolderAlert = false
+    @AppStorage("compilationAppearence") var compilationAppearence = CompilationAppearence.compact
     @AppStorage("transparentBar") var transparentBar = TitlebarAppearence.normal
     @AppStorage("transparency") var transparency = TransparencyAppearence.normal
     @AppStorage("firstLaunch") var firstLaunch = true
@@ -61,7 +62,7 @@ struct FirstLaunchView: View {
                     })
             } else if status == .launcherView {
                 VStack {
-                    Text("Select Launcher Layout")
+                    Text("Select Launcher Appearence")
                     
                     Text("This can be changed at anytime in Settings")
                         .font(.caption)
@@ -115,6 +116,27 @@ struct FirstLaunchView: View {
                         Text("More")
                             .tag(TransparencyAppearence.more)
                     }.frame(idealWidth: 200, maxWidth: 200)
+                    
+                    Button("Continue") {
+                        withAnimation {
+                            status = .compilingAppearence
+                        }
+                    }
+                }
+            } else if status == .compilingAppearence {
+                VStack {
+                    Text("Select Compiling Appearence")
+                    
+                    Text("This can be changed at anytime in Settings")
+                        .font(.caption)
+                    
+                    Picker("Compilation Appearence", selection: $compilationAppearence) {
+                        Text("Compact")
+                            .tag(CompilationAppearence.compact)
+                        
+                        Text("Full")
+                            .tag(CompilationAppearence.full)
+                    }.frame(maxWidth: 300)
                     
                     Button("Continue") {
                         withAnimation {
@@ -196,9 +218,9 @@ struct FirstLaunchView: View {
                         var dependenciesCommand = ""
                         
                         if isArm() {
-                            dependenciesCommand = "brew install fileicon make mingw-w64 gcc sdl2 pkg-config glew glfw libusb audiofile coreutils wget; /usr/local/bin/brew install make mingw-w64 gcc sdl2 pkg-config glew glfw libusb audiofile coreutils wget; echo 'sm_osx: Finished Installing Deps'"
+                            dependenciesCommand = "brew install make mingw-w64 gcc sdl2 pkg-config glew glfw libusb audiofile coreutils wget; /usr/local/bin/brew install make mingw-w64 gcc sdl2 pkg-config glew glfw libusb audiofile coreutils wget; echo 'sm_osx: Finished Installing Deps'"
                         } else {
-                            dependenciesCommand = "brew install fileicon make mingw-w64 gcc sdl2 pkg-config glew glfw libusb audiofile coreutils wget; echo 'sm_osx: Finished Installing Deps'"
+                            dependenciesCommand = "brew install make mingw-w64 gcc sdl2 pkg-config glew glfw libusb audiofile coreutils wget; echo 'sm_osx: Finished Installing Deps'"
                         }
                         
                         let process = Process()
@@ -233,7 +255,15 @@ struct FirstLaunchView: View {
                     .frame(width: 300)
             } else if status == .finishingUp {
                 Text("Finishing Up...").onAppear {
-                    try? Shell().shell("cd ~/ && mkdir SM64Repos")
+                    if !FileManager.default.fileExists(atPath: "\(FileManager.default.homeDirectoryForCurrentUser.path())/SM64Repos") {
+                        do {
+                            try FileManager.default.createDirectory(atPath: "\(FileManager.default.homeDirectoryForCurrentUser.path())/SM64Repos", withIntermediateDirectories: true)
+                            print("Created Folder SM64Repos in the home folder.")
+                        } catch {
+                            print("Error, could not create folder (this is probably ok), error: \(error)")
+                        }
+                    }
+                    
                 }.onReceive(timer, perform: { _ in
                     startingTimer += 1
                     

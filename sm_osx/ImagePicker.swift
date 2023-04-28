@@ -3,6 +3,7 @@ import SwiftUI
 struct ImagePicker: View {
     
     @State var text: String
+    @State var launcherImage: Bool
     @Binding var image: String?
     
     var body: some View {
@@ -33,10 +34,10 @@ struct ImagePicker: View {
                 Image(systemName: "trash")
             }.disabled(image == nil)
             
-            if image != nil && NSImage(contentsOf: URL(fileURLWithPath: image ?? "")) != nil {
+            if NSImage(contentsOf: URL(fileURLWithPath: image ?? "")) != nil {
                 Image(nsImage: NSImage(contentsOf: URL(fileURLWithPath: image ?? ""))!)
                     .resizable()
-                    .frame(width: 35.56, height: 20)
+                    .frame(width: launcherImage ? 35.56 : 20, height: 20)
             }
         }
     }

@@ -32,7 +32,7 @@ public func showApp() {
     
     for window in NSApplication.shared.windows {
         if window.title == "sm_osx" {
-            window.orderFrontRegardless()            
+            window.orderFrontRegardless()
         }
     }
 }
@@ -44,4 +44,10 @@ func restart() {
     process.arguments = [path]
     process.launch()
     exit(0)
+}
+
+class AddingRepo: ObservableObject {
+    static let shared = AddingRepo()
+    
+    var isCompiling = false
 }
