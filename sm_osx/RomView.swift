@@ -42,7 +42,7 @@ struct RomView: View {
         }
         
         //clone the repo
-        commandsCompile.append("echo 'Started Clone' && cd ~/SM64Repos && rm -rf \(repo) && git clone \(repo.rawValue) \(repo) && ")
+        commandsCompile.append("echo 'Starting Clone' && cd ~/SM64Repos && rm -rf \(repo) && git clone \(repo.rawValue) \(repo) && ")
         
         //copy files
         commandsCompile.append("cp baserom.us.z64 \(repo) | echo 'Rom Files Done' && cd \(repo) && ")

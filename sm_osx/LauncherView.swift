@@ -286,7 +286,7 @@ struct LauncherView: View {
                 let launchID = UserDefaults.standard.string(forKey: "launch-repo-id") ?? ""
                 
                 if launchID == launcherRepos[i].id?.uuidString {
-                    try? launcherShell("\(launcherRepos[i].path ?? "its broken") \(launcherRepos[i].args ?? "")")
+                    launcherShell("\(launcherRepos[i].path ?? "its broken") \(launcherRepos[i].args ?? "")")
                 }
             }
             
