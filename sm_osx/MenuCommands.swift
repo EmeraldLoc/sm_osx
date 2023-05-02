@@ -16,8 +16,20 @@ struct MenuCommands: Commands {
     var updaterController: SPUStandardUpdaterController
     let moc = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+
+    private func fetchLaunchers() -> [LauncherRepos] {
+        let fetchRequest: NSFetchRequest<LauncherRepos>
+        fetchRequest = LauncherRepos.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true, selector: #selector(NSString.caseInsensitiveCompare(_:)))]
+        
+        let context = dataController.container.viewContext
+        
+        let objects = try? context.fetch(fetchRequest)
+        
+        return objects ?? []
+    }
     
-    private func launcherShell(_ command: String) {
+    func launcherShell(_ command: String) {
         
         let process = Process()
         var output = ""
@@ -30,37 +42,25 @@ struct MenuCommands: Commands {
         let outHandle = pipe.fileHandleForReading
         
         outHandle.readabilityHandler = { pipe in
-            if let line = String(data: pipe.availableData, encoding: .utf8) {
+            if let line = String(data: pipe.availableData, encoding: String.Encoding.utf8) {
                 output.append(line)
             } else {
-                print("Error decoding data, aaaa: \(pipe.availableData)")
+                print("Error decoding data. why do I program...: \(pipe.availableData)")
             }
+            
+            outHandle.stopReadingIfPassedEOF()
         }
         
-        NotificationCenter.default.addObserver(forName: Process.didTerminateNotification, object: process, queue: nil, using: { _ in
+        var observer : NSObjectProtocol?
+        observer = NotificationCenter.default.addObserver(forName: Process.didTerminateNotification, object: process, queue: nil) { notification -> Void in
             if process.terminationStatus != 0 {
-                
-                if NSApp.activationPolicy() == .prohibited {
-                    showApp()
-                }
-                
                 openWindow(id: "crash-log", value: output)
             }
-        })
+            
+            NotificationCenter.default.removeObserver(observer as Any)
+        }
         
         try? process.run()
-    }
-    
-    private func fetchLaunchers() -> [LauncherRepos] {
-        let fetchRequest: NSFetchRequest<LauncherRepos>
-        fetchRequest = LauncherRepos.fetchRequest()
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true, selector: #selector(NSString.caseInsensitiveCompare(_:)))]
-        
-        let context = dataController.container.viewContext
-        
-        let objects = try? context.fetch(fetchRequest)
-        
-        return objects ?? []
     }
     
     var body: some Commands {
@@ -151,7 +151,19 @@ struct menuExtras: Scene {
     @ObservedObject var launchRepoAppleScript = LaunchRepoAppleScript.shared
     @Environment(\.openWindow) var openWindow
     
-    private func launcherShell(_ command: String) {
+    private func fetchLaunchers() -> [LauncherRepos] {
+        let fetchRequest: NSFetchRequest<LauncherRepos>
+        fetchRequest = LauncherRepos.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true, selector: #selector(NSString.caseInsensitiveCompare(_:)))]
+        
+        let context = dataController.container.viewContext
+        
+        let objects = try? context.fetch(fetchRequest)
+        
+        return objects ?? []
+    }
+    
+    func launcherShell(_ command: String) {
         
         let process = Process()
         var output = ""
@@ -164,37 +176,25 @@ struct menuExtras: Scene {
         let outHandle = pipe.fileHandleForReading
         
         outHandle.readabilityHandler = { pipe in
-            if let line = String(data: pipe.availableData, encoding: .utf8) {
+            if let line = String(data: pipe.availableData, encoding: String.Encoding.utf8) {
                 output.append(line)
             } else {
-                print("Error decoding data, aaaa: \(pipe.availableData)")
+                print("Error decoding data. why do I program...: \(pipe.availableData)")
             }
+            
+            outHandle.stopReadingIfPassedEOF()
         }
         
-        NotificationCenter.default.addObserver(forName: Process.didTerminateNotification, object: process, queue: nil, using: { _ in
+        var observer : NSObjectProtocol?
+        observer = NotificationCenter.default.addObserver(forName: Process.didTerminateNotification, object: process, queue: nil) { notification -> Void in
             if process.terminationStatus != 0 {
-                
-                if NSApp.activationPolicy() == .prohibited {
-                    showApp()
-                }
-                
                 openWindow(id: "crash-log", value: output)
             }
-        })
+            
+            NotificationCenter.default.removeObserver(observer as Any)
+        }
         
         try? process.run()
-    }
-    
-    private func fetchLaunchers() -> [LauncherRepos] {
-        let fetchRequest: NSFetchRequest<LauncherRepos>
-        fetchRequest = LauncherRepos.fetchRequest()
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true, selector: #selector(NSString.caseInsensitiveCompare(_:)))]
-        
-        let context = dataController.container.viewContext
-        
-        let objects = try? context.fetch(fetchRequest)
-        
-        return objects ?? []
     }
     
     var body: some Scene {

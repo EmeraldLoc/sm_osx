@@ -26,7 +26,7 @@ struct LauncherView: View {
     @ObservedObject var launchRepoAppleScript = LaunchRepoAppleScript.shared
     let rom: UTType = .init(filenameExtension: "z64") ?? UTType.unixExecutable
     
-    private func launcherShell(_ command: String) {
+    func launcherShell(_ command: String) {
         
         let process = Process()
         var output = ""
@@ -39,23 +39,23 @@ struct LauncherView: View {
         let outHandle = pipe.fileHandleForReading
         
         outHandle.readabilityHandler = { pipe in
-            if let line = String(data: pipe.availableData, encoding: .utf8) {
+            if let line = String(data: pipe.availableData, encoding: String.Encoding.utf8) {
                 output.append(line)
             } else {
-                print("Error decoding data, aaaa: \(pipe.availableData)")
+                print("Error decoding data. why do I program...: \(pipe.availableData)")
             }
+            
+            outHandle.stopReadingIfPassedEOF()
         }
         
-        NotificationCenter.default.addObserver(forName: Process.didTerminateNotification, object: process, queue: nil, using: { _ in
+        var observer : NSObjectProtocol?
+        observer = NotificationCenter.default.addObserver(forName: Process.didTerminateNotification, object: process, queue: nil) { notification -> Void in
             if process.terminationStatus != 0 {
-                
-                if NSApp.activationPolicy() == .prohibited {
-                    showApp()
-                }
-                
                 openWindow(id: "crash-log", value: output)
             }
-        })
+            
+            NotificationCenter.default.removeObserver(observer as Any)
+        }
         
         try? process.run()
     }
@@ -148,7 +148,7 @@ struct LauncherView: View {
                     romURL? = URL(fileURLWithPath: romURL?.path.replacingOccurrences(of: " ", with: #"\ "#
                                                                                      , options: .literal, range: nil) ?? "")
                     
-                    try? Shell().shell("cp \(romURL?.path ?? "") ~/SM64Repos/baserom.us.z64")
+                    Shell().shell("cp \(romURL?.path ?? "") ~/SM64Repos/baserom.us.z64")
                     
                     if let doesExist = try? checkRom("ls ~/SM64Repos/baserom.us.z64") {
                         if doesExist {
@@ -221,17 +221,17 @@ struct LauncherView: View {
             }
         }.onAppear {
             
-            let detectArmBrewInstall = try? Shell().shell("which brew")
-            let detectIntelBrewInstall = try? Shell().shell("which /usr/local/bin/brew")
+            let detectArmBrewInstall = Shell().shell("which brew")
+            let detectIntelBrewInstall = Shell().shell("which /usr/local/bin/brew")
             
-            if (detectArmBrewInstall?.contains("/opt/homebrew/bin/brew") ?? false && detectIntelBrewInstall == "/usr/local/bin/brew\n" && isArm()) || (detectIntelBrewInstall == "/usr/local/bin/brew\n" && !isArm())  {
+            if (detectArmBrewInstall.contains("/opt/homebrew/bin/brew") && detectIntelBrewInstall == "/usr/local/bin/brew\n" && isArm()) || (detectIntelBrewInstall == "/usr/local/bin/brew\n" && !isArm())  {
                     homebrewText = ""
             }
-            else if !(detectArmBrewInstall?.contains("/opt/homebrew/bin/brew") ?? false) && detectIntelBrewInstall == "/usr/local/bin/brew\n" && isArm() {
+            else if !(detectArmBrewInstall.contains("/opt/homebrew/bin/brew")) && detectIntelBrewInstall == "/usr/local/bin/brew\n" && isArm() {
                     
                 homebrewText = "Arm homebrew is not installed. Please install at brew.sh\n\nIntel homebrew is installed"
             }
-            else if (detectArmBrewInstall?.contains("/opt/homebrew/bin/brew") ?? false) && detectIntelBrewInstall != "/usr/local/bin/brew\n" && isArm() {
+            else if (detectArmBrewInstall.contains("/opt/homebrew/bin/brew")) && detectIntelBrewInstall != "/usr/local/bin/brew\n" && isArm() {
                     
                 homebrewText = "Arm homebrew is installed\n\nIntel homebrew is not installed. Install by launching your terminal with rosetta, and then follow instructions at brew.sh"
             }

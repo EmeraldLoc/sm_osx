@@ -13,10 +13,7 @@ struct CrashView: View {
 
             GroupBox {
                 VStack {
-                    TextEditor(text: .constant(log))
-                        .scrollContentBackground(.hidden)
-                        .scrollIndicators(.never)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                    BetterTextEditor(text: .constant(log), isEditable: false, autoScroll: true)
                 }
             }.padding(.horizontal)
                 

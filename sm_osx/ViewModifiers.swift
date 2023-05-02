@@ -77,7 +77,7 @@ struct BetterTextEditor: NSViewRepresentable {
         documentView.isEditable = isEditable
         
         let scroll = NSScrollView()
-        scroll.hasVerticalScroller = true
+        scroll.hasVerticalScroller = false
         scroll.documentView = documentView
         scroll.drawsBackground = false
         
