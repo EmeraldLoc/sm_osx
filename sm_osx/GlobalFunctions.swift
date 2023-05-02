@@ -1,5 +1,4 @@
 
-import Foundation
 import UniformTypeIdentifiers
 import AppKit
 
@@ -48,6 +47,5 @@ func restart() {
 
 class AddingRepo: ObservableObject {
     static let shared = AddingRepo()
-    
     var isCompiling = false
 }

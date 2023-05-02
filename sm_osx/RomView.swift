@@ -21,6 +21,7 @@ struct RomView: View {
     @State var extData = 0
     @State var shell = Shell()
     @State var execPath = ""
+    @State var errorMessage = ""
     @Binding var repoView: Bool
     @Binding var reloadMenuBarLauncher: Bool
     @AppStorage("keepRepo") var keepRepo = false
@@ -35,21 +36,21 @@ struct RomView: View {
     func compile() {
         //install dependencies
         if (repo == .sm64ex_coop || repo == .sm64ex_coop_dev || repo == .moon64) && isArm() {
-            commandsCompile = "echo 'Installing Deps' && brew uninstall --ignore-dependencies glew sdl2; arch -x86_64 /bin/zsh -cl '/usr/local/bin/brew install make mingw-w64 gcc gcc@9 sdl2 pkg-config glew glfw libusb audiofile coreutils wget'; brew install make mingw-w64 gcc pkg-config glfw libusb audiofile coreutils wget; "
+            commandsCompile = "echo 'sm_osx: Installing Deps'; brew uninstall --ignore-dependencies glew sdl2; arch -x86_64 /bin/zsh -cl '/usr/local/bin/brew install make mingw-w64 gcc gcc@9 sdl2 pkg-config glew glfw libusb audiofile coreutils wget'; brew install make mingw-w64 gcc pkg-config glfw libusb audiofile coreutils wget; "
         }
         else {
-            commandsCompile = "echo 'Installing Deps' && brew install make mingw-w64 gcc sdl2 pkg-config glew glfw libusb audiofile coreutils wget; "
+            commandsCompile = "echo 'sm_osx: Installing Deps' && brew install make mingw-w64 gcc sdl2 pkg-config glew glfw libusb audiofile coreutils wget; "
         }
         
         //clone the repo
-        commandsCompile.append("echo 'Starting Clone' && cd ~/SM64Repos && rm -rf \(repo) && git clone \(repo.rawValue) \(repo) && ")
+        commandsCompile.append("echo 'sm_osx: Starting Clone' && cd ~/SM64Repos && rm -rf \(repo) && git clone \(repo.rawValue) \(repo) && ")
         
         //copy files
-        commandsCompile.append("cp baserom.us.z64 \(repo) | echo 'Rom Files Done' && cd \(repo) && ")
+        commandsCompile.append("echo 'sm_osx: Rom Files Done' && cp baserom.us.z64 \(repo) && cd \(repo) && ")
         
         //patch
         if !patch.isEmpty {
-            commandsCompile.append("echo 'Patching Files' && ")
+            commandsCompile.append("echo 'sm_osx: Patching Files' && ")
         }
         
         if repo == .moon64 {
@@ -91,7 +92,7 @@ struct RomView: View {
             extData = 0
         }
 
-        commandsCompile.append("echo 'Compiling Now' && ")
+        commandsCompile.append("echo 'sm_osx: Compiling Now' && ")
 
         if repo == .sm64ex_coop || repo == .sm64ex_coop_dev {
             commandsCompile.append("cd ~/SM64Repos/\(repo) && arch -x86_64 /bin/zsh -cl 'gmake OSX_BUILD=1 TARGET_ARCH=x86_64-apple-darwin TARGET_BITS=64 USE_APP=0 EXTERNAL_DATA=0 DEBUG=\(debug) COLOR=0 \(compSpeed.rawValue)' && ")
@@ -110,14 +111,7 @@ struct RomView: View {
         
         if doKeepRepo {
             
-            var checkExecPath = ""
-            
-            do {
-                checkExecPath = try shell.shell("ls ~/SM64Repos/")
-            }
-            catch {
-                print("thats bad")
-            }
+            let checkExecPath = shell.shell("ls ~/SM64Repos/")
             
             var numbCur = 0
             
@@ -136,7 +130,7 @@ struct RomView: View {
             }
         }
         
-        commandsCompile.append("echo 'Finishing Up' && cd ~/SM64Repos && rm -rf \(execPath) && gcp -r \(repo)/build/us_pc/ \(execPath) && rm -rf \(repo);")
+        commandsCompile.append("echo 'sm_osx: Finishing Up' && cd ~/SM64Repos && rm -rf \(execPath) && gcp -r \(repo)/build/us_pc/ \(execPath) && rm -rf \(repo);")
         
         if repo == .sm64ex_coop || repo == .sm64ex_coop_dev || repo == .moon64 {
             commandsCompile.append("brew install glew sdl2;")
@@ -146,15 +140,20 @@ struct RomView: View {
             }
         }
         
-        commandsCompile.append(" echo 'Finished Doin Stonks'")
+        commandsCompile.append(" echo 'sm_osx: Done'")
 
-        startedCompilation = true
+        if commandsCompile.contains("sm_osx: Done") {
+            startedCompilation = true
+        } else {
+            withAnimation {
+                errorMessage = "Error: Can't start due to unfinished commands, please try again."
+            }
+        }
     }
     
     var body: some View {
         ZStack {
             VStack {
-                
                 List {
                     Toggle(isOn: $doLauncher) {
                         Text("Add Repo to Launcher")
@@ -185,6 +184,10 @@ struct RomView: View {
                         compile()
                     }.padding(.top, 3).sheet(isPresented: $startedCompilation) {
                         CompilationView(compileCommands: $commandsCompile, repo: $repo, execPath: $execPath, doLauncher: $doLauncher, reloadMenuBarLauncher: $reloadMenuBarLauncher)
+                    }
+                    
+                    if !errorMessage.isEmpty {
+                        Text(errorMessage)
                     }
                 }
             }

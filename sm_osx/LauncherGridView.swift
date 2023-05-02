@@ -11,7 +11,7 @@ struct LauncherGridView: View {
     @Binding var existingRepo: URL?
     let layout = [GridItem(.adaptive(minimum: 260))]
     
-    private func launcherShell(_ command: String) {
+    func launcherShell(_ command: String) {
         
         let process = Process()
         var output = ""
@@ -24,23 +24,23 @@ struct LauncherGridView: View {
         let outHandle = pipe.fileHandleForReading
         
         outHandle.readabilityHandler = { pipe in
-            if let line = String(data: pipe.availableData, encoding: .utf8) {
+            if let line = String(data: pipe.availableData, encoding: String.Encoding.utf8) {
                 output.append(line)
             } else {
-                print("Error decoding data, aaaa: \(pipe.availableData)")
+                print("Error decoding data. why do I program...: \(pipe.availableData)")
             }
+            
+            outHandle.stopReadingIfPassedEOF()
         }
         
-        NotificationCenter.default.addObserver(forName: Process.didTerminateNotification, object: process, queue: nil, using: { _ in
+        var observer : NSObjectProtocol?
+        observer = NotificationCenter.default.addObserver(forName: Process.didTerminateNotification, object: process, queue: nil) { notification -> Void in
             if process.terminationStatus != 0 {
-                
-                if NSApp.activationPolicy() == .prohibited {
-                    showApp()
-                }
-                
                 openWindow(id: "crash-log", value: output)
             }
-        })
+            
+            NotificationCenter.default.removeObserver(observer as Any)
+        }
         
         try? process.run()
     }

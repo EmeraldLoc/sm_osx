@@ -19,10 +19,7 @@ struct LogView: View {
             
             GroupBox {
                 VStack {
-                    TextEditor(text: .constant(log))
-                        .scrollContentBackground(.hidden)
-                        .scrollIndicators(.never)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                    BetterTextEditor(text: .constant(log), isEditable: false, autoScroll: true)
                 }
             }.padding(.horizontal)
             
@@ -41,15 +38,17 @@ struct LogView: View {
                 task.standardError = pipe
                 let outHandle = pipe.fileHandleForReading
                 
+                try? task.run()
+                
                 outHandle.readabilityHandler = { pipe in
                     if let line = String(data: pipe.availableData, encoding: .utf8) {
                         log.append(line)
                     } else {
                         print("Error decoding data, aaaa: \(pipe.availableData)")
                     }
+                    
+                    outHandle.stopReadingIfPassedEOF()
                 }
-                
-                try? task.run()
                 
                 launched = true
             }
