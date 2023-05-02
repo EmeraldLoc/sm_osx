@@ -49,3 +49,11 @@ class AddingRepo: ObservableObject {
     static let shared = AddingRepo()
     var isCompiling = false
 }
+
+extension DispatchQueue {
+    static func background(delay: Double = 0.0, background: @escaping () -> Void) {
+        DispatchQueue.global(qos: .background).async {
+            background()
+        }
+    }
+}

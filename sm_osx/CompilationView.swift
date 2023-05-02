@@ -21,6 +21,7 @@ struct CompilationView: View {
     @ObservedObject var addingRepo = AddingRepo.shared
     @AppStorage("compilationAppearence") var compilationAppearence = CompilationAppearence.compact
     let task = Process()
+    let pipe = Pipe()
     
     var body: some View {
         VStack {
@@ -102,7 +103,14 @@ struct CompilationView: View {
                     }.padding(.bottom)
                 } else {
                     Button("Cancel") {
-                        log = "Canceling"
+                        if task.isRunning {
+                            task.terminate()
+                        }
+                        
+                        shell.shell("cd ~/SM64Repos && rm -rf \(execPath)", false)
+                        shell.shell("cd ~/SM64Repos && rm -rf \(repo)", false)
+                        
+                        dismiss.callAsFunction()
                     }.padding(.bottom)
                 }
             }
@@ -112,7 +120,14 @@ struct CompilationView: View {
                     Spacer()
                     
                     Button("Cancel") {
-                        log = "Canceling"
+                        if task.isRunning {
+                            task.terminate()
+                        }
+                        
+                        shell.shell("cd ~/SM64Repos && rm -rf \(execPath)", false)
+                        shell.shell("cd ~/SM64Repos && rm -rf \(repo)", false)
+                        
+                        dismiss.callAsFunction()
                     }.padding([.bottom, .trailing])
                 }
             }
@@ -136,16 +151,15 @@ struct CompilationView: View {
             task.executableURL = URL(fileURLWithPath: "/bin/zsh")
             task.arguments = ["-cl", "cd ~/SM64Repos && rm -rf \(execPath) && cd ~/; \(compileCommands)"]
             
-            let pipe = Pipe()
             task.standardOutput = pipe
             task.standardError = pipe
             let outHandle = pipe.fileHandleForReading
-
+            
             outHandle.readabilityHandler = { pipe in
                 if let line = String(data: pipe.availableData, encoding: String.Encoding.utf8) {
                     let number = CharacterSet.decimalDigits
                     let letters = CharacterSet.letters
-                                        
+                    
                     totalLog.append(line)
                     
                     print(line)
@@ -158,8 +172,110 @@ struct CompilationView: View {
                             log = line
                         }
                     }
-
-                    if log.contains("sm_osx: Finishing Up") {
+                    
+                    if log.contains("sm_osx: Done") {
+                        task.terminate()
+                        
+                        compilationStatus = .finished
+                        
+                        if shell.shell("ls ~/SM64Repos/\(execPath)/sm64.us.f3dex2e | echo y", true) == "y\n" && repo != .moon64 {
+                            
+                            let content = UNMutableNotificationContent()
+                            content.title = "Build Finished Successfully"
+                            content.subtitle = "The repo \(repo) has finished building successfully."
+                            content.sound = UNNotificationSound.default
+                            
+                            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.0001, repeats: false)
+                            
+                            let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+                            
+                            UNUserNotificationCenter.current().add(request)
+                            
+                            compilesSucess = true
+                            
+                            if doLauncher {
+                                
+                                let launcherRepo = LauncherRepos(context: moc)
+                                
+                                launcherRepo.title = "\(repo)"
+                                launcherRepo.isEditing = false
+                                launcherRepo.path = "~/SM64Repos/\(execPath)/sm64.us.f3dex2e"
+                                launcherRepo.args = ""
+                                launcherRepo.id = UUID()
+                                
+                                do {
+                                    try moc.save()
+                                    
+                                    reloadMenuBarLauncher = true
+                                }
+                                catch {
+                                    print(error)
+                                }
+                            }
+                            
+                            dismiss.callAsFunction()
+                        }
+                        else if shell.shell("ls ~/SM64Repos/\(execPath)/moon64.us.f3dex2e | echo y", true) == "y\n" {
+                            
+                            let content = UNMutableNotificationContent()
+                            content.title = "Build Finished Successfully"
+                            content.subtitle = "The build \(repo) has finished successfully."
+                            content.sound = UNNotificationSound.default
+                            
+                            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.0001, repeats: false)
+                            
+                            let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+                            
+                            UNUserNotificationCenter.current().add(request)
+                            
+                            compilesSucess = true
+                            
+                            if doLauncher {
+                                
+                                let launcherRepo = LauncherRepos(context: moc)
+                                
+                                launcherRepo.title = "\(repo)"
+                                launcherRepo.isEditing = false
+                                launcherRepo.path = "~/SM64Repos/\(execPath)/moon64.us.f3dex2e"
+                                launcherRepo.args = ""
+                                launcherRepo.id = UUID()
+                                
+                                do {
+                                    try moc.save()
+                                    
+                                    reloadMenuBarLauncher = true
+                                }
+                                catch {
+                                    print(error)
+                                }
+                            }
+                            
+                            dismiss.callAsFunction()
+                        }
+                        else {
+                            
+                            let content = UNMutableNotificationContent()
+                            content.title = "Build Failed"
+                            content.subtitle = "The build \(repo) has failed."
+                            content.sound = UNNotificationSound.default
+                            
+                            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.0001, repeats: false)
+                            
+                            let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+                            
+                            UNUserNotificationCenter.current().add(request)
+                            
+                            compilesSucess = false
+                            
+                            height = 575
+                            
+                            shell.shell("cd ~/SM64Repos && rm -rf \(execPath)", false)
+                            shell.shell("cd ~/SM64Repos && rm -rf \(repo)", false)
+                        }
+                        
+                        outHandle.readabilityHandler = nil
+                    }
+                    else if log.contains("sm_osx: Finishing Up") {
                         compilationStatus = .finishingUp
                     }
                     else if log.contains("sm_osx: Compiling Now") {
@@ -180,109 +296,6 @@ struct CompilationView: View {
                 } else {
                     print("Error decoding data: \(pipe.availableData)")
                 }
-                
-                if outHandle.availableData.count == 0 {
-                    task.terminate()
-
-                    compilationStatus = .finished
-                    
-                    if shell.shell("ls ~/SM64Repos/\(execPath)/sm64.us.f3dex2e | echo y", true) == "y\n" && repo != .moon64 {
-                        
-                        let content = UNMutableNotificationContent()
-                        content.title = "Build Finished Successfully"
-                        content.subtitle = "The repo \(repo) has finished building successfully."
-                        content.sound = UNNotificationSound.default
-                        
-                        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.0001, repeats: false)
-                        
-                        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-                        
-                        UNUserNotificationCenter.current().add(request)
-                        
-                        compilesSucess = true
-                        
-                        if doLauncher {
-                            
-                            let launcherRepo = LauncherRepos(context: moc)
-                            
-                            launcherRepo.title = "\(repo)"
-                            launcherRepo.isEditing = false
-                            launcherRepo.path = "~/SM64Repos/\(execPath)/sm64.us.f3dex2e"
-                            launcherRepo.args = ""
-                            launcherRepo.id = UUID()
-                            
-                            do {
-                                try moc.save()
-                                
-                                reloadMenuBarLauncher = true
-                            }
-                            catch {
-                                print(error)
-                            }
-                        }
-                        
-                        dismiss.callAsFunction()
-                    }
-                    else if shell.shell("ls ~/SM64Repos/\(execPath)/moon64.us.f3dex2e | echo y", true) == "y\n" {
-                        
-                        let content = UNMutableNotificationContent()
-                        content.title = "Build Finished Successfully"
-                        content.subtitle = "The build \(repo) has finished successfully."
-                        content.sound = UNNotificationSound.default
-                        
-                        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.0001, repeats: false)
-                        
-                        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-                        
-                        UNUserNotificationCenter.current().add(request)
-                        
-                        compilesSucess = true
-                        
-                        if doLauncher {
-                            
-                            let launcherRepo = LauncherRepos(context: moc)
-                            
-                            launcherRepo.title = "\(repo)"
-                            launcherRepo.isEditing = false
-                            launcherRepo.path = "~/SM64Repos/\(execPath)/moon64.us.f3dex2e"
-                            launcherRepo.args = ""
-                            launcherRepo.id = UUID()
-                            
-                            do {
-                                try moc.save()
-                                
-                                reloadMenuBarLauncher = true
-                            }
-                            catch {
-                                print(error)
-                            }
-                        }
-                        
-                        dismiss.callAsFunction()
-                    }
-                    else {
-                        
-                        let content = UNMutableNotificationContent()
-                        content.title = "Build Failed"
-                        content.subtitle = "The build \(repo) has failed."
-                        content.sound = UNNotificationSound.default
-
-                        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.0001, repeats: false)
-
-                        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-
-                        UNUserNotificationCenter.current().add(request)
-                        
-                        compilesSucess = false
-                        
-                        height = 575
-                        
-                        shell.shell("cd ~/SM64Repos && rm -rf \(execPath)", false)
-                        shell.shell("cd ~/SM64Repos && rm -rf \(repo)", false)
-                    }
-                }
-                
-                outHandle.stopReadingIfPassedEOF()
             }
             
             try? task.run()
@@ -301,15 +314,8 @@ struct CompilationView: View {
                     height = 575
                 }
             }
-        }.onChange(of: log) { _ in
-            if log == "Canceling" {
-                task.terminate()
-                
-                shell.shell("cd ~/SM64Repos && rm -rf \(execPath)", false)
-                shell.shell("cd ~/SM64Repos && rm -rf \(repo)", false)
-                
-                dismiss.callAsFunction()
-            }
+        }.onDisappear {
+            pipe.fileHandleForReading.readabilityHandler = nil
         }
     }
 }

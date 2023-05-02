@@ -415,7 +415,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"sm_osx/Preview Content\"";
 				DEVELOPMENT_TEAM = 25RK3JMVLT;
@@ -431,7 +431,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 1.3.0.4;
+				MARKETING_VERSION = 1.3.0.5;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.CubingStudios.sm-osx";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -449,7 +449,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"sm_osx/Preview Content\"";
 				DEVELOPMENT_TEAM = 25RK3JMVLT;
@@ -465,7 +465,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 1.3.0.4;
+				MARKETING_VERSION = 1.3.0.5;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.CubingStudios.sm-osx";
 				PRODUCT_NAME = "$(TARGET_NAME)";
