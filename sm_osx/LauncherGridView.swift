@@ -9,6 +9,9 @@ struct LauncherGridView: View {
     @FetchRequest(sortDescriptors:[SortDescriptor(\.title)]) var launcherRepos: FetchedResults<LauncherRepos>
     @Binding var reloadMenuBarLauncher: Bool
     @Binding var existingRepo: URL?
+    @State var removeEntireRepo = false
+    @State var removeRepo = false
+    @State var item: Int? = nil
     let layout = [GridItem(.adaptive(minimum: 260))]
     
     func launcherShell(_ command: String) {
@@ -34,8 +37,13 @@ struct LauncherGridView: View {
         }
         
         var observer : NSObjectProtocol?
-        observer = NotificationCenter.default.addObserver(forName: Process.didTerminateNotification, object: process, queue: nil) { notification -> Void in
+        observer = NotificationCenter.default.addObserver(forName: Process.didTerminateNotification, object: process, queue: nil) { [observer] _ in
             if process.terminationStatus != 0 {
+                
+                if NSApp.activationPolicy() == .prohibited {
+                    showApp()
+                }
+                
                 openWindow(id: "crash-log", value: output)
             }
             
@@ -49,6 +57,7 @@ struct LauncherGridView: View {
         LazyVGrid(columns: layout) {
             ForEach(launcherRepos) { LauncherRepo in
                 let i = launcherRepos.firstIndex(of: LauncherRepo) ?? 0
+
                 VStack {
                     Button {
                         
@@ -102,26 +111,8 @@ struct LauncherGridView: View {
                         }
                         
                         Button(action: {
-                            
-                            if launcherRepos.isEmpty { return }
-                            
-                            for i in 0...launcherRepos.count - 1 {
-                                launcherRepos[i].isEditing = false
-                            }
-                            
-                            let launcherRepo = launcherRepos[i]
-                            
-                            moc.delete(launcherRepo)
-                            
-                            do {
-                                try withAnimation {
-                                    try moc.save()
-                                }
-                                reloadMenuBarLauncher = true
-                            }
-                            catch {
-                                print("Error: its broken: \(error)")
-                            }
+                            item = i
+                            removeRepo = true
                         }) {
                             Text("Remove Repo")
                         }
@@ -146,6 +137,67 @@ struct LauncherGridView: View {
                     LauncherEditView(i: i, existingRepo: $existingRepo, reloadMenuBarLauncher: $reloadMenuBarLauncher)
                 }
             }
-        }.padding(15)
+        }.alert("Are You Sure You Want to Remove the Repo?", isPresented: $removeEntireRepo) {
+            Button("Yes", role: .destructive) {
+                
+                if launcherRepos.isEmpty { return }
+                
+                let launcherRepo = launcherRepos[item!]
+                
+                do {
+                    let path = URL(filePath: (launcherRepo.path!)).deletingLastPathComponent().path()
+                    
+                    Shell().shell("rm -rf \(path)")
+                } catch {
+                    print("Error, could not delete file due to: \(error)")
+                }
+                
+                moc.delete(launcherRepo)
+                
+                do {
+                    try withAnimation {
+                        try moc.save()
+                    }
+                    reloadMenuBarLauncher = true
+                } catch {
+                    print("Error: its broken: \(error)")
+                }
+                
+                item = nil
+            }
+            
+            Button("No", role: .cancel) {}
+        } message: {
+            Text("Make sure there are no important files in that folder!")
+        }
+        .padding(15)
+        .alert("Remove Repo \(launcherRepos[item ?? 0].title ?? "")?", isPresented: $removeRepo) {
+            Button("Remove Repo", role: .destructive) {
+                removeEntireRepo = true
+            }
+            
+            Button("Remove Entry", role: .destructive) {
+                if item != nil {
+                    if launcherRepos.isEmpty { return }
+                    
+                    let launcherRepo = launcherRepos[item!]
+                    
+                    moc.delete(launcherRepo)
+                    
+                    do {
+                        try withAnimation {
+                            try moc.save()
+                        }
+                        reloadMenuBarLauncher = true
+                    } catch {
+                        print("Error: its broken: \(error)")
+                    }
+                    
+                    item = nil
+                }
+            }
+            
+            Button("Cancel", role: .cancel) {}
+        }
     }
 }

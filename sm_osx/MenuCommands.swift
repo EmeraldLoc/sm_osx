@@ -52,8 +52,13 @@ struct MenuCommands: Commands {
         }
         
         var observer : NSObjectProtocol?
-        observer = NotificationCenter.default.addObserver(forName: Process.didTerminateNotification, object: process, queue: nil) { notification -> Void in
+        observer = NotificationCenter.default.addObserver(forName: Process.didTerminateNotification, object: process, queue: nil) { [observer] _ in
             if process.terminationStatus != 0 {
+                
+                if NSApp.activationPolicy() == .prohibited {
+                    showApp()
+                }
+                
                 openWindow(id: "crash-log", value: output)
             }
             
@@ -186,8 +191,13 @@ struct menuExtras: Scene {
         }
         
         var observer : NSObjectProtocol?
-        observer = NotificationCenter.default.addObserver(forName: Process.didTerminateNotification, object: process, queue: nil) { notification -> Void in
+        observer = NotificationCenter.default.addObserver(forName: Process.didTerminateNotification, object: process, queue: nil) { [observer] _ in
             if process.terminationStatus != 0 {
+                
+                if NSApp.activationPolicy() == .prohibited {
+                    showApp()
+                }
+                
                 openWindow(id: "crash-log", value: output)
             }
             
