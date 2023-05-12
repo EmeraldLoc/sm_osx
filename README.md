@@ -2,7 +2,7 @@
 # sm_osx
 
 ## About Me
-I am a swift programmer who enjoys playing video games. I started when I was very young, and since then have learned the swift programming language, and I have loved it ever since I started programming in swift. I also program in lua, c, c++, c#, and have done a little bit of js.
+I am a swift programmer who enjoys playing video games. I started when I was very young, and since then have learned the swift programming language, and I have loved it ever since I started programming in swift. I also program in lua, c#, am decent at c, and have done a little bit of js.
 
 ## How this project got started
 Super Mario 64 was one of the first  of 3 games I played, however I forgot about it for a couple of years until I learned about decomp and the sm64 pc port. Ever since I heard about it, I wanted to play the game in what was promised to be a wonderful 60fps, however with no easy way to do it, I realized I would have to make my own way. So after collecting a lot of knowledge about c and Makefiles and compilers, I was able to tinker up a small, but usable app, I then released the first version of sm_osx. Only including a couple of repos, it was the start of this project.
