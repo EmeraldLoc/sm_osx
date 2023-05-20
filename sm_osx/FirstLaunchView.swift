@@ -148,7 +148,7 @@ struct FirstLaunchView: View {
                 Text("Checking Homebrew Installation...")
                     .onAppear {
                         if isArm() {
-                            if !((Shell().shell("which brew"))).contains("/opt/homebrew/bin/brew") {
+                            if !FileManager.default.fileExists(atPath: "/opt/homebrew/bin/brew") {
                                 
                                 let task = Process()
                                 task.launchPath = "/usr/bin/osascript"
@@ -161,7 +161,7 @@ struct FirstLaunchView: View {
                                 }
                             }
                         } else {
-                            if Shell().shell("which brew").contains("/usr/local/bin/brew") {
+                            if !FileManager.default.fileExists(atPath: "/usr/local/bin/brew") {
                                 
                                 let task = Process()
                                 task.launchPath = "/usr/bin/osascript"
@@ -176,13 +176,13 @@ struct FirstLaunchView: View {
                         }
                     }.onReceive(timer) { _ in
                         if isArm() {
-                            if Shell().shell("which brew").contains("/opt/homebrew/bin/brew") {
+                            if FileManager.default.fileExists(atPath: "/opt/homebrew/bin/brew") {
                                 withAnimation {
                                     status = .checkingIntelHomebrewInstallation
                                 }
                             }
                         } else {
-                            if Shell().shell("which brew").contains("/usr/local/bin/brew") {
+                            if FileManager.default.fileExists(atPath: "/usr/local/bin/brew") {
                                 withAnimation {
                                     status = .installingDeps
                                 }
@@ -192,7 +192,7 @@ struct FirstLaunchView: View {
             } else if status == .checkingIntelHomebrewInstallation {
                 Text("Checking Intel Homebrew Installation...")
                     .onAppear {
-                        if Shell().shell("which /usr/local/bin/brew").contains("/usr/local/bin/brew\n") {
+                        if !FileManager.default.fileExists(atPath: "/usr/local/bin/brew") {
                             
                             let task = Process()
                             task.launchPath = "/usr/bin/osascript"
@@ -205,7 +205,7 @@ struct FirstLaunchView: View {
                             }
                         }
                     }.onReceive(timer) { _ in
-                        if Shell().shell("which /usr/local/bin/brew").contains("/usr/local/bin/brew\n") {
+                        if FileManager.default.fileExists(atPath: "/usr/local/bin/brew") {
                             withAnimation(.linear(duration: 0.4)) {
                                 status = .installingDeps
                             }

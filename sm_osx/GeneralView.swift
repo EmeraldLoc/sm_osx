@@ -16,29 +16,30 @@ struct GeneralView: View {
         let outHandle = pipe.fileHandleForReading
         
         outHandle.readabilityHandler = { pipe in
-            if let line = String(data: pipe.availableData, encoding: String.Encoding.utf8) {
-                if line.contains("Finished installing deps") {
-                    
-                    withAnimation() {
-                        isInstallingDeps = false
+            if pipe.availableData.count > 0 {
+                if let line = String(data: pipe.availableData, encoding: String.Encoding.utf8) {
+                    if line.contains("Finished installing deps") {
+                        
+                        withAnimation() {
+                            isInstallingDeps = false
+                        }
+                        
+                        let content = UNMutableNotificationContent()
+                        content.title = "Finished installing dependencies"
+                        content.subtitle = "Dependencies are now installed."
+                        content.sound = UNNotificationSound.default
+                        
+                        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.0001, repeats: false)
+                        
+                        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+                        
+                        UNUserNotificationCenter.current().add(request)
                     }
-                    
-                    let content = UNMutableNotificationContent()
-                    content.title = "Finished installing dependencies"
-                    content.subtitle = "Dependencies are now installed."
-                    content.sound = UNNotificationSound.default
-                    
-                    // show this notification instantly
-                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.0001, repeats: false)
-                    
-                    // choose a random identifier
-                    let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-                    
-                    // add our notification request
-                    UNUserNotificationCenter.current().add(request)
+                } else {
+                    print("Error decoding data. why do I program...: \(pipe.availableData)")
                 }
             } else {
-                print("Error decoding data. why do I program...: \(pipe.availableData)")
+                outHandle.readabilityHandler = nil
             }
         }
         
