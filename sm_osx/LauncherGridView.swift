@@ -144,13 +144,9 @@ struct LauncherGridView: View {
                 
                 let launcherRepo = launcherRepos[item!]
                 
-                do {
-                    let path = URL(filePath: (launcherRepo.path!)).deletingLastPathComponent().path()
-                    
-                    Shell().shell("rm -rf \(path)")
-                } catch {
-                    print("Error, could not delete file due to: \(error)")
-                }
+                let path = URL(filePath: (launcherRepo.path!)).deletingLastPathComponent().path()
+                
+                Shell().shell("rm -rf \(path)")
                 
                 moc.delete(launcherRepo)
                 

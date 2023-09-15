@@ -18,6 +18,7 @@ class LaunchScriptCommand: NSScriptCommand {
                 
         if menu == "Yes" {
             launcherRepoAppleScript.didOpenApp = true
+            print("App was closed, opening up in menu bar mode.")
         }
         if !repoId.isEmpty {
             print("Launching Repo With ID \(repoId)")

@@ -99,18 +99,19 @@ struct CompilationView: View {
             
                 if compilesSucess == false && compilationStatus == .finished {
                     Button("Finish") {
-                        dismiss.callAsFunction()
+                        task.terminate()
+                        pipe.fileHandleForReading.readabilityHandler = nil
+                        dismiss()
                     }.padding(.bottom)
                 } else {
                     Button("Cancel") {
-                        if task.isRunning {
-                            task.terminate()
-                        }
+                        task.terminate()
+                        pipe.fileHandleForReading.readabilityHandler = nil
                         
                         shell.shell("cd ~/SM64Repos && rm -rf \(execPath)", false)
                         shell.shell("cd ~/SM64Repos && rm -rf \(repo)", false)
                         
-                        dismiss.callAsFunction()
+                        dismiss()
                     }.padding(.bottom)
                 }
             }
@@ -120,20 +121,18 @@ struct CompilationView: View {
                     Spacer()
                     
                     Button("Cancel") {
-                        if task.isRunning {
-                            task.terminate()
-                        }
+                        task.terminate()
+                        pipe.fileHandleForReading.readabilityHandler = nil
                         
                         shell.shell("cd ~/SM64Repos && rm -rf \(execPath)", false)
                         shell.shell("cd ~/SM64Repos && rm -rf \(repo)", false)
                         
-                        dismiss.callAsFunction()
+                        dismiss()
                     }.padding([.bottom, .trailing])
                 }
             }
             
         }.onAppear {
-            
             switch compilationAppearence {
             case .compact:
                 height = 125
@@ -213,7 +212,7 @@ struct CompilationView: View {
                                 }
                             }
                             
-                            dismiss.callAsFunction()
+                            dismiss()
                         }
                         else if shell.shell("ls ~/SM64Repos/\(execPath)/moon64.us.f3dex2e | echo y", true) == "y\n" {
                             
@@ -250,7 +249,7 @@ struct CompilationView: View {
                                 }
                             }
                             
-                            dismiss.callAsFunction()
+                            dismiss()
                         }
                         else {
                             

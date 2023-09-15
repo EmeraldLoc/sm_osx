@@ -2,6 +2,7 @@
 import Foundation
 
 public enum Repo: String {
+    case none = ""
     case sm64ex = "https://github.com/sm64pc/sm64ex.git"
     case sm64ex_master = "https://github.com/EmeraldLoc/sm64ex.git --branch master"
     case sm64ex_alo = "https://github.com/EmeraldLoc/sm64ex-alo.git"

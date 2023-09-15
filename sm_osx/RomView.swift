@@ -4,7 +4,7 @@ import UserNotifications
 
 struct RomView: View {
     
-    var patch: Array<Patches>
+    @State var patch: Array<Patches>
     @State var repo: Repo
     @State var allowFinish = true
     @State var log = ""
@@ -27,9 +27,7 @@ struct RomView: View {
     @AppStorage("keepRepo") var keepRepo = false
     @AppStorage("compilationSpeed") var compilationSpeed: Speed = .normal
     @AppStorage("launchEntry") var launcherEntry = true
-    @Environment(\.managedObjectContext) var moc
     @Environment(\.dismiss) var dismiss
-    @FetchRequest(sortDescriptors:[SortDescriptor(\.title)]) var launcherRepos: FetchedResults<LauncherRepos>
     @State var startedCompilation = false
     @State var commandsCompile = ""
     
@@ -84,7 +82,6 @@ struct RomView: View {
         }
         
         //compile
-        
         if repo == .moonshine {
             extData = 1
         }
@@ -152,73 +149,102 @@ struct RomView: View {
     }
     
     var body: some View {
-        ZStack {
-            VStack {
-                List {
-                    Toggle(isOn: $doLauncher) {
-                        Text("Add Repo to Launcher")
-                    }
-                    Toggle(isOn: $doKeepRepo) {
-                        Text("Keep Previously Compiled Repo")
-                    }
+        VStack {
+            Text("Compilation Options")
+                .lineLimit(nil)
+                .padding(.top)
+            
+            GroupBox {
+                HStack {
+                    VStack(alignment: .leading) {
+                        Toggle(isOn: $doLauncher) {
+                            Text("Add Repo to Launcher")
+                        }
+                        Toggle(isOn: $doKeepRepo) {
+                            Text("Keep Previously Compiled Repo")
+                        }
+                        
+                        Picker(selection: $compSpeed) {
+                            Text("Slow")
+                                .tag(Speed.slow)
+                            Text("Normal")
+                                .tag(Speed.normal)
+                            Text("Fast")
+                                .tag(Speed.fast)
+                            Text("Very Fast")
+                                .tag(Speed.veryFast)
+                            Text("Fastest")
+                                .tag(Speed.fastest)
+                        } label: {
+                            Text("Speed")
+                                .lineLimit(nil)
+                        }
+                        .padding(.horizontal, 3)
+                        .frame(idealWidth: 200, maxWidth: 200)
+                        
+                        Spacer()
+                    }.padding(5)
                     
-                    Picker(selection: $compSpeed) {
-                        Text("Slow")
-                            .tag(Speed.slow)
-                        Text("Normal")
-                            .tag(Speed.normal)
-                        Text("Fast")
-                            .tag(Speed.fast)
-                        Text("Very Fast")
-                            .tag(Speed.veryFast)
-                        Text("Fastest")
-                            .tag(Speed.fastest)
-                    } label: {
-                        Text("Speed")
-                            .lineLimit(nil)
-                    }
-                    .padding(.horizontal, 3)
-                    .frame(idealWidth: 200, maxWidth: 200)
-                    
-                    Button("Compile") {
-                        compile()
-                    }.padding(.top, 3).sheet(isPresented: $startedCompilation) {
-                        CompilationView(compileCommands: $commandsCompile, repo: $repo, execPath: $execPath, doLauncher: $doLauncher, reloadMenuBarLauncher: $reloadMenuBarLauncher)
-                    }
-                    
-                    if !errorMessage.isEmpty {
-                        Text(errorMessage)
-                    }
-                }
+                    Spacer()
+                }.frame(maxWidth: .infinity, maxHeight: .infinity)
+                
+                Spacer()
             }
-            .frame(minWidth: 200)
-            .onAppear {
-                if patch.contains(.bettercam) {
-                    betterCamera = 1
-                }
-                if patch.contains(.drawdistance) {
-                    drawDistance = 1
-                }
-                if patch.contains(.extData) {
-                    extData = 1
-                }
-                if patch.contains(.qolFeatures) {
-                    qolFeatures = 1
-                }
-                if patch.contains(.qolFixes) {
-                    qolFix = 1
-                }
-                if patch.contains(.highfps) {
-                    highFPS = 1
-                }
-                if patch.contains(.debug) {
-                    debug = 1
+            
+            Spacer()
+            
+            HStack {
+                Button {
+                    dismiss()
+                } label: {
+                    Text("Back")
                 }
                 
-                compSpeed = compilationSpeed
-                doLauncher = launcherEntry
-                doKeepRepo = keepRepo
+                Button {
+                    repoView = false
+                } label: {
+                    Text("Cancel")
+                }
+                
+                Spacer()
+                
+                Button("Compile") {
+                    compile()
+                }.sheet(isPresented: $startedCompilation) {
+                    CompilationView(compileCommands: $commandsCompile, repo: $repo, execPath: $execPath, doLauncher: $doLauncher, reloadMenuBarLauncher: $reloadMenuBarLauncher)
+                }
+                .buttonStyle(.borderedProminent)
             }
         }
+        .onAppear {
+            if patch.contains(.bettercam) {
+                betterCamera = 1
+            }
+            if patch.contains(.drawdistance) {
+                drawDistance = 1
+            }
+            if patch.contains(.extData) {
+                extData = 1
+            }
+            if patch.contains(.qolFeatures) {
+                qolFeatures = 1
+            }
+            if patch.contains(.qolFixes) {
+                qolFix = 1
+            }
+            if patch.contains(.highfps) {
+                highFPS = 1
+            }
+            if patch.contains(.debug) {
+                debug = 1
+            }
+            
+            compSpeed = compilationSpeed
+            doLauncher = launcherEntry
+            doKeepRepo = keepRepo
+        }
+        .padding([.horizontal, .bottom])
+        .navigationBarBackButtonHidden(true)
+        .transparentBackgroundStyle()
     }
 }

@@ -3,7 +3,7 @@ import SwiftUI
 
 struct PatchesView: View {
     
-    var repo: Repo
+    @State var repo: Repo
     @State var isOmm = false
     @State var isToadStars = false
     @State var extMoveset = false
@@ -20,17 +20,17 @@ struct PatchesView: View {
     @Binding var reloadMenuBarLauncher: Bool
     @State var patches = [Patches]()
     @AppStorage("devMode") var devMode = true
+    @Environment(\.dismiss) var dismiss
     
     var body: some View {
-        NavigationView {
-            ZStack {
-                VStack {
-                    List {
+        VStack {
+            Text("Select a Patch")
+                .lineLimit(nil)
+                .padding(.top)
                         
-                        Text("Select a Patch")
-                            .lineLimit(nil)
-                            .padding(.top, 3)
-                        
+            GroupBox {
+                HStack {
+                    VStack(alignment: .leading) {
                         if repo == .sm64ex_coop || repo == .sm64ex_coop_dev {
                             Toggle(isOn: $debug) {
                                 Text("Debug")
@@ -65,8 +65,6 @@ struct PatchesView: View {
                             }
                             
                             if repo != .moon64 && repo != .sm64ex_alo {
-
-                            
                                 Toggle(isOn: $timeTrials) {
                                     Text("Time Trial")
                                         .lineLimit(nil)
@@ -165,7 +163,7 @@ struct PatchesView: View {
                                 }
                             }
                         }
-
+                        
                         if repo != .sm64ex_coop && repo != .sm64ex_coop_dev {
                             Toggle(isOn: $isDist) {
                                 Text("No Draw Distance")
@@ -229,13 +227,34 @@ struct PatchesView: View {
                                 }
                             }
                         }
-                        
-                        NavigationLink(destination:RomView(patch: patches, repo: repo, repoView: $repoView, reloadMenuBarLauncher: $reloadMenuBarLauncher)) {
-                            Text("Next")
-                        }
+                        Spacer()
                     }
+                    Spacer()
+                }.padding(5).frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+            
+            HStack {
+                
+                Button {
+                    dismiss()
+                } label: {
+                    Text("Back")
                 }
+                
+                Button {
+                    repoView = false
+                } label: {
+                    Text("Cancel")
+                }
+                
+                Spacer()
+                
+                NavigationLink("Next", value: patches)
+                    .buttonStyle(.borderedProminent)
             }
         }
+        .transparentBackgroundStyle()
+        .padding([.horizontal, .bottom])
+        .navigationBarBackButtonHidden(true)
     }
 }

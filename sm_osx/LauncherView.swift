@@ -16,7 +16,6 @@ struct LauncherView: View {
     @AppStorage("firstLaunch") var firstLaunch = true
     @AppStorage("checkUpdateAuto") var checkUpdateAuto = true
     @AppStorage("isGrid") var isGrid = false
-    @AppStorage("showMenuExtra") var showMenuExtra = true
     @AppStorage("transparentBar") var transparentBar = TitlebarAppearence.normal
     @State var romURL = URL(string: "")
     @State var homebrewText = ""
@@ -110,17 +109,6 @@ struct LauncherView: View {
                     }
                 }
                 .padding(.top, 1)
-                .onChange(of: launchRepoAppleScript.repoID) { repoID in
-                    if !showMenuExtra {
-                        for i in 0...launcherRepos.count - 1 {
-                            if launcherRepos[i].id?.uuidString == repoID {
-                                launcherShell("\(launcherRepos[i].path ?? "its broken") \(launcherRepos[i].args ?? "")")
-                                
-                                launchRepoAppleScript.repoID = ""
-                            }
-                        }
-                    }
-                }
                 .scrollContentBackground(.hidden)
                 .scrollIndicators(.never)
             }
@@ -317,7 +305,7 @@ struct LauncherView: View {
             }
         }.sheet(isPresented: $repoView) {
             RepoView(repoView: $repoView, reloadMenuBarLauncher: $reloadMenuBarLauncher)
-                .frame(minWidth: 650, idealWidth: 750, maxWidth: 850, minHeight: 400, idealHeight: 500, maxHeight: 550)
+                //.frame(minWidth: 650, idealWidth: 750, maxWidth: 850, minHeight: 400, idealHeight: 500, maxHeight: 550)
         }.frame(minWidth: 300, minHeight: 250).transparentBackgroundStyle()
     }
 }

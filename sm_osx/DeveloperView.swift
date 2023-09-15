@@ -7,8 +7,10 @@ struct DeveloperView: View {
     
     var body: some View {
         List {
-            Toggle(isOn: $devMode.animation()) {
-                Text("Enable development repos (Not recommended)")
+            VStack(alignment: .leading) {
+                Toggle(isOn: $devMode.animation()) {
+                    Text("Enable development repos (Not recommended)")
+                }
             }
         }.transparentListStyle().scrollDisabled(true)
     }

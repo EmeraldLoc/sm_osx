@@ -2,7 +2,6 @@
 import SwiftUI
 import Sparkle
 
-
 @main
 struct sm_osxApp: App {
     
@@ -10,7 +9,6 @@ struct sm_osxApp: App {
     @Environment(\.openWindow) var openWindow
     @StateObject private var networkMonitor = NetworkMonitor()
     @StateObject private var dataController = DataController()
-    @AppStorage("showMenuExtra") var showMenuExtra = true
     @AppStorage("keepInMenuBar") var keepInMenuBar = true
     @AppStorage("devMode") var devMode = false
     @AppStorage("firstLaunch") var firstLaunch = true
@@ -53,7 +51,7 @@ struct sm_osxApp: App {
                     .environmentObject(networkMonitor)
                     .environment(\.managedObjectContext, dataController.container.viewContext)
                     .onAppear {
-                        if showMenuExtra && keepInMenuBar {
+                        if keepInMenuBar {
                             NSApp.setActivationPolicy(.regular)
                         }
                         
@@ -218,11 +216,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     }
     
     func windowShouldClose(_ sender: NSWindow) -> Bool {
-        let showMenuBarExtra = UserDefaults.standard.bool(forKey: "showMenuExtra")
         let keepInMenuBar = UserDefaults.standard.bool(forKey: "keepInMenuBar")
         
         if sender.title == "sm_osx" {
-            if showMenuBarExtra && keepInMenuBar {
+            if keepInMenuBar {
                 NSApp.setActivationPolicy(.prohibited)
                 
                 return false

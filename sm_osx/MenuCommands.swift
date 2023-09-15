@@ -9,7 +9,6 @@ struct MenuCommands: Commands {
     @State var launcherRepos = [LauncherRepos]()
     @StateObject var dataController: DataController
     @StateObject var networkMonitor = NetworkMonitor()
-    @AppStorage("showMenuExtra") var showMenuExtra = true
     @AppStorage("keepInMenuBar") var keepInMenuBar = true
     @Environment(\.openWindow) var openWindow
     @ObservedObject var addingRepo = AddingRepo.shared
@@ -104,7 +103,7 @@ struct MenuCommands: Commands {
         
         CommandGroup(replacing: .appTermination) {
             Button("Quit sm_osx") {
-                if showMenuExtra && keepInMenuBar {
+                if keepInMenuBar {
                     NSApp.setActivationPolicy(.prohibited)
                 } else {
                     exit(0)
@@ -148,7 +147,6 @@ struct menuExtras: Scene {
     @State var launcherRepos = [LauncherRepos]()
     @Binding var showAddRepos: Bool
     @Binding var reloadMenuBarLauncher: Bool
-    @AppStorage("showMenuExtra") var showMenuExtra = true
     @AppStorage("firstLaunch") var firstLaunch = true
     @AppStorage("transparentBar") var transparentBar = TitlebarAppearence.normal
     @StateObject var networkMonitor = NetworkMonitor()
@@ -248,7 +246,7 @@ struct menuExtras: Scene {
                 }.disabled(addingRepo.isCompiling)
             }
         } label: {
-            if showMenuExtra && !firstLaunch {
+            if !firstLaunch {
                 let image: NSImage = {
                     $0.size.height = 16
                     $0.size.width = 16
@@ -286,7 +284,6 @@ struct menuExtras: Scene {
                         }
                     }.onChange(of: launchRepoAppleScript.didOpenApp) { didOpenApp in
                         if didOpenApp {
-                            print("Changed App to Menu Bar Mode")
                             NSApp.setActivationPolicy(.prohibited)
                         }
                     }.onChange(of: transparentBar) { _ in
@@ -311,7 +308,7 @@ struct menuExtras: Scene {
                         }
                     }
             } else {
-                Image("menu_bar_icon")
+                Image("menu_bar_icon") // <-- Bug, this is why I am removing it as a option, and instead opting with macos' built in system for that
             }
         }
     }
