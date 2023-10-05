@@ -17,7 +17,6 @@ struct CrashView: View {
                 }
             }.padding(.horizontal)
                 
-            
             Button("Close") {
                 dismiss()
             }.padding(.bottom)

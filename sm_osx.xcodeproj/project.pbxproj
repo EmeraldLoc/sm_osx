@@ -44,7 +44,22 @@
 		96E529D729C511F000E8E14D /* InternetChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96E529D629C511F000E8E14D /* InternetChecker.swift */; };
 		96E96D8629CE3E96009CAF74 /* export.plist in Resources */ = {isa = PBXBuildFile; fileRef = 96E96D8529CE3E96009CAF74 /* export.plist */; };
 		96EBED1329BA51970033771E /* UpdatesSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96EBED1229BA51970033771E /* UpdatesSettingsView.swift */; };
+		96F79CC62AC622CE009FC622 /* CustomRepoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F79CC52AC622CE009FC622 /* CustomRepoView.swift */; };
+		96F79CC82AC6388F009FC622 /* CustomRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F79CC72AC6388F009FC622 /* CustomRepo.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		9666C0772ABCF57F00682473 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		9601BB1B29CB82240060BD24 /* UpdaterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdaterView.swift; sourceTree = "<group>"; };
@@ -61,6 +76,8 @@
 		963F238527F8B942004E010E /* DataStore.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataStore.xcdatamodel; sourceTree = "<group>"; };
 		963F238727F8BA01004E010E /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		964C6F7629E889C100506DBD /* CreateAppShortcutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAppShortcutView.swift; sourceTree = "<group>"; };
+		9666C0652ABCF57D00682473 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		9666C0672ABCF57E00682473 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		9669DC5827D5565000DE5FAB /* sm_osx.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = sm_osx.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9669DC5B27D5565000DE5FAB /* sm_osxApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sm_osxApp.swift; sourceTree = "<group>"; };
 		9669DC5F27D5565100DE5FAB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -86,6 +103,8 @@
 		96E529D629C511F000E8E14D /* InternetChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetChecker.swift; sourceTree = "<group>"; };
 		96E96D8529CE3E96009CAF74 /* export.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = export.plist; sourceTree = "<group>"; };
 		96EBED1229BA51970033771E /* UpdatesSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdatesSettingsView.swift; sourceTree = "<group>"; };
+		96F79CC52AC622CE009FC622 /* CustomRepoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRepoView.swift; sourceTree = "<group>"; };
+		96F79CC72AC6388F009FC622 /* CustomRepo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRepo.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,10 +119,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9666C0642ABCF57D00682473 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9666C0652ABCF57D00682473 /* WidgetKit.framework */,
+				9666C0672ABCF57E00682473 /* SwiftUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		9669DC4F27D5565000DE5FAB = {
 			isa = PBXGroup;
 			children = (
 				9669DC5A27D5565000DE5FAB /* sm_osx */,
+				9666C0642ABCF57D00682473 /* Frameworks */,
 				9669DC5927D5565000DE5FAB /* Products */,
 			);
 			sourceTree = "<group>";
@@ -135,6 +164,7 @@
 				96BDA2F4283D221700A4DFF3 /* DeveloperView.swift */,
 				963F238227F8B211004E010E /* LauncherView.swift */,
 				96BB22E227E274F700057915 /* RepoView.swift */,
+				96F79CC52AC622CE009FC622 /* CustomRepoView.swift */,
 				9669DC6E27D55D5300DE5FAB /* PatchesView.swift */,
 				9669DC7027D55F4700DE5FAB /* RomView.swift */,
 				96BEADAD2839986200FF72E3 /* CompilationView.swift */,
@@ -157,6 +187,7 @@
 				964C6F7629E889C100506DBD /* CreateAppShortcutView.swift */,
 				961C0A5029E9C6E000D50A80 /* Enums.swift */,
 				9639868029EB011A00E6218B /* ViewModifiers.swift */,
+				96F79CC72AC6388F009FC622 /* CustomRepo.swift */,
 			);
 			path = sm_osx;
 			sourceTree = "<group>";
@@ -179,6 +210,7 @@
 				9669DC5427D5565000DE5FAB /* Sources */,
 				9669DC5527D5565000DE5FAB /* Frameworks */,
 				9669DC5627D5565000DE5FAB /* Resources */,
+				9666C0772ABCF57F00682473 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
@@ -199,7 +231,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1430;
+				LastSwiftUpdateCheck = 1500;
 				LastUpgradeCheck = 1420;
 				TargetAttributes = {
 					9669DC5727D5565000DE5FAB = {
@@ -263,6 +295,7 @@
 				9621F4DB29E4A441007BE51D /* FirstLaunchView.swift in Sources */,
 				96892C8329E5D5E90083526B /* LauncherGridView.swift in Sources */,
 				9669DC7127D55F4700DE5FAB /* RomView.swift in Sources */,
+				96F79CC82AC6388F009FC622 /* CustomRepo.swift in Sources */,
 				96BDA2F3283D216500A4DFF3 /* GeneralView.swift in Sources */,
 				96DE71D327EB9C170090E7A0 /* SettingsView.swift in Sources */,
 				96C54E6D285930D7003B4A2D /* GlobalFunctions.swift in Sources */,
@@ -275,6 +308,7 @@
 				9601BB1C29CB82240060BD24 /* UpdaterView.swift in Sources */,
 				9669DC6F27D55D5300DE5FAB /* PatchesView.swift in Sources */,
 				963074FA29DF28AA00234B23 /* Shell.swift in Sources */,
+				96F79CC62AC622CE009FC622 /* CustomRepoView.swift in Sources */,
 				96BB22E327E274F700057915 /* RepoView.swift in Sources */,
 				9669DC5C27D5565000DE5FAB /* sm_osxApp.swift in Sources */,
 				96CCFB7729E7158B00BE8CC7 /* LaunchScriptCommand.swift in Sources */,
@@ -415,10 +449,10 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 14;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"sm_osx/Preview Content\"";
-				DEVELOPMENT_TEAM = 25RK3JMVLT;
+				DEVELOPMENT_TEAM = 6K864V7HLM;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -431,10 +465,11 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 1.3.1;
+				MARKETING_VERSION = 1.3.2;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.CubingStudios.sm-osx";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -450,10 +485,10 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 14;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"sm_osx/Preview Content\"";
-				DEVELOPMENT_TEAM = 25RK3JMVLT;
+				DEVELOPMENT_TEAM = 6K864V7HLM;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -466,10 +501,11 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 1.3.1;
+				MARKETING_VERSION = 1.3.2;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.CubingStudios.sm-osx";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

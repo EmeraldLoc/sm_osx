@@ -5,22 +5,24 @@ import UserNotifications
 struct CompilationView: View {
     
     @Binding var compileCommands: String
-    @State var compilationStatus = CompStatus.nothing
-    @State var compilationStatusString = " "
-    @State var compilesSucess = false
     @Binding var repo: Repo
+    @Binding var customRepo: CustomRepo
     @Binding var execPath: String
     @Binding var doLauncher: Bool
     @Binding var reloadMenuBarLauncher: Bool
+    @State var compilationStatus = CompStatus.nothing
+    @State var compilationStatusString = " "
+    @State var compilesSucess = false
     @State var shell = Shell()
     @State var log = ""
     @State var totalLog = ""
     @State var height: Double = 125
+    @State var cancelCompilation = false
     @Environment(\.dismiss) var dismiss
     @Environment(\.managedObjectContext) var moc
     @ObservedObject var addingRepo = AddingRepo.shared
     @AppStorage("compilationAppearence") var compilationAppearence = CompilationAppearence.compact
-    let task = Process()
+    let process = Process()
     let pipe = Pipe()
     
     var body: some View {
@@ -55,7 +57,9 @@ struct CompilationView: View {
                         case .finishingUp:
                             compilationStatusString = "Finishing..."
                         case .finished:
-                            compilationStatusString = "Finished..."
+                            if !compilesSucess {
+                                compilationStatusString = "Compilation Failed."
+                            }
                         case .nothing:
                             compilationStatusString = "Starting..."
                         }
@@ -83,7 +87,11 @@ struct CompilationView: View {
                         case .finishingUp:
                             compilationStatusString = "Finishing..."
                         case .finished:
-                            compilationStatusString = "Finished..."
+                            if compilesSucess {
+                                compilationStatusString = "Finished..."
+                            } else {
+                                compilationStatusString = "Failed to Compile"
+                            }
                         case .nothing:
                             compilationStatusString = "Starting..."
                         }
@@ -98,21 +106,16 @@ struct CompilationView: View {
                 }.padding(.horizontal).frame(maxWidth: .infinity, maxHeight: .infinity)
             
                 if compilesSucess == false && compilationStatus == .finished {
-                    Button("Finish") {
-                        task.terminate()
+                    Button("Close") {
                         pipe.fileHandleForReading.readabilityHandler = nil
                         dismiss()
                     }.padding(.bottom)
                 } else {
                     Button("Cancel") {
-                        task.terminate()
-                        pipe.fileHandleForReading.readabilityHandler = nil
-                        
-                        shell.shell("cd ~/SM64Repos && rm -rf \(execPath)", false)
-                        shell.shell("cd ~/SM64Repos && rm -rf \(repo)", false)
-                        
-                        dismiss()
-                    }.padding(.bottom)
+                        cancelCompilation = true
+                    }
+                    .padding(.bottom)
+                    .disabled(cancelCompilation)
                 }
             }
 
@@ -121,14 +124,10 @@ struct CompilationView: View {
                     Spacer()
                     
                     Button("Cancel") {
-                        task.terminate()
-                        pipe.fileHandleForReading.readabilityHandler = nil
-                        
-                        shell.shell("cd ~/SM64Repos && rm -rf \(execPath)", false)
-                        shell.shell("cd ~/SM64Repos && rm -rf \(repo)", false)
-                        
-                        dismiss()
-                    }.padding([.bottom, .trailing])
+                        cancelCompilation = true
+                    }
+                    .padding([.bottom, .trailing])
+                    .disabled(cancelCompilation)
                 }
             }
             
@@ -147,11 +146,11 @@ struct CompilationView: View {
             
             print(compileCommands)
             
-            task.executableURL = URL(fileURLWithPath: "/bin/zsh")
-            task.arguments = ["-cl", "cd ~/SM64Repos && rm -rf \(execPath) && cd ~/; \(compileCommands)"]
+            process.executableURL = URL(fileURLWithPath: "/bin/zsh")
+            process.arguments = ["-cl", "cd ~/SM64Repos && rm -rf \(execPath) && cd ~/; \(compileCommands)"]
             
-            task.standardOutput = pipe
-            task.standardError = pipe
+            process.standardOutput = pipe
+            process.standardError = pipe
             let outHandle = pipe.fileHandleForReading
             
             outHandle.readabilityHandler = { pipe in
@@ -172,12 +171,28 @@ struct CompilationView: View {
                         }
                     }
                     
+                    if cancelCompilation {
+                        process.terminate()
+                        self.pipe.fileHandleForReading.readabilityHandler = nil
+                        
+                        shell.shell("cd ~/SM64Repos && rm -rf \(execPath)", false)
+                        if repo != .custom {
+                            shell.shell("cd ~/SM64Repos && rm -rf \(repo)", false)
+                        } else {
+                            shell.shell("cd ~/SM64Repos && rm -rf \(customRepo.name)", false)
+                        }
+                        
+                        dismiss()
+                    }
+                                        
                     if log.contains("sm_osx: Done") {
-                        task.terminate()
+                        if process.isRunning {
+                            process.terminate()
+                        }
                         
                         compilationStatus = .finished
                         
-                        if shell.shell("ls ~/SM64Repos/\(execPath)/sm64.us.f3dex2e | echo y", true) == "y\n" && repo != .moon64 {
+                        if FileManager.default.fileExists(atPath: "\(FileManager.default.homeDirectoryForCurrentUser.path())SM64Repos/\(execPath)/sm64.us.f3dex2e") && repo != .custom {
                             
                             let content = UNMutableNotificationContent()
                             content.title = "Build Finished Successfully"
@@ -193,9 +208,8 @@ struct CompilationView: View {
                             compilesSucess = true
                             
                             if doLauncher {
-                                
                                 let launcherRepo = LauncherRepos(context: moc)
-                                
+
                                 launcherRepo.title = "\(repo)"
                                 launcherRepo.isEditing = false
                                 launcherRepo.path = "~/SM64Repos/\(execPath)/sm64.us.f3dex2e"
@@ -213,12 +227,11 @@ struct CompilationView: View {
                             }
                             
                             dismiss()
-                        }
-                        else if shell.shell("ls ~/SM64Repos/\(execPath)/moon64.us.f3dex2e | echo y", true) == "y\n" {
+                        } else if FileManager.default.fileExists(atPath: "\(FileManager.default.homeDirectoryForCurrentUser.path())SM64Repos/\(execPath)/\(customRepo.customEndFileName.isEmpty ? "sm64.us.f3dex2e" : customRepo.customEndFileName)") {
                             
                             let content = UNMutableNotificationContent()
                             content.title = "Build Finished Successfully"
-                            content.subtitle = "The build \(repo) has finished successfully."
+                            content.subtitle = "The build \(customRepo.name) has finished successfully."
                             content.sound = UNNotificationSound.default
                             
                             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.0001, repeats: false)
@@ -233,9 +246,9 @@ struct CompilationView: View {
                                 
                                 let launcherRepo = LauncherRepos(context: moc)
                                 
-                                launcherRepo.title = "\(repo)"
+                                launcherRepo.title = "\(customRepo.name)"
                                 launcherRepo.isEditing = false
-                                launcherRepo.path = "~/SM64Repos/\(execPath)/moon64.us.f3dex2e"
+                                launcherRepo.path = "~/SM64Repos/\(execPath)/\(customRepo.customEndFileName.isEmpty ? "sm64.us.f3dex2e" : customRepo.customEndFileName)"
                                 launcherRepo.args = ""
                                 launcherRepo.id = UUID()
                                 
@@ -296,9 +309,8 @@ struct CompilationView: View {
                     print("Error decoding data: \(pipe.availableData)")
                 }
             }
-            
-            try? task.run()
-            
+
+            try? process.run()
         }
         .frame(width: 700, height: height)
         .onDisappear {

@@ -4,17 +4,15 @@ import Foundation
 public enum Repo: String {
     case none = ""
     case sm64ex = "https://github.com/sm64pc/sm64ex.git"
-    case sm64ex_master = "https://github.com/EmeraldLoc/sm64ex.git --branch master"
-    case sm64ex_alo = "https://github.com/EmeraldLoc/sm64ex-alo.git"
+    case sm64ex_alo = "https://github.com/AloUltraExt/sm64ex-alo.git"
     case moonshine = "https://github.com/EmeraldLoc/sm64-moonshine"
-    case moon64 = "https://github.com/EmeraldLoc/Moon64"
-    case render96ex = "https://github.com/EmeraldLoc/sm64ex.git --branch alpha"
+    case render96ex = "https://github.com/EmeraldLoc/Render96ex"
     case sm64ex_coop = "https://github.com/djoslin0/sm64ex-coop.git"
     case sm64ex_coop_dev = "https://github.com/sm64ex-coop-dev/sm64ex-coop.git"
+    case custom = "custom"
 }
 
 public enum Patches: String {
-    case omm = "https://github.com/PeachyPeachSM64/sm64ex-omm.git"
     case highfps = "60Fps"
     case debug = "Debug"
     case extMoveset = "Extended Moveset"
@@ -32,8 +30,8 @@ public enum Patches: String {
 public enum CompStatus: Double {
     case patching = 45
     case instDependencies = 2
-    case instRepo = 5
-    case copyingFiles = 15
+    case instRepo = 15
+    case copyingFiles = 20
     case compiling = 65
     case finishingUp = 90
     case finished = 100

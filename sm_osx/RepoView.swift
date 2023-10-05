@@ -23,11 +23,6 @@ struct RepoView: View {
                                 Text("sm64ex")
                                     .lineLimit(nil)
                                     .tag(Repo.sm64ex)
-                                
-                                Text("sm64ex-master (Old)")
-                                    .lineLimit(nil)
-                                    .tag(Repo.sm64ex_master)
-                                
                                 Text("sm64ex-alo")
                                     .lineLimit(nil)
                                     .tag(Repo.sm64ex_alo)
@@ -50,9 +45,9 @@ struct RepoView: View {
                                     .lineLimit(nil)
                                     .tag(Repo.moonshine)
                                 
-                                Text("Moon64 (Discontinued)")
+                                Text("Custom")
                                     .lineLimit(nil)
-                                    .tag(Repo.moon64)
+                                    .tag(Repo.custom)
                                 
                             }.pickerStyle(.radioGroup).padding(.vertical, 5)
                             
@@ -85,10 +80,17 @@ struct RepoView: View {
             }
             .padding([.horizontal, .bottom])
             .navigationDestination(for: Repo.self) { repo in
-                PatchesView(repo: repo, repoView: $repoView, reloadMenuBarLauncher: $reloadMenuBarLauncher)
+                if repo == .custom {
+                    CustomRepoView(repo: repo, repoView: $repoView, reloadMenuBarLauncher: $reloadMenuBarLauncher)
+                } else {
+                    PatchesView(repo: repo, repoView: $repoView, reloadMenuBarLauncher: $reloadMenuBarLauncher)
+                }
             }
             .navigationDestination(for: [Patches].self) { patches in
-                RomView(patch: patches, repo: repo, repoView: $repoView, reloadMenuBarLauncher: $reloadMenuBarLauncher)
+                RomView(patch: patches, repo: repo, repoView: $repoView, reloadMenuBarLauncher: $reloadMenuBarLauncher, customRepo: .constant(CustomRepo()))
+            }
+            .navigationDestination(for: CustomRepo.self) { customRepo in
+                RomView(patch: [Patches](), repo: repo, repoView: $repoView, reloadMenuBarLauncher: $reloadMenuBarLauncher, customRepo: .constant(customRepo))
             }
         }
         .transparentBackgroundStyle()

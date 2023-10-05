@@ -48,7 +48,7 @@ struct PatchesView: View {
                             }
                         }
                         
-                        if repo == .sm64ex || repo == .moon64 || repo == .sm64ex_alo {
+                        if repo == .sm64ex || repo == .sm64ex_alo {
                             Toggle(isOn: $isFPS) {
                                 Text("60 FPS")
                                     .lineLimit(nil)
@@ -64,7 +64,7 @@ struct PatchesView: View {
                                 }
                             }
                             
-                            if repo != .moon64 && repo != .sm64ex_alo {
+                            if repo != .sm64ex_alo {
                                 Toggle(isOn: $timeTrials) {
                                     Text("Time Trial")
                                         .lineLimit(nil)
@@ -94,23 +94,6 @@ struct PatchesView: View {
                                     }
                                 }
                                 
-                                if devMode {
-                                    Toggle(isOn: $isOmm) {
-                                        Text("Oddysey Mario Moveset")
-                                            .lineLimit(nil)
-                                    }.onChange(of: isOmm) { _ in
-                                        
-                                        if isOmm {
-                                            patches.append(.omm)
-                                        }
-                                        else {
-                                            if let i = patches.firstIndex(of: .omm) {
-                                                patches.remove(at: i)
-                                            }
-                                        }
-                                    }
-                                }
-                                
                                 Toggle(isOn: $extMoveset) {
                                     Text("Extended Moveset")
                                         .lineLimit(nil)
@@ -128,7 +111,7 @@ struct PatchesView: View {
                             }
                         }
                         
-                        if repo == .sm64ex || repo == .sm64ex_coop || repo == .render96ex || repo == .moonshine || repo == .moon64 || repo == .sm64ex_master || repo == .sm64ex_alo || repo == .sm64ex_coop_dev {
+                        if repo == .sm64ex || repo == .sm64ex_coop || repo == .render96ex || repo == .moonshine || repo == .sm64ex_alo || repo == .sm64ex_coop_dev {
                             if repo != .sm64ex_coop && repo != .sm64ex_coop_dev {
                                 Toggle(isOn: $isCam) {
                                     Text("Better Camera")
@@ -146,7 +129,7 @@ struct PatchesView: View {
                                 }
                             }
                             
-                            if repo != .moonshine && repo != .moon64 && repo != .sm64ex_master && repo != .sm64ex_alo && repo != .sm64ex_coop && repo != .sm64ex_coop_dev {
+                            if repo != .moonshine && repo != .sm64ex_alo && repo != .sm64ex_coop && repo != .sm64ex_coop_dev {
                                 Toggle(isOn: $extData) {
                                     Text("External Data")
                                         .lineLimit(nil)
@@ -212,17 +195,19 @@ struct PatchesView: View {
                                 }
                             }
                             
-                            Toggle(isOn: $starRoad) {
-                                Text("Star Road (Romhack)")
-                                    .lineLimit(nil)
-                            }.onChange(of: starRoad) { _ in
-                                
-                                if starRoad {
-                                    patches.append(.star_road)
-                                }
-                                else {
-                                    if let i = patches.firstIndex(of: .star_road) {
-                                        patches.remove(at: i)
+                            if devMode {
+                                Toggle(isOn: $starRoad) {
+                                    Text("Star Road (Romhack)")
+                                        .lineLimit(nil)
+                                }.onChange(of: starRoad) { _ in
+                                    
+                                    if starRoad {
+                                        patches.append(.star_road)
+                                    }
+                                    else {
+                                        if let i = patches.firstIndex(of: .star_road) {
+                                            patches.remove(at: i)
+                                        }
                                     }
                                 }
                             }

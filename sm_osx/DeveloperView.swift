@@ -9,7 +9,7 @@ struct DeveloperView: View {
         List {
             VStack(alignment: .leading) {
                 Toggle(isOn: $devMode.animation()) {
-                    Text("Enable development repos (Not recommended)")
+                    Text("See developer repos and w.i.p repos and patches (Not recommended)")
                 }
             }
         }.transparentListStyle().scrollDisabled(true)

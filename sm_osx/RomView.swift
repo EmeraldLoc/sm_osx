@@ -22,8 +22,11 @@ struct RomView: View {
     @State var shell = Shell()
     @State var execPath = ""
     @State var errorMessage = ""
+    @State var showWarningMessage = false
+    @State var showWarningAlert = false
     @Binding var repoView: Bool
     @Binding var reloadMenuBarLauncher: Bool
+    @Binding var customRepo: CustomRepo
     @AppStorage("keepRepo") var keepRepo = false
     @AppStorage("compilationSpeed") var compilationSpeed: Speed = .normal
     @AppStorage("launchEntry") var launcherEntry = true
@@ -33,7 +36,7 @@ struct RomView: View {
     
     func compile() {
         //install dependencies
-        if (repo == .sm64ex_coop || repo == .sm64ex_coop_dev || repo == .moon64) && isArm() {
+        if (repo == .sm64ex_coop || repo == .sm64ex_coop_dev || (repo == .custom && customRepo.x86_64)) && isArm() {
             commandsCompile = "echo 'sm_osx: Installing Deps'; brew uninstall --ignore-dependencies glew sdl2; arch -x86_64 /bin/zsh -cl '/usr/local/bin/brew install make mingw-w64 gcc gcc@9 sdl2 pkg-config glew glfw libusb audiofile coreutils wget'; brew install make mingw-w64 gcc pkg-config glfw libusb audiofile coreutils wget; "
         }
         else {
@@ -41,27 +44,26 @@ struct RomView: View {
         }
         
         //clone the repo
-        commandsCompile.append("echo 'sm_osx: Starting Clone' && cd ~/SM64Repos && rm -rf \(repo) && git clone \(repo.rawValue) \(repo) && ")
+        if repo == .custom {
+            commandsCompile.append("echo 'sm_osx: Starting Clone' && cd ~/SM64Repos && rm -rf \(customRepo.name) && git clone \(customRepo.cloneURL) \(customRepo.name) && ")
+            print("Custom Repo Name: \(customRepo.cloneURL)")
+        } else {
+            commandsCompile.append("echo 'sm_osx: Starting Clone' && cd ~/SM64Repos && rm -rf \(repo) && git clone \(repo.rawValue) \(repo) && ")
+        }
         
         //copy files
-        commandsCompile.append("echo 'sm_osx: Rom Files Done' && cp baserom.us.z64 \(repo) && cd \(repo) && ")
+        if repo == .custom {
+            commandsCompile.append("echo 'sm_osx: Rom Files Done' && cp baserom.us.z64 \(customRepo.name) && cd \(customRepo.name) && ")
+        } else {
+            commandsCompile.append("echo 'sm_osx: Rom Files Done' && cp baserom.us.z64 \(repo) && cd \(repo) && ")
+        }
         
         //patch
         if !patch.isEmpty {
             commandsCompile.append("echo 'sm_osx: Patching Files' && ")
         }
-        
-        if repo == .moon64 {
-            if patch.contains(.highfps) {
-                commandsCompile.append("cd ~/SM64Repos/\(repo) && cp enhancements/moon64_60fps.patch 60fps_ex.patch && git apply --reject --ignore-whitespace '60fps_ex.patch' && ")
-            }
-        }
-        
+
         if repo == .sm64ex {
-            if patch.contains(.omm) {
-                commandsCompile.append("cd ~/SM64Repos/\(repo) && wget https://raw.githubusercontent.com/PeachyPeachSM64/sm64ex-omm/master/patch/omm.patch && wget https://raw.githubusercontent.com/PeachyPeachSM64/sm64ex-omm/nightly/omm.mk && wget https://raw.githubusercontent.com/PeachyPeachSM64/sm64ex-omm/nightly/omm_defines.mk && git apply --reject --ignore-whitespace 'omm.patch'; ")
-            }
-            
             if patch.contains(.timeTrials) {
                 commandsCompile.append("cd ~/SM64Repos/\(repo) && wget https://sm64pc.info/downloads/patches/time_trials.2.4.hotfix.patch && git apply --reject --ignore-whitespace 'time_trials.2.4.hotfix.patch' && ")
             }
@@ -85,17 +87,17 @@ struct RomView: View {
         if repo == .moonshine {
             extData = 1
         }
-        else if repo == .moon64 {
-            extData = 0
-        }
 
         commandsCompile.append("echo 'sm_osx: Compiling Now' && ")
 
-        if repo == .sm64ex_coop || repo == .sm64ex_coop_dev {
+        if repo == .custom {
+            if customRepo.x86_64 {
+                commandsCompile.append("cd ~/SM64Repos/\(customRepo.name) && arch -x86_64 /bin/zsh -cl 'gmake \(customRepo.useOsxBuildFlag ? "OSX_BUILD=1" : "") \(customRepo.buildFlags) \(compSpeed.rawValue)' && ")
+            } else {
+                commandsCompile.append("cd ~/SM64Repos/\(customRepo.name) && gmake \(customRepo.useOsxBuildFlag ? "OSX_BUILD=1" : "") \(customRepo.buildFlags) \(compSpeed.rawValue) &&")
+            }
+        } else if repo == .sm64ex_coop || repo == .sm64ex_coop_dev {
             commandsCompile.append("cd ~/SM64Repos/\(repo) && arch -x86_64 /bin/zsh -cl 'gmake OSX_BUILD=1 TARGET_ARCH=x86_64-apple-darwin TARGET_BITS=64 USE_APP=0 EXTERNAL_DATA=0 DEBUG=\(debug) COLOR=0 \(compSpeed.rawValue)' && ")
-        }
-        else if repo == .moon64 {
-            commandsCompile.append("cd ~/SM64Repos/\(repo) && arch -x86_64 /bin/zsh -cl 'gmake OSX_BUILD=1 BETTERCAMERA=\(betterCamera) NODRAWDISTANCE=\(drawDistance) \(compSpeed.rawValue)' && ")
         }
         else if repo == .sm64ex_alo {
             commandsCompile.append("cd ~/SM64Repos/\(repo) && gmake OSX_BUILD=1 BETTERCAMERA=\(betterCamera) EXTERNAL_DATA=0 NODRAWDISTANCE=\(drawDistance) QOL_FEATURES=\(qolFeatures) QOL_FIXES=\(qolFix) HIGH_FPS_PC=\(highFPS) COLOR=0 \(compSpeed.rawValue) && ")
@@ -104,7 +106,11 @@ struct RomView: View {
             commandsCompile.append("cd ~/SM64Repos/\(repo) && gmake OSX_BUILD=1 BETTERCAMERA=\(betterCamera) EXTERNAL_DATA=\(extData) NODRAWDISTANCE=\(drawDistance) \(compSpeed.rawValue) && ")
         }
         
-        execPath = "\(repo)-build"
+        if repo == .custom {
+            execPath = "\(customRepo.name)-build"
+        } else {
+            execPath = "\(repo)-build"
+        }
         
         if doKeepRepo {
             
@@ -127,9 +133,13 @@ struct RomView: View {
             }
         }
         
-        commandsCompile.append("echo 'sm_osx: Finishing Up' && cd ~/SM64Repos && rm -rf \(execPath) && gcp -r \(repo)/build/us_pc/ \(execPath) && rm -rf \(repo);")
+        if repo == .custom {
+            commandsCompile.append("echo 'sm_osx: Finishing Up' && cd ~/SM64Repos && rm -rf \(execPath) && gcp -r \(customRepo.name)/build/us_pc/ \(execPath) && rm -rf \(customRepo.name);")
+        } else {
+            commandsCompile.append("echo 'sm_osx: Finishing Up' && cd ~/SM64Repos && rm -rf \(execPath) && gcp -r \(repo)/build/us_pc/ \(execPath) && rm -rf \(repo);")
+        }
         
-        if repo == .sm64ex_coop || repo == .sm64ex_coop_dev || repo == .moon64 {
+        if repo == .sm64ex_coop || repo == .sm64ex_coop_dev || (repo == .custom && customRepo.x86_64) {
             commandsCompile.append("brew install glew sdl2;")
             
             if repo == .sm64ex_coop || repo == .sm64ex_coop_dev {
@@ -164,23 +174,37 @@ struct RomView: View {
                             Text("Keep Previously Compiled Repo")
                         }
                         
-                        Picker(selection: $compSpeed) {
-                            Text("Slow")
-                                .tag(Speed.slow)
-                            Text("Normal")
-                                .tag(Speed.normal)
-                            Text("Fast")
-                                .tag(Speed.fast)
-                            Text("Very Fast")
-                                .tag(Speed.veryFast)
-                            Text("Fastest")
-                                .tag(Speed.fastest)
-                        } label: {
-                            Text("Speed")
-                                .lineLimit(nil)
+                        HStack {
+                            Picker(selection: $compSpeed.animation()) {
+                                Text("Slow")
+                                    .tag(Speed.slow)
+                                Text("Normal")
+                                    .tag(Speed.normal)
+                                Text("Fast")
+                                    .tag(Speed.fast)
+                                Text("Very Fast")
+                                    .tag(Speed.veryFast)
+                                Text("Fastest")
+                                    .tag(Speed.fastest)
+                            } label: {
+                                Text("Speed")
+                                    .lineLimit(nil)
+                            }
+                            .padding(.leading, 3)
+                            .frame(idealWidth: 200, maxWidth: 200)
+                            
+                            if (repo == .moonshine || repo == .custom) && compSpeed == .fastest {
+                                Button {
+                                    showWarningMessage = true
+                                } label: {
+                                    Image(systemName: "exclamationmark.triangle.fill")
+                                }.popover(isPresented: $showWarningMessage) {
+                                    Text("Compiling on the \"Fastest\"\ncompilation speed might make\nthe compilation fail on this repo.")
+                                        .padding()
+                                }
+                                .transition(.push(from: .trailing))
+                            }
                         }
-                        .padding(.horizontal, 3)
-                        .frame(idealWidth: 200, maxWidth: 200)
                         
                         Spacer()
                     }.padding(5)
@@ -209,11 +233,42 @@ struct RomView: View {
                 Spacer()
                 
                 Button("Compile") {
+                    if !doKeepRepo {
+                        if repo == .custom {
+                            if FileManager.default.fileExists(atPath: "\(FileManager.default.homeDirectoryForCurrentUser.path())SM64Repos/\(customRepo.name)-build") {
+                                showWarningAlert = true
+                                
+                                return
+                            }
+                        } else {
+                            if FileManager.default.fileExists(atPath: "\(FileManager.default.homeDirectoryForCurrentUser.path())SM64Repos/\(repo)-build") {
+                                showWarningAlert = true
+                                
+                                return
+                            }
+                        }
+                    }
+                    
                     compile()
+                    
                 }.sheet(isPresented: $startedCompilation) {
-                    CompilationView(compileCommands: $commandsCompile, repo: $repo, execPath: $execPath, doLauncher: $doLauncher, reloadMenuBarLauncher: $reloadMenuBarLauncher)
+                    CompilationView(compileCommands: $commandsCompile, repo: $repo, customRepo: $customRepo, execPath: $execPath, doLauncher: $doLauncher, reloadMenuBarLauncher: $reloadMenuBarLauncher)
                 }
                 .buttonStyle(.borderedProminent)
+                .alert("Repo Already Compiled", isPresented: $showWarningAlert) {
+                    Button(role: .destructive) {
+                        compile()
+                    } label: {
+                        Text("Replace")
+                    }
+                    
+                    Button(role: .cancel) {}
+                    label: {
+                        Text("Cancel")
+                    }
+                } message: {
+                    Text("A repo seems to already be compiled. If you don't want to replace it, please enable the \"Keep Previously Compiled Repo\" option")
+                }
             }
         }
         .onAppear {
