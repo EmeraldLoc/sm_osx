@@ -10,6 +10,9 @@ struct CompilationView: View {
     @Binding var execPath: String
     @Binding var doLauncher: Bool
     @Binding var reloadMenuBarLauncher: Bool
+    @Binding var finishedCompiling: Bool
+    @Binding var developmentEnvironment: Bool
+    @Binding var fullExecPath: String
     @State var compilationStatus = CompStatus.nothing
     @State var compilationStatusString = " "
     @State var compilesSucess = false
@@ -158,6 +161,22 @@ struct CompilationView: View {
                     let number = CharacterSet.decimalDigits
                     let letters = CharacterSet.letters
                     
+                    if cancelCompilation {
+                        process.terminate()
+                        self.pipe.fileHandleForReading.readabilityHandler = nil
+                        
+                        if !developmentEnvironment {
+                            shell.shell("cd ~/SM64Repos && rm -rf \(execPath)", false)
+                            if repo != .custom {
+                                shell.shell("cd ~/SM64Repos && rm -rf \(repo)", false)
+                            } else {
+                                shell.shell("cd ~/SM64Repos && rm -rf \(customRepo.name)", false)
+                            }
+                        }
+                        
+                        dismiss()
+                    }
+                    
                     totalLog.append(line)
                     
                     print(line)
@@ -170,20 +189,6 @@ struct CompilationView: View {
                             log = line
                         }
                     }
-                    
-                    if cancelCompilation {
-                        process.terminate()
-                        self.pipe.fileHandleForReading.readabilityHandler = nil
-                        
-                        shell.shell("cd ~/SM64Repos && rm -rf \(execPath)", false)
-                        if repo != .custom {
-                            shell.shell("cd ~/SM64Repos && rm -rf \(repo)", false)
-                        } else {
-                            shell.shell("cd ~/SM64Repos && rm -rf \(customRepo.name)", false)
-                        }
-                        
-                        dismiss()
-                    }
                                         
                     if log.contains("sm_osx: Done") {
                         if process.isRunning {
@@ -191,12 +196,26 @@ struct CompilationView: View {
                         }
                         
                         compilationStatus = .finished
+                        var execDir = ""
                         
-                        if FileManager.default.fileExists(atPath: "\(FileManager.default.homeDirectoryForCurrentUser.path())SM64Repos/\(execPath)/sm64.us.f3dex2e") && repo != .custom {
-                            
+                        if repo == .custom {
+                            if developmentEnvironment {
+                                execDir = "\(FileManager.default.homeDirectoryForCurrentUser.path())SM64Repos/\(customRepo.name)/build/us_pc/\(customRepo.customEndFileName.isEmpty ? "sm64.us.f3dex2e" : customRepo.customEndFileName)"
+                            } else {
+                                execDir = "\(FileManager.default.homeDirectoryForCurrentUser.path())SM64Repos/\(execPath)/\(customRepo.customEndFileName.isEmpty ? "sm64.us.f3dex2e" : customRepo.customEndFileName)"
+                            }
+                        } else {
+                            if developmentEnvironment {
+                                execDir = "\(FileManager.default.homeDirectoryForCurrentUser.path())SM64Repos/\(repo)/build/us_pc/sm64.us.f3dex2e"
+                            } else {
+                                execDir = "\(FileManager.default.homeDirectoryForCurrentUser.path())SM64Repos/\(execPath)/sm64.us.f3dex2e"
+                            }
+                        }
+                        
+                        if FileManager.default.fileExists(atPath: execDir) {
                             let content = UNMutableNotificationContent()
                             content.title = "Build Finished Successfully"
-                            content.subtitle = "The repo \(repo) has finished building successfully."
+                            content.subtitle = "The repo \(repo == .custom ? customRepo.name : "\(repo)") has finished building successfully."
                             content.sound = UNNotificationSound.default
                             
                             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.0001, repeats: false)
@@ -210,9 +229,9 @@ struct CompilationView: View {
                             if doLauncher {
                                 let launcherRepo = LauncherRepos(context: moc)
 
-                                launcherRepo.title = "\(repo)"
+                                launcherRepo.title = "\(repo == .custom ? customRepo.name : "\(repo)")"
                                 launcherRepo.isEditing = false
-                                launcherRepo.path = "~/SM64Repos/\(execPath)/sm64.us.f3dex2e"
+                                launcherRepo.path = "~/SM64Repos/\(execPath)/\(customRepo.customEndFileName.isEmpty || repo != .custom ? "sm64.us.f3dex2e" : customRepo.customEndFileName)"
                                 launcherRepo.args = ""
                                 launcherRepo.id = UUID()
                                 
@@ -226,45 +245,10 @@ struct CompilationView: View {
                                 }
                             }
                             
+                            fullExecPath = execDir
+                            finishedCompiling = true
                             dismiss()
-                        } else if FileManager.default.fileExists(atPath: "\(FileManager.default.homeDirectoryForCurrentUser.path())SM64Repos/\(execPath)/\(customRepo.customEndFileName.isEmpty ? "sm64.us.f3dex2e" : customRepo.customEndFileName)") {
-                            
-                            let content = UNMutableNotificationContent()
-                            content.title = "Build Finished Successfully"
-                            content.subtitle = "The build \(customRepo.name) has finished successfully."
-                            content.sound = UNNotificationSound.default
-                            
-                            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.0001, repeats: false)
-                            
-                            let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-                            
-                            UNUserNotificationCenter.current().add(request)
-                            
-                            compilesSucess = true
-                            
-                            if doLauncher {
-                                
-                                let launcherRepo = LauncherRepos(context: moc)
-                                
-                                launcherRepo.title = "\(customRepo.name)"
-                                launcherRepo.isEditing = false
-                                launcherRepo.path = "~/SM64Repos/\(execPath)/\(customRepo.customEndFileName.isEmpty ? "sm64.us.f3dex2e" : customRepo.customEndFileName)"
-                                launcherRepo.args = ""
-                                launcherRepo.id = UUID()
-                                
-                                do {
-                                    try moc.save()
-                                    
-                                    reloadMenuBarLauncher = true
-                                }
-                                catch {
-                                    print(error)
-                                }
-                            }
-                            
-                            dismiss()
-                        }
-                        else {
+                        } else {
                             
                             let content = UNMutableNotificationContent()
                             content.title = "Build Failed"

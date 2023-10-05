@@ -26,6 +26,7 @@
 		9669DC6027D5565100DE5FAB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9669DC5F27D5565100DE5FAB /* Assets.xcassets */; };
 		9669DC6F27D55D5300DE5FAB /* PatchesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9669DC6E27D55D5300DE5FAB /* PatchesView.swift */; };
 		9669DC7127D55F4700DE5FAB /* RomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9669DC7027D55F4700DE5FAB /* RomView.swift */; };
+		966A0E8D2ACF4A8C00199378 /* DevelopmentEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966A0E8C2ACF4A8C00199378 /* DevelopmentEnvironment.swift */; };
 		96892C8129E5CDF00083526B /* LauncherListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96892C8029E5CDF00083526B /* LauncherListView.swift */; };
 		96892C8329E5D5E90083526B /* LauncherGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96892C8229E5D5E90083526B /* LauncherGridView.swift */; };
 		96892C8529E5E4280083526B /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96892C8429E5E4280083526B /* AboutView.swift */; };
@@ -84,6 +85,7 @@
 		9669DC6427D5565100DE5FAB /* sm_osx.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = sm_osx.entitlements; sourceTree = "<group>"; };
 		9669DC6E27D55D5300DE5FAB /* PatchesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatchesView.swift; sourceTree = "<group>"; };
 		9669DC7027D55F4700DE5FAB /* RomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RomView.swift; sourceTree = "<group>"; };
+		966A0E8C2ACF4A8C00199378 /* DevelopmentEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevelopmentEnvironment.swift; sourceTree = "<group>"; };
 		96892C8029E5CDF00083526B /* LauncherListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LauncherListView.swift; sourceTree = "<group>"; };
 		96892C8229E5D5E90083526B /* LauncherGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LauncherGridView.swift; sourceTree = "<group>"; };
 		96892C8429E5E4280083526B /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
@@ -168,6 +170,7 @@
 				9669DC6E27D55D5300DE5FAB /* PatchesView.swift */,
 				9669DC7027D55F4700DE5FAB /* RomView.swift */,
 				96BEADAD2839986200FF72E3 /* CompilationView.swift */,
+				966A0E8C2ACF4A8C00199378 /* DevelopmentEnvironment.swift */,
 				96BDA2F6283D283200A4DFF3 /* CrashView.swift */,
 				96BDA2F8283D29E300A4DFF3 /* LogView.swift */,
 				96C54E6C285930D7003B4A2D /* GlobalFunctions.swift */,
@@ -295,6 +298,7 @@
 				9621F4DB29E4A441007BE51D /* FirstLaunchView.swift in Sources */,
 				96892C8329E5D5E90083526B /* LauncherGridView.swift in Sources */,
 				9669DC7127D55F4700DE5FAB /* RomView.swift in Sources */,
+				966A0E8D2ACF4A8C00199378 /* DevelopmentEnvironment.swift in Sources */,
 				96F79CC82AC6388F009FC622 /* CustomRepo.swift in Sources */,
 				96BDA2F3283D216500A4DFF3 /* GeneralView.swift in Sources */,
 				96DE71D327EB9C170090E7A0 /* SettingsView.swift in Sources */,

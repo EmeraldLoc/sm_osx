@@ -8,7 +8,7 @@ public enum Repo: String {
     case moonshine = "https://github.com/EmeraldLoc/sm64-moonshine"
     case render96ex = "https://github.com/EmeraldLoc/Render96ex"
     case sm64ex_coop = "https://github.com/djoslin0/sm64ex-coop.git"
-    case sm64ex_coop_dev = "https://github.com/sm64ex-coop-dev/sm64ex-coop.git"
+    case sm64ex_coop_dev = "https://github.com/sm64ex-coop-dev/sm64ex-coop.git -b dev"
     case custom = "custom"
 }
 

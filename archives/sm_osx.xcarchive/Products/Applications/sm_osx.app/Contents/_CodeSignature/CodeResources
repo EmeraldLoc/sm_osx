@@ -43,10 +43,10 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			KCwUGi13hNYNLBjOCM9dyb5/sdY=
+			4osoXy/SWFCbhYWbHfwGtN6GlVQ=
 			</data>
 			<key>requirement</key>
-			<string>identifier "org.sparkle-project.Sparkle" and anchor apple generic and certificate leaf[subject.CN] = "Apple Development: calebelm@outlook.com (4SR9WR9R5Q)" and certificate 1[field.1.2.840.113635.100.6.2.1] /* exists */</string>
+			<string>identifier "org.sparkle-project.Sparkle" and anchor apple generic and certificate leaf[subject.CN] = "Apple Development: calebelm@icloud.com (VZ9N8YGDP3)" and certificate 1[field.1.2.840.113635.100.6.2.1] /* exists */</string>
 		</dict>
 		<key>Resources/AppIcon.icns</key>
 		<dict>
