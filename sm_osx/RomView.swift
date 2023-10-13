@@ -116,7 +116,7 @@ struct RomView: View {
             compilationCommand = "cd ~/SM64Repos/\(repo) && gmake OSX_BUILD=1 BETTERCAMERA=\(betterCamera) EXTERNAL_DATA=\(extData) NODRAWDISTANCE=\(drawDistance) \(compSpeed.rawValue) &&  echo 'sm_osx: Done'"
         }
         
-        recompileCommands.append("echo 'sm_osx: Compiling Now' && \(compilationCommand)")
+        recompileCommands.append("rm -rf ~/SM64Repos/\(repo == .custom ? customRepo.name : "\(repo)")/build/us_pc/\(customRepo.customEndFileName.isEmpty ? "sm64.us.f3dex2e" : customRepo.customEndFileName) && echo 'sm_osx: Compiling Now' && \(compilationCommand)")
         commandsCompile.append(compilationCommand)
         
         if !developmentEnvironment {

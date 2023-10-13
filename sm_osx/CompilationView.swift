@@ -243,8 +243,10 @@ struct CompilationView: View {
                             
                             height = 575
                             
-                            shell.shell("cd ~/SM64Repos && rm -rf \(execPath)", false)
-                            shell.shell("cd ~/SM64Repos && rm -rf \(repo)", false)
+                            if !developmentEnvironment {
+                                shell.shell("cd ~/SM64Repos && rm -rf \(execPath)", false)
+                                shell.shell("cd ~/SM64Repos && rm -rf \(repo)", false)
+                            }
                         }
                         
                         outHandle.readabilityHandler = nil
