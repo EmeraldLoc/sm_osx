@@ -19,126 +19,103 @@ struct CompilationView: View {
     @State var shell = Shell()
     @State var log = ""
     @State var totalLog = ""
-    @State var height: Double = 125
+    @State var height: Double = 100
     @State var cancelCompilation = false
+    @State var showingLog = false
     @Environment(\.dismiss) var dismiss
     @Environment(\.managedObjectContext) var moc
     @ObservedObject var addingRepo = AddingRepo.shared
-    @AppStorage("compilationAppearence") var compilationAppearence = CompilationAppearence.compact
     let process = Process()
     let pipe = Pipe()
     
     var body: some View {
         VStack {
-            
-            Spacer()
-            
-            if compilationAppearence == .compact {
-                if !log.isEmpty {
-                    Text(log)
-                        .lineLimit(2)
-                        .padding([.horizontal, .top], 5)
-                } else {
-                    Text(" ")
-                        .lineLimit(2)
-                        .padding([.horizontal, .top], 5)
-                }
-            } else {
-                Text(compilationStatusString)
-                    .onChange(of: compilationStatus) { _ in
-                        switch compilationStatus {
-                        case .instDependencies:
-                            compilationStatusString = "Installing Dependencies..."
-                        case .instRepo:
-                            compilationStatusString = "Downloading Repo..."
-                        case .patching:
-                            compilationStatusString = "Patching..."
-                        case .copyingFiles:
-                            compilationStatusString = "Copying Required Files..."
-                        case .compiling:
-                            compilationStatusString = "Compiling..."
-                        case .finishingUp:
-                            compilationStatusString = "Finishing..."
-                        case .finished:
-                            if !compilesSucess {
-                                compilationStatusString = "Compilation Failed."
-                            }
-                        case .nothing:
-                            compilationStatusString = "Starting..."
+            Text(compilationStatusString)
+                .padding(.top, showingLog ? 10 : 0)
+                .onChange(of: compilationStatus) { _ in
+                    switch compilationStatus {
+                    case .instDependencies:
+                        compilationStatusString = "Installing Dependencies..."
+                    case .instRepo:
+                        compilationStatusString = "Downloading Repo..."
+                    case .patching:
+                        compilationStatusString = "Patching..."
+                    case .copyingFiles:
+                        compilationStatusString = "Copying Required Files..."
+                    case .compiling:
+                        compilationStatusString = "Compiling..."
+                    case .finishingUp:
+                        compilationStatusString = "Finishing..."
+                    case .finished:
+                        if !compilesSucess {
+                            compilationStatusString = "Compilation Failed."
                         }
+                    case .nothing:
+                        compilationStatusString = "Starting..."
                     }
-            }
+                }
             
             ProgressView(value: compilationStatus.rawValue, total: 100)
                 .progressViewStyle(.linear)
                 .padding(.horizontal, 7)
             
-            if compilationAppearence == .compact {
-                Text(compilationStatusString)
-                    .onChange(of: compilationStatus) { _ in
-                        switch compilationStatus {
-                        case .instDependencies:
-                            compilationStatusString = "Installing Dependencies..."
-                        case .instRepo:
-                            compilationStatusString = "Downloading Repo..."
-                        case .patching:
-                            compilationStatusString = "Patching..."
-                        case .copyingFiles:
-                            compilationStatusString = "Copying Required Files..."
-                        case .compiling:
-                            compilationStatusString = "Compiling..."
-                        case .finishingUp:
-                            compilationStatusString = "Finishing..."
-                        case .finished:
-                            if compilesSucess {
-                                compilationStatusString = "Finished..."
-                            } else {
-                                compilationStatusString = "Failed to Compile"
-                            }
-                        case .nothing:
-                            compilationStatusString = "Starting..."
-                        }
-                    }
-            }
-            
-            if (compilesSucess == false && compilationStatus == .finished) || compilationAppearence == CompilationAppearence.full {
+            if showingLog {
                 GroupBox {
                     VStack {
                         BetterTextEditor(text: $totalLog, isEditable: false, autoScroll: true)
                     }
-                }.padding(.horizontal).frame(maxWidth: .infinity, maxHeight: .infinity)
-            
-                if compilesSucess == false && compilationStatus == .finished {
-                    Button("Close") {
-                        pipe.fileHandleForReading.readabilityHandler = nil
-                        dismiss()
-                    }.padding(.bottom)
-                } else {
-                    Button("Cancel") {
-                        cancelCompilation = true
-                    }
-                    .padding(.bottom)
-                    .disabled(cancelCompilation)
-                }
+                }.padding([.horizontal, .bottom]).frame(maxWidth: .infinity, maxHeight: .infinity)
             }
-
-            if compilationStatus != .finished && compilationAppearence == .compact {
+            
+            ZStack {
+                if !showingLog {
+                    if !log.isEmpty {
+                        Text(log)
+                            .lineLimit(1)
+                            .padding(.bottom, 5)
+                    } else {
+                        Text(" ")
+                            .lineLimit(1)
+                            .padding(.bottom, 5)
+                    }
+                }
+                
                 HStack {
                     Spacer()
                     
-                    Button("Cancel") {
-                        cancelCompilation = true
+                    if compilesSucess == false && compilationStatus == .finished {
+                        Button("Close") {
+                            pipe.fileHandleForReading.readabilityHandler = nil
+                            dismiss()
+                        }
+                        .padding(.bottom, showingLog ? 10 : 0)
+                    } else {
+                        Button("Cancel") {
+                            cancelCompilation = true
+                        }
+                        .disabled(cancelCompilation)
+                        .padding(.bottom, showingLog ? 10 : 0)
                     }
-                    .padding([.bottom, .trailing])
-                    .disabled(cancelCompilation)
+                    
+                    Button() {
+                        showingLog.toggle()
+                    } label: {
+                        VStack {
+                            Text(Image(systemName: "chevron.down"))
+                                .fontWeight(.bold)
+                                .rotationEffect(showingLog ? .degrees(180) : .zero)
+                                .disabled(compilesSucess == false && compilationStatus == .finished)
+                        }
+                    }
+                    .padding(.trailing)
+                    .padding(.bottom, showingLog ? 10 : 0)
                 }
             }
-            
         }.onAppear {
-            switch compilationAppearence {
-            case .compact:
-                height = 125
-            case .full:
+            switch showingLog {
+            case false:
+                height = 100
+            case true:
                 height = 575
             }
             
@@ -182,11 +159,11 @@ struct CompilationView: View {
                     print(line)
                     
                     if !line.isEmpty {
-                        if line.rangeOfCharacter(from: number) != nil {
-                            log = line
-                        }
-                        else if line.rangeOfCharacter(from: letters) != nil {
-                            log = line
+                        if line.rangeOfCharacter(from: number) != nil || line.rangeOfCharacter(from: letters) != nil {
+                            log = String(line.prefix(67))
+                            if line.count > 67 {
+                                log.append("...")
+                            }
                         }
                     }
                                         
@@ -262,6 +239,7 @@ struct CompilationView: View {
                             UNUserNotificationCenter.current().add(request)
                             
                             compilesSucess = false
+                            showingLog = true
                             
                             height = 575
                             
@@ -300,12 +278,12 @@ struct CompilationView: View {
         .onDisappear {
             addingRepo.isCompiling = false
             addingRepo.objectWillChange.send()
-        }.onChange(of: compilationAppearence) { _ in
+        }.onChange(of: showingLog) { _ in
             if !compilesSucess {
-                switch compilationAppearence {
-                case .compact:
-                    height = 125
-                case .full:
+                switch showingLog {
+                case false:
+                    height = 100
+                case true:
                     height = 575
                 }
             }

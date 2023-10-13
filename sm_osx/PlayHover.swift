@@ -10,7 +10,7 @@ struct PlayHover: ButtonStyle {
             .frame(width: 250, height: 150)
             .overlay(.black.opacity(isHovered ? 0.7 : 0))
             .overlay(content: {
-                if isHovered {
+                if isHovered || image.isEmpty {
                     Image(systemName: "play.fill")
                         .font(.title)
                         .foregroundColor(.white)

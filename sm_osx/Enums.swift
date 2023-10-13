@@ -52,16 +52,10 @@ public enum FirstLaunchStatus {
     case launcherView
     case titleBarAppearence
     case transparencyAppearence
-    case compilingAppearence
     case checkingHomebrewInstallation
     case checkingIntelHomebrewInstallation
     case installingDeps
     case finishingUp
-}
-
-public enum CompilationAppearence: Int {
-    case compact = 0
-    case full = 1
 }
 
 public enum TitlebarAppearence: Int {

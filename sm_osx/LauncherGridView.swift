@@ -74,9 +74,10 @@ struct LauncherGridView: View {
                         if !launcherRepos.isEmpty {
                             if NSImage(contentsOf: URL(fileURLWithPath: LauncherRepo.imagePath ?? "")) == nil {
                                 GroupBox {
-                                    Text(LauncherRepo.title ?? "")
-                                        .frame(width: 250, height: 140)
+                                    Text("")
+                                        .frame(width: 250, height: 150)
                                 }
+                                .border(Color.clear, width: 0)
                             } else {
                                 VStack {
                                     Image(nsImage: NSImage(contentsOf: URL(fileURLWithPath: LauncherRepo.imagePath ?? "")) ?? NSImage())
@@ -86,53 +87,57 @@ struct LauncherGridView: View {
                         }
                     }.buttonStyle(PlayHover(image: LauncherRepo.imagePath ?? ""))
                     
-                    if launcherRepos[i].imagePath != nil && NSImage(contentsOf: URL(fileURLWithPath: LauncherRepo.imagePath ?? "")) != nil {
+                    HStack {
                         Text(LauncherRepo.title ?? "Unknown Title")
+                        
+                        Menu {
+                            Button(action: {
+                                
+                                if launcherRepos.isEmpty { return }
+                                
+                                for i in 0...launcherRepos.count - 1 {
+                                    launcherRepos[i].isEditing = false
+                                }
+                                
+                                openWindow(id: "regular-log", value: i)
+                                
+                                print(LauncherRepo.path ?? "")
+                            }) {
+                                Text("Log")
+                                
+                                Image(systemName: "play.fill")
+                            }
+                            
+                            Button(action: {
+                                item = i
+                                removeRepo = true
+                            }) {
+                                Text("Remove Repo")
+                            }
+                            
+                            Button(action: {
+                                
+                                if launcherRepos.isEmpty { return }
+                                
+                                for iEdit in 0...launcherRepos.count - 1 {
+                                    launcherRepos[iEdit].isEditing = false
+                                }
+                                
+                                launcherRepos[i].isEditing = true
+                            }) {
+                                Text("Edit \(Image(systemName: "pencil"))")
+                            }
+                            
+                        } label: {
+                            Text(Image(systemName: "chevron.down"))
+                                .fontWeight(.bold)
+                        }
                     }
+                    .menuIndicator(.hidden)
+                    .fixedSize()
+                    .padding(.bottom)
                     
                     Spacer()
-                    
-                    Menu {
-                        Button(action: {
-                            
-                            if launcherRepos.isEmpty { return }
-                            
-                            for i in 0...launcherRepos.count - 1 {
-                                launcherRepos[i].isEditing = false
-                            }
-                            
-                            openWindow(id: "regular-log", value: i)
-                            
-                            print(LauncherRepo.path ?? "")
-                        }) {
-                            Text("Log")
-                            
-                            Image(systemName: "play.fill")
-                        }
-                        
-                        Button(action: {
-                            item = i
-                            removeRepo = true
-                        }) {
-                            Text("Remove Repo")
-                        }
-                        
-                        Button(action: {
-                            
-                            if launcherRepos.isEmpty { return }
-                            
-                            for iEdit in 0...launcherRepos.count - 1 {
-                                launcherRepos[iEdit].isEditing = false
-                            }
-                            
-                            launcherRepos[i].isEditing = true
-                        }) {
-                            Text("Edit \(Image(systemName: "pencil"))")
-                        }
-                        
-                    } label: {
-                        Text("Options")
-                    }.frame(maxWidth: 250)
                 }.sheet(isPresented: .constant(LauncherRepo.isEditing)) {
                     LauncherEditView(i: i, existingRepo: $existingRepo, reloadMenuBarLauncher: $reloadMenuBarLauncher)
                 }

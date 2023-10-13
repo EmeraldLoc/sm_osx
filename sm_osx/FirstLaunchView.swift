@@ -6,7 +6,6 @@ struct FirstLaunchView: View {
     @State var status = FirstLaunchStatus.none
     @State var startingTimer = 0
     @State var showAppNotInApplicationsFolderAlert = false
-    @AppStorage("compilationAppearence") var compilationAppearence = CompilationAppearence.compact
     @AppStorage("transparentBar") var transparentBar = TitlebarAppearence.normal
     @AppStorage("transparency") var transparency = TransparencyAppearence.normal
     @AppStorage("firstLaunch") var firstLaunch = true
@@ -119,32 +118,11 @@ struct FirstLaunchView: View {
                     
                     Button("Continue") {
                         withAnimation {
-                            status = .compilingAppearence
-                        }
-                    }
-                }
-            } else if status == .compilingAppearence {
-                VStack {
-                    Text("Select Compiling Appearence")
-                    
-                    Text("This can be changed at anytime in Settings")
-                        .font(.caption)
-                    
-                    Picker("Compilation Appearence", selection: $compilationAppearence) {
-                        Text("Compact")
-                            .tag(CompilationAppearence.compact)
-                        
-                        Text("Full")
-                            .tag(CompilationAppearence.full)
-                    }.frame(maxWidth: 300)
-                    
-                    Button("Continue") {
-                        withAnimation {
                             status = .checkingHomebrewInstallation
                         }
                     }
                 }
-            }  else if status == .checkingHomebrewInstallation {
+            } else if status == .checkingHomebrewInstallation {
                 Text("Checking Homebrew Installation...")
                     .onAppear {
                         if isArm() {
