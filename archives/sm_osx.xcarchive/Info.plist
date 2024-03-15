@@ -14,18 +14,18 @@
 		<key>CFBundleIdentifier</key>
 		<string>com.CubingStudios.sm-osx</string>
 		<key>CFBundleShortVersionString</key>
-		<string>1.3.4</string>
+		<string>1.3.5</string>
 		<key>CFBundleVersion</key>
-		<string>17</string>
+		<string>18</string>
 		<key>SigningIdentity</key>
-		<string>Apple Development: calebelm@icloud.com (VZ9N8YGDP3)</string>
+		<string>Apple Development: calebelm@outlook.com (4SR9WR9R5Q)</string>
 		<key>Team</key>
-		<string>6K864V7HLM</string>
+		<string>25RK3JMVLT</string>
 	</dict>
 	<key>ArchiveVersion</key>
 	<integer>2</integer>
 	<key>CreationDate</key>
-	<date>2023-10-28T03:00:00Z</date>
+	<date>2024-03-15T23:52:37Z</date>
 	<key>Name</key>
 	<string>sm_osx</string>
 	<key>SchemeName</key>

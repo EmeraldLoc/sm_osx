@@ -53,10 +53,10 @@ struct RomView: View {
         
         //clone the repo
         if repo == .custom {
-            commandsCompile.append("echo 'sm_osx: Starting Clone' && cd ~/SM64Repos && rm -rf \(customRepo.name) && git clone \(customRepo.cloneURL) \(customRepo.name) && ")
+            commandsCompile.append("echo 'sm_osx: Starting Clone' && cd ~/SM64Repos && rm -rf \(customRepo.name) && git clone \(customRepo.cloneURL) \(customRepo.name) \(customRepo.branch.isEmpty ? "" : "-b \(customRepo.branch)") && ")
             print("Custom Repo Name: \(customRepo.cloneURL)")
         } else {
-            commandsCompile.append("echo 'sm_osx: Starting Clone' && cd ~/SM64Repos && rm -rf \(repo) && git clone \(repo.rawValue) \(repo) && ")
+            commandsCompile.append("echo 'sm_osx: Starting Clone' && cd ~/SM64Repos && rm -rf \(repo) && git clone \(repo.rawValue) \(repo) \(patch.contains(.dev) ? "-b dev" : "") && ")
         }
         
         //copy files
@@ -106,7 +106,7 @@ struct RomView: View {
             } else {
                 compilationCommand = "cd ~/SM64Repos/\(customRepo.name) && gmake \(customRepo.useOsxBuildFlag ? "OSX_BUILD=1" : "") \(customRepo.buildFlags) \(compSpeed.rawValue) &&"
             }
-        } else if repo == .sm64ex_coop || repo == .sm64ex_coop_dev {
+        } else if repo == .sm64ex_coop || repo == .sm64ex_coop_dev || repo == .sm64coopdx {
             compilationCommand = "cd ~/SM64Repos/\(repo) && gmake OSX_BUILD=1 USE_APP=0 EXTERNAL_DATA=0 DEBUG=\(debug) COLOR=0 \(compSpeed.rawValue) && "
         }
         else if repo == .sm64ex_alo {
@@ -154,7 +154,7 @@ struct RomView: View {
             }
         }
         
-        if repo == .sm64ex_coop || repo == .sm64ex_coop_dev || (repo == .custom && customRepo.x86_64) {
+        if repo == .custom && customRepo.x86_64 {
             commandsCompile.append("brew install glew sdl2;")
             recompileCommands.append("brew install glew sdl2;")
         }

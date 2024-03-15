@@ -8,6 +8,7 @@ public enum Repo: String {
     case moonshine = "https://github.com/EmeraldLoc/sm64-moonshine"
     case render96ex = "https://github.com/EmeraldLoc/Render96ex"
     case sm64ex_coop = "https://github.com/djoslin0/sm64ex-coop.git"
+    case sm64coopdx = "https://github.com/coop-deluxe/sm64coopdx"
     case sm64ex_coop_dev = "https://github.com/sm64ex-coop-dev/sm64ex-coop.git -b dev"
     case custom = "custom"
 }
@@ -15,6 +16,7 @@ public enum Repo: String {
 public enum Patches: String {
     case highfps = "60Fps"
     case debug = "Debug"
+    case dev = "Dev"
     case extMoveset = "Extended Moveset"
     case bettercam = "Better Camera"
     case drawdistance = "No Draw Distance"

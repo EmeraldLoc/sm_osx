@@ -12,6 +12,7 @@ struct PatchesView: View {
     @State var isDist = false
     @State var extData = false
     @State var debug = false
+    @State var dev = false
     @State var timeTrials = false
     @State var isQOLFeat = false
     @State var isQOLFix = false
@@ -31,12 +32,11 @@ struct PatchesView: View {
             GroupBox {
                 HStack {
                     VStack(alignment: .leading) {
-                        if repo == .sm64ex_coop || repo == .sm64ex_coop_dev {
+                        if repo == .sm64ex_coop || repo == .sm64ex_coop_dev || repo == .sm64coopdx {
                             Toggle(isOn: $debug) {
                                 Text("Debug")
                                     .lineLimit(nil)
                             }.onChange(of: debug) { _ in
-                                
                                 if debug {
                                     patches.append(.debug)
                                 }
@@ -48,12 +48,27 @@ struct PatchesView: View {
                             }
                         }
                         
+                        if repo == .sm64coopdx {
+                            Toggle(isOn: $dev) {
+                                Text("Development Branch")
+                                    .lineLimit(nil)
+                            }.onChange(of: dev) { _ in
+                                if dev {
+                                    patches.append(.dev)
+                                }
+                                else {
+                                    if let i = patches.firstIndex(of: .dev) {
+                                        patches.remove(at: i)
+                                    }
+                                }
+                            }
+                        }
+                        
                         if repo == .sm64ex || repo == .sm64ex_alo {
                             Toggle(isOn: $isFPS) {
                                 Text("60 FPS")
                                     .lineLimit(nil)
                             }.onChange(of: isFPS) { _ in
-                                
                                 if isFPS {
                                     patches.append(.highfps)
                                 }
@@ -111,8 +126,8 @@ struct PatchesView: View {
                             }
                         }
                         
-                        if repo == .sm64ex || repo == .sm64ex_coop || repo == .render96ex || repo == .moonshine || repo == .sm64ex_alo || repo == .sm64ex_coop_dev {
-                            if repo != .sm64ex_coop && repo != .sm64ex_coop_dev {
+                        if repo == .sm64ex || repo == .sm64ex_coop || repo == .render96ex || repo == .moonshine || repo == .sm64ex_alo || repo == .sm64ex_coop_dev || repo == .sm64coopdx {
+                            if repo != .sm64ex_coop && repo != .sm64ex_coop_dev && repo != .sm64coopdx {
                                 Toggle(isOn: $isCam) {
                                     Text("Better Camera")
                                         .lineLimit(nil)
@@ -129,7 +144,7 @@ struct PatchesView: View {
                                 }
                             }
                             
-                            if repo != .moonshine && repo != .sm64ex_alo && repo != .sm64ex_coop && repo != .sm64ex_coop_dev {
+                            if repo != .moonshine && repo != .sm64ex_alo && repo != .sm64ex_coop && repo != .sm64ex_coop_dev && repo != .sm64coopdx {
                                 Toggle(isOn: $extData) {
                                     Text("External Data")
                                         .lineLimit(nil)
@@ -147,7 +162,7 @@ struct PatchesView: View {
                             }
                         }
                         
-                        if repo != .sm64ex_coop && repo != .sm64ex_coop_dev {
+                        if repo != .sm64ex_coop && repo != .sm64ex_coop_dev && repo != .sm64coopdx {
                             Toggle(isOn: $isDist) {
                                 Text("No Draw Distance")
                                     .lineLimit(nil)

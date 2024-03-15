@@ -31,6 +31,13 @@ struct CustomRepoView: View {
                                 .replacingOccurrences(of: " ", with: "")
                             customRepo.cloneURL = filteredCloneURL
                         }
+                    TextField("Branch", text: $customRepo.branch)
+                        .onChange(of: customRepo.cloneURL) { _ in
+                            let filteredCloneURL
+                                = customRepo.cloneURL
+                                .replacingOccurrences(of: " ", with: "")
+                            customRepo.cloneURL = filteredCloneURL
+                        }
                     TextField("Build Flags", text: $customRepo.buildFlags)
                     TextField("Exec File Name (Usually leave empty)", text: $customRepo.customEndFileName)
                         .onChange(of: customRepo.customEndFileName) { _ in

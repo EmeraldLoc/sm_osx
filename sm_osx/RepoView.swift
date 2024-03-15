@@ -31,6 +31,10 @@ struct RepoView: View {
                                     .lineLimit(nil)
                                     .tag(Repo.sm64ex_coop)
                                 
+                                Text("sm64coopdx")
+                                    .lineLimit(nil)
+                                    .tag(Repo.sm64coopdx)
+                                
                                 if devMode {
                                     Text("sm64ex-coop-dev (Only for devs)")
                                         .lineLimit(nil)

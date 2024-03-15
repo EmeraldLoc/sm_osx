@@ -129,12 +129,12 @@ struct LauncherGridView: View {
                             }
                             
                         } label: {
-                            Text(Image(systemName: "chevron.down"))
-                                .fontWeight(.bold)
+                            Image(systemName: "chevron.down")
                         }
                     }
                     .menuIndicator(.hidden)
                     .fixedSize()
+                    .bold()
                     .padding(.bottom)
                     
                     Spacer()

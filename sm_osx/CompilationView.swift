@@ -183,9 +183,9 @@ struct CompilationView: View {
                             }
                         } else {
                             if developmentEnvironment {
-                                execDir = "\(FileManager.default.homeDirectoryForCurrentUser.path())SM64Repos/\(repo)/build/us_pc/sm64.us.f3dex2e"
+                                execDir = "\(FileManager.default.homeDirectoryForCurrentUser.path())SM64Repos/\(repo)/build/us_pc/\(repo == .sm64coopdx ? "sm64coopdx" : "sm64.us.f3dex2e")"
                             } else {
-                                execDir = "\(FileManager.default.homeDirectoryForCurrentUser.path())SM64Repos/\(execPath)/sm64.us.f3dex2e"
+                                execDir = "\(FileManager.default.homeDirectoryForCurrentUser.path())SM64Repos/\(execPath)/\(repo == .sm64coopdx ? "sm64coopdx" : "sm64.us.f3dex2e")"
                             }
                         }
                         
@@ -208,7 +208,7 @@ struct CompilationView: View {
 
                                 launcherRepo.title = "\(repo == .custom ? customRepo.name : "\(repo)")"
                                 launcherRepo.isEditing = false
-                                launcherRepo.path = "~/SM64Repos/\(execPath)/\(customRepo.customEndFileName.isEmpty || repo != .custom ? "sm64.us.f3dex2e" : customRepo.customEndFileName)"
+                                launcherRepo.path = "~/SM64Repos/\(execPath)/\(customRepo.customEndFileName.isEmpty || repo != .custom ? repo == .sm64coopdx ? "sm64coopdx" : "sm64.us.f3dex2e" : customRepo.customEndFileName)"
                                 launcherRepo.args = ""
                                 launcherRepo.id = UUID()
                                 
