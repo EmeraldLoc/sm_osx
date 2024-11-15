@@ -43,7 +43,6 @@
 		96CCFB7729E7158B00BE8CC7 /* LaunchScriptCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96CCFB7629E7158B00BE8CC7 /* LaunchScriptCommand.swift */; };
 		96DE71D327EB9C170090E7A0 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96DE71D227EB9C170090E7A0 /* SettingsView.swift */; };
 		96E529D729C511F000E8E14D /* InternetChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96E529D629C511F000E8E14D /* InternetChecker.swift */; };
-		96E96D8629CE3E96009CAF74 /* export.plist in Resources */ = {isa = PBXBuildFile; fileRef = 96E96D8529CE3E96009CAF74 /* export.plist */; };
 		96EBED1329BA51970033771E /* UpdatesSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96EBED1229BA51970033771E /* UpdatesSettingsView.swift */; };
 		96F79CC62AC622CE009FC622 /* CustomRepoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F79CC52AC622CE009FC622 /* CustomRepoView.swift */; };
 		96F79CC82AC6388F009FC622 /* CustomRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F79CC72AC6388F009FC622 /* CustomRepo.swift */; };
@@ -103,7 +102,6 @@
 		96DE71D227EB9C170090E7A0 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		96DE71D427EB9C7D0090E7A0 /* sm-osx-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "sm-osx-Info.plist"; sourceTree = SOURCE_ROOT; };
 		96E529D629C511F000E8E14D /* InternetChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetChecker.swift; sourceTree = "<group>"; };
-		96E96D8529CE3E96009CAF74 /* export.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = export.plist; sourceTree = "<group>"; };
 		96EBED1229BA51970033771E /* UpdatesSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdatesSettingsView.swift; sourceTree = "<group>"; };
 		96F79CC52AC622CE009FC622 /* CustomRepoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRepoView.swift; sourceTree = "<group>"; };
 		96F79CC72AC6388F009FC622 /* CustomRepo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRepo.swift; sourceTree = "<group>"; };
@@ -152,7 +150,6 @@
 			children = (
 				9621F4EE29E4CCBC007BE51D /* IntelHomebrewInstaller.scpt */,
 				9621F4EC29E4C33F007BE51D /* HomebrewInstaller.scpt */,
-				96E96D8429CE3E80009CAF74 /* Config */,
 				9669DC5F27D5565100DE5FAB /* Assets.xcassets */,
 				963F238427F8B942004E010E /* DataStore.xcdatamodeld */,
 				96DE71D427EB9C7D0090E7A0 /* sm-osx-Info.plist */,
@@ -193,14 +190,6 @@
 				96F79CC72AC6388F009FC622 /* CustomRepo.swift */,
 			);
 			path = sm_osx;
-			sourceTree = "<group>";
-		};
-		96E96D8429CE3E80009CAF74 /* Config */ = {
-			isa = PBXGroup;
-			children = (
-				96E96D8529CE3E96009CAF74 /* export.plist */,
-			);
-			path = Config;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -269,7 +258,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				96CCFB7529E7152100BE8CC7 /* LauncherScript.sdef in Resources */,
-				96E96D8629CE3E96009CAF74 /* export.plist in Resources */,
 				9621F4ED29E4C33F007BE51D /* HomebrewInstaller.scpt in Resources */,
 				9621F4EF29E4CCBC007BE51D /* IntelHomebrewInstaller.scpt in Resources */,
 				9669DC6027D5565100DE5FAB /* Assets.xcassets in Resources */,
@@ -458,7 +446,7 @@
 				CURRENT_PROJECT_VERSION = 18;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"sm_osx/Preview Content\"";
-				DEVELOPMENT_TEAM = 25RK3JMVLT;
+				DEVELOPMENT_TEAM = 6K864V7HLM;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -494,7 +482,7 @@
 				CURRENT_PROJECT_VERSION = 18;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"sm_osx/Preview Content\"";
-				DEVELOPMENT_TEAM = 25RK3JMVLT;
+				DEVELOPMENT_TEAM = 6K864V7HLM;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;

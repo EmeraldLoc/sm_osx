@@ -12,13 +12,12 @@ struct LauncherView: View {
     @Environment(\.openWindow) var openWindow
     @FetchRequest(sortDescriptors:[SortDescriptor(\.title)]) var launcherRepos: FetchedResults<LauncherRepos>
     @State var existingRepo = URL(string: "")
-    @State var allowAddingRepos = true
+    @State var romInserted = false
     @AppStorage("firstLaunch") var firstLaunch = true
     @AppStorage("checkUpdateAuto") var checkUpdateAuto = true
     @AppStorage("isGrid") var isGrid = false
     @AppStorage("transparentBar") var transparentBar = TitlebarAppearence.normal
     @State var romURL = URL(string: "")
-    @State var homebrewText = ""
     @State var isLogging = false
     @State var showPackageInstall = false
     @Binding var reloadMenuBarLauncher: Bool
@@ -74,30 +73,6 @@ struct LauncherView: View {
         return response == .OK ? openPanel.url : nil
     }
     
-    func checkRom(_ command: String) throws -> Bool {
-        let task = Process()
-        var output = false
-        task.launchPath = "/bin/zsh"
-        task.arguments = ["-cl", command]
-
-        let pipe = Pipe()
-        task.standardOutput = pipe
-        task.standardError = pipe
-        let outHandle = pipe.fileHandleForReading
-        outHandle.waitForDataInBackgroundAndNotify()
-        
-        try? task.run()
-        task.waitUntilExit()
-        if task.terminationStatus != 0 {
-            output = true
-        }
-        else {
-            output = false
-        }
-        
-        return(output)
-    }
-    
     var body: some View {
         VStack {
             if !launcherRepos.isEmpty {
@@ -114,7 +89,7 @@ struct LauncherView: View {
             }
             
             if launcherRepos.isEmpty {
-                if !allowAddingRepos {
+                if romInserted {
                     Text("You have no repos, add a repo to begin!")
                         .font(.title2)
                         .multilineTextAlignment(.center)
@@ -127,9 +102,8 @@ struct LauncherView: View {
                 }
             }
             
-            if allowAddingRepos {
+            if !romInserted {
                 Button(action:{
-                    
                     if !launcherRepos.isEmpty {
                         for i in 0...launcherRepos.count - 1 {
                             launcherRepos[i].isEditing = false
@@ -137,28 +111,18 @@ struct LauncherView: View {
                     }
                     
                     romURL = showOpenPanelForRom()
-                    
-                    romURL? = URL(fileURLWithPath: romURL?.path.replacingOccurrences(of: " ", with: #"\ "#
-                                                                                     , options: .literal, range: nil) ?? "")
+                    romURL? = URL(fileURLWithPath: romURL?.path.replacingOccurrences(of: " ", with: #"\ "# , options: .literal, range: nil) ?? "")
                     
                     Shell().shell("cp \(romURL?.path ?? "") ~/SM64Repos/baserom.us.z64")
                     
-                    if let doesExist = try? checkRom("ls ~/SM64Repos/baserom.us.z64") {
-                        if doesExist {
-                            allowAddingRepos = true
-                        }
-                        else {
-                            allowAddingRepos = false
-                        }
+                    if FileManager.default.fileExists(atPath: "\(FileManager.default.homeDirectoryForCurrentUser.path())/SM64Repos/baserom.us.z64") {
+                        romInserted = true
+                    } else {
+                        romInserted = false
                     }
                 }) {
                     Text("Select Rom")
                 }.buttonStyle(.borderedProminent).padding(.bottom)
-            }
-            
-            if !homebrewText.isEmpty {
-                Text(homebrewText)
-                    .padding(.horizontal)
             }
         }.toolbar {
             ToolbarItem {
@@ -174,7 +138,7 @@ struct LauncherView: View {
                         repoView = true
                     }) {
                         Text("Add New Repo")
-                    }.buttonStyle(.borderedProminent).disabled(allowAddingRepos)
+                    }.buttonStyle(.borderedProminent).disabled(!romInserted)
                     
                     Button("Add Existing Repo") {
                         
@@ -209,39 +173,12 @@ struct LauncherView: View {
                     Text("Repos")
                         .frame(maxWidth: .infinity)
                 }.frame(width: 70)
-                
-                
             }
         }.onAppear {
-            
-            let detectArmBrewInstall = Shell().shell("which brew")
-            let detectIntelBrewInstall = Shell().shell("which /usr/local/bin/brew")
-            
-            if (detectArmBrewInstall.contains("/opt/homebrew/bin/brew") && detectIntelBrewInstall == "/usr/local/bin/brew\n" && isArm()) || (detectIntelBrewInstall == "/usr/local/bin/brew\n" && !isArm())  {
-                    homebrewText = ""
-            }
-            else if !(detectArmBrewInstall.contains("/opt/homebrew/bin/brew")) && detectIntelBrewInstall == "/usr/local/bin/brew\n" && isArm() {
-                    
-                homebrewText = "Arm homebrew is not installed. Please install at brew.sh\n\nIntel homebrew is installed"
-            }
-            else if (detectArmBrewInstall.contains("/opt/homebrew/bin/brew")) && detectIntelBrewInstall != "/usr/local/bin/brew\n" && isArm() {
-                    
-                homebrewText = "Arm homebrew is installed\n\nIntel homebrew is not installed. Install by launching your terminal with rosetta, and then follow instructions at brew.sh"
-            }
-            else {
-                homebrewText = "Homebrew is not installed, please install at brew.sh"
-            }
-            
-            do {
-                if try checkRom("ls ~/SM64Repos/baserom.us.z64") {
-                    allowAddingRepos = true
-                }
-                else {
-                    allowAddingRepos = false
-                }
-            }
-            catch {
-                print("Failed: \(error)")
+            if FileManager.default.fileExists(atPath: "\(FileManager.default.homeDirectoryForCurrentUser.path())/SM64Repos/baserom.us.z64") {
+                romInserted = true
+            } else {
+                romInserted = false
             }
 
             if !FileManager.default.fileExists(atPath: "\(FileManager.default.homeDirectoryForCurrentUser.path())/SM64Repos") {
