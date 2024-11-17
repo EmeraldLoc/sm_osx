@@ -19,7 +19,7 @@ struct PatchesView: View {
     @State var starRoad = false
     @Binding var repoView: Bool
     @Binding var reloadMenuBarLauncher: Bool
-    @State var patches = [Patches]()
+    @State var patches = [Patch]()
     @AppStorage("devMode") var devMode = true
     @Environment(\.dismiss) var dismiss
     
@@ -32,201 +32,24 @@ struct PatchesView: View {
             GroupBox {
                 HStack {
                     VStack(alignment: .leading) {
-                        if repo == .sm64ex_coop || repo == .sm64ex_coop_dev || repo == .sm64coopdx {
-                            Toggle(isOn: $debug) {
-                                Text("Debug")
-                                    .lineLimit(nil)
-                            }.onChange(of: debug) { _ in
-                                if debug {
-                                    patches.append(.debug)
-                                }
-                                else {
-                                    if let i = patches.firstIndex(of: .debug) {
-                                        patches.remove(at: i)
+                        ForEach(Array(builtinPatches.keys.sorted()).filter { key in
+                            builtinPatches[key]?.repoCompatibility.contains(repo.name) ?? false
+                        }, id: \.self) { key in
+                            let patch = builtinPatches[key]
+                            Toggle(patch?.name ?? "nil", isOn: .init(
+                                get: { patches.contains(patch ?? Patch()) },
+                                set: { _ in
+                                    if patches.contains(patch ?? Patch()) {
+                                        if let index = patches.firstIndex(of: patch ?? Patch()) {
+                                            patches.remove(at: index)
+                                        }
+                                    } else {
+                                        patches.append(patch ?? Patch())
                                     }
                                 }
-                            }
+                            ))
                         }
                         
-                        if repo == .sm64coopdx {
-                            Toggle(isOn: $dev) {
-                                Text("Development Branch")
-                                    .lineLimit(nil)
-                            }.onChange(of: dev) { _ in
-                                if dev {
-                                    patches.append(.dev)
-                                }
-                                else {
-                                    if let i = patches.firstIndex(of: .dev) {
-                                        patches.remove(at: i)
-                                    }
-                                }
-                            }
-                        }
-                        
-                        if repo == .sm64ex || repo == .sm64ex_alo {
-                            Toggle(isOn: $isFPS) {
-                                Text("60 FPS")
-                                    .lineLimit(nil)
-                            }.onChange(of: isFPS) { _ in
-                                if isFPS {
-                                    patches.append(.highfps)
-                                }
-                                else {
-                                    if let i = patches.firstIndex(of: .highfps) {
-                                        patches.remove(at: i)
-                                    }
-                                }
-                            }
-                            
-                            if repo != .sm64ex_alo {
-                                Toggle(isOn: $timeTrials) {
-                                    Text("Time Trial")
-                                        .lineLimit(nil)
-                                }.onChange(of: timeTrials) { _ in
-                                    
-                                    if timeTrials {
-                                        patches.append(.timeTrials)
-                                    }
-                                    else {
-                                        if let i = patches.firstIndex(of: .timeTrials) {
-                                            patches.remove(at: i)
-                                        }
-                                    }
-                                }
-                                
-                                Toggle(isOn: $isToadStars) {
-                                    Text("\(Patches.captainToadStars.rawValue)")
-                                }.onChange(of: isToadStars) { _ in
-                                    
-                                    if isToadStars {
-                                        patches.append(.captainToadStars)
-                                    }
-                                    else {
-                                        if let i = patches.firstIndex(of: .captainToadStars) {
-                                            patches.remove(at: i)
-                                        }
-                                    }
-                                }
-                                
-                                Toggle(isOn: $extMoveset) {
-                                    Text("Extended Moveset")
-                                        .lineLimit(nil)
-                                }.onChange(of: extMoveset) { _ in
-                                    
-                                    if extMoveset {
-                                        patches.append(.extMoveset)
-                                    }
-                                    else {
-                                        if let i = patches.firstIndex(of: .extMoveset) {
-                                            patches.remove(at: i)
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        
-                        if repo == .sm64ex || repo == .sm64ex_coop || repo == .render96ex || repo == .moonshine || repo == .sm64ex_alo || repo == .sm64ex_coop_dev || repo == .sm64coopdx {
-                            if repo != .sm64ex_coop && repo != .sm64ex_coop_dev && repo != .sm64coopdx {
-                                Toggle(isOn: $isCam) {
-                                    Text("Better Camera")
-                                        .lineLimit(nil)
-                                }.onChange(of: isCam) { _ in
-                                    
-                                    if isCam {
-                                        patches.append(.bettercam)
-                                    }
-                                    else {
-                                        if let i = patches.firstIndex(of: .bettercam) {
-                                            patches.remove(at: i)
-                                        }
-                                    }
-                                }
-                            }
-                            
-                            if repo != .moonshine && repo != .sm64ex_alo && repo != .sm64ex_coop && repo != .sm64ex_coop_dev && repo != .sm64coopdx {
-                                Toggle(isOn: $extData) {
-                                    Text("External Data")
-                                        .lineLimit(nil)
-                                }.onChange(of: extData) { _ in
-                                    
-                                    if extData {
-                                        patches.append(.extData)
-                                    }
-                                    else {
-                                        if let i = patches.firstIndex(of: .extData) {
-                                            patches.remove(at: i)
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        
-                        if repo != .sm64ex_coop && repo != .sm64ex_coop_dev && repo != .sm64coopdx {
-                            Toggle(isOn: $isDist) {
-                                Text("No Draw Distance")
-                                    .lineLimit(nil)
-                            }.onChange(of: isDist) { _ in
-                                
-                                if isDist {
-                                    patches.append(.drawdistance)
-                                }
-                                else {
-                                    if let i = patches.firstIndex(of: .drawdistance) {
-                                        patches.remove(at: i)
-                                    }
-                                }
-                            }
-                        }
-                        
-                        if repo == .sm64ex_alo {
-                            Toggle(isOn: $isQOLFeat) {
-                                Text("Quality of Life Features")
-                                    .lineLimit(nil)
-                            }.onChange(of: isQOLFeat) { _ in
-                                
-                                if isQOLFeat {
-                                    patches.append(.qolFeatures)
-                                }
-                                else {
-                                    if let i = patches.firstIndex(of: .qolFeatures) {
-                                        patches.remove(at: i)
-                                    }
-                                }
-                            }
-                            
-                            Toggle(isOn: $isQOLFix) {
-                                Text("Quality of Life Fixes")
-                                    .lineLimit(nil)
-                            }.onChange(of: isQOLFix) { _ in
-                                
-                                if isQOLFix {
-                                    patches.append(.qolFixes)
-                                }
-                                else {
-                                    if let i = patches.firstIndex(of: .qolFixes) {
-                                        patches.remove(at: i)
-                                    }
-                                }
-                            }
-                            
-                            if devMode {
-                                Toggle(isOn: $starRoad) {
-                                    Text("Star Road (Romhack)")
-                                        .lineLimit(nil)
-                                }.onChange(of: starRoad) { _ in
-                                    
-                                    if starRoad {
-                                        patches.append(.star_road)
-                                    }
-                                    else {
-                                        if let i = patches.firstIndex(of: .star_road) {
-                                            patches.remove(at: i)
-                                        }
-                                    }
-                                }
-                            }
-                        }
                         Spacer()
                     }
                     Spacer()

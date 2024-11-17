@@ -6,7 +6,6 @@ struct DevelopmentEnvironment: View {
     @Environment(\.dismiss) var dismiss
     @Binding var fullCompileCommands: String
     @Binding var repo: Repo
-    @Binding var customRepo: CustomRepo
     @Binding var execPath: String
     @Binding var doLauncher: Bool
     @Binding var reloadMenuBarLauncher: Bool
@@ -77,7 +76,7 @@ struct DevelopmentEnvironment: View {
                     .disabled(!alreadyCompiled)
                     
                     Button("Open Repo in Finder") {
-                        NSWorkspace.shared.selectFile(nil, inFileViewerRootedAtPath: "\(FileManager.default.homeDirectoryForCurrentUser.path())SM64Repos/\(repo == .custom ? customRepo.name : "\(repo)")")
+                        NSWorkspace.shared.selectFile(nil, inFileViewerRootedAtPath: "\(FileManager.default.homeDirectoryForCurrentUser.path())SM64Repos/\(repo.name)")
                     }.disabled(!alreadyCompiled)
                     
                     Button("Recompile from Scratch") {
@@ -99,7 +98,7 @@ struct DevelopmentEnvironment: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .sheet(isPresented: $compileRepo) {
-                    CompilationView(compileCommands: $compileCommand, repo: $repo, customRepo: $customRepo, execPath: $execPath, doLauncher: $doLauncher, reloadMenuBarLauncher: $reloadMenuBarLauncher, finishedCompiling: $alreadyCompiled, developmentEnvironment: .constant(true), fullExecPath: $fullExecPath)
+                    CompilationView(compileCommands: $compileCommand, repo: $repo, execPath: $execPath, doLauncher: $doLauncher, reloadMenuBarLauncher: $reloadMenuBarLauncher, finishedCompiling: $alreadyCompiled, developmentEnvironment: .constant(true), fullExecPath: $fullExecPath)
                 }
             }
             

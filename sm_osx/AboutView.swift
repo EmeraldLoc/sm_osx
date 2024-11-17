@@ -3,9 +3,7 @@ import SwiftUI
 
 struct AboutView: View {
     
-    let sm_osx_about_text = """
-sm_osx is a app that allows you to compile Super Mario 64 Pc Port repos with ease. It has a launcher, so that you can launch all your repos from one place, and an auto updater, so no need to worry about checking the github every five seconds. sm_osx also includes multiple sections in the menu bar, so you can use the app without the big window being there at all times.
-"""
+    let sm_osx_about_text = "sm_osx is a app that allows you to compile Super Mario 64 Pc Port repos with ease. It has a launcher, so that you can launch all your repos from one place, and an auto updater, so no need to worry about checking the github every five seconds. sm_osx also includes multiple sections in the menu bar, so you can use the app without the big window being there at all times."
     
     var body: some View {
         VStack {

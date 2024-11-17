@@ -45,7 +45,8 @@
 		96E529D729C511F000E8E14D /* InternetChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96E529D629C511F000E8E14D /* InternetChecker.swift */; };
 		96EBED1329BA51970033771E /* UpdatesSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96EBED1229BA51970033771E /* UpdatesSettingsView.swift */; };
 		96F79CC62AC622CE009FC622 /* CustomRepoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F79CC52AC622CE009FC622 /* CustomRepoView.swift */; };
-		96F79CC82AC6388F009FC622 /* CustomRepo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F79CC72AC6388F009FC622 /* CustomRepo.swift */; };
+		96F79CC82AC6388F009FC622 /* Repos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F79CC72AC6388F009FC622 /* Repos.swift */; };
+		96FA91072CE80449004BFD60 /* Patches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96FA91062CE80446004BFD60 /* Patches.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -104,7 +105,8 @@
 		96E529D629C511F000E8E14D /* InternetChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetChecker.swift; sourceTree = "<group>"; };
 		96EBED1229BA51970033771E /* UpdatesSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdatesSettingsView.swift; sourceTree = "<group>"; };
 		96F79CC52AC622CE009FC622 /* CustomRepoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRepoView.swift; sourceTree = "<group>"; };
-		96F79CC72AC6388F009FC622 /* CustomRepo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRepo.swift; sourceTree = "<group>"; };
+		96F79CC72AC6388F009FC622 /* Repos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Repos.swift; sourceTree = "<group>"; };
+		96FA91062CE80446004BFD60 /* Patches.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Patches.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -187,7 +189,8 @@
 				964C6F7629E889C100506DBD /* CreateAppShortcutView.swift */,
 				961C0A5029E9C6E000D50A80 /* Enums.swift */,
 				9639868029EB011A00E6218B /* ViewModifiers.swift */,
-				96F79CC72AC6388F009FC622 /* CustomRepo.swift */,
+				96F79CC72AC6388F009FC622 /* Repos.swift */,
+				96FA91062CE80446004BFD60 /* Patches.swift */,
 			);
 			path = sm_osx;
 			sourceTree = "<group>";
@@ -287,7 +290,7 @@
 				96892C8329E5D5E90083526B /* LauncherGridView.swift in Sources */,
 				9669DC7127D55F4700DE5FAB /* RomView.swift in Sources */,
 				966A0E8D2ACF4A8C00199378 /* DevelopmentEnvironment.swift in Sources */,
-				96F79CC82AC6388F009FC622 /* CustomRepo.swift in Sources */,
+				96F79CC82AC6388F009FC622 /* Repos.swift in Sources */,
 				96BDA2F3283D216500A4DFF3 /* GeneralView.swift in Sources */,
 				96DE71D327EB9C170090E7A0 /* SettingsView.swift in Sources */,
 				96C54E6D285930D7003B4A2D /* GlobalFunctions.swift in Sources */,
@@ -303,6 +306,7 @@
 				96F79CC62AC622CE009FC622 /* CustomRepoView.swift in Sources */,
 				96BB22E327E274F700057915 /* RepoView.swift in Sources */,
 				9669DC5C27D5565000DE5FAB /* sm_osxApp.swift in Sources */,
+				96FA91072CE80449004BFD60 /* Patches.swift in Sources */,
 				96CCFB7729E7158B00BE8CC7 /* LaunchScriptCommand.swift in Sources */,
 				96BDA2F5283D221700A4DFF3 /* DeveloperView.swift in Sources */,
 			);

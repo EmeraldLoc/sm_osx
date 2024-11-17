@@ -3,8 +3,7 @@ import SwiftUI
 
 struct CustomRepoView: View {
     
-    let repo: Repo
-    @State var customRepo = CustomRepo()
+    @State var repo: Repo
     @Binding var repoView: Bool
     @Binding var reloadMenuBarLauncher: Bool
     @Environment(\.dismiss) var dismiss
@@ -17,36 +16,36 @@ struct CustomRepoView: View {
             
             GroupBox {
                 VStack(alignment: .leading) {
-                    TextField("Name", text: $customRepo.name)
-                        .onChange(of: customRepo.name) { _ in
+                    TextField("Name", text: $repo.name)
+                        .onChange(of: repo.name) { _ in
                             let filteredName
-                                = customRepo.name
+                                = repo.name
                                 .replacingOccurrences(of: " ", with: "")
-                            customRepo.name = filteredName
+                            repo.name = filteredName
                         }
-                    TextField("Clone URL", text: $customRepo.cloneURL)
-                        .onChange(of: customRepo.cloneURL) { _ in
+                    TextField("Clone URL", text: $repo.cloneURL)
+                        .onChange(of: repo.cloneURL) { _ in
                             let filteredCloneURL 
-                                = customRepo.cloneURL
+                                = repo.cloneURL
                                 .replacingOccurrences(of: " ", with: "")
-                            customRepo.cloneURL = filteredCloneURL
+                            repo.cloneURL = filteredCloneURL
                         }
-                    TextField("Branch", text: $customRepo.branch)
-                        .onChange(of: customRepo.cloneURL) { _ in
+                    TextField("Branch", text: $repo.branch)
+                        .onChange(of: repo.cloneURL) { _ in
                             let filteredCloneURL
-                                = customRepo.cloneURL
+                                = repo.cloneURL
                                 .replacingOccurrences(of: " ", with: "")
-                            customRepo.cloneURL = filteredCloneURL
+                            repo.cloneURL = filteredCloneURL
                         }
-                    TextField("Build Flags", text: $customRepo.buildFlags)
-                    TextField("Exec File Name (Usually leave empty)", text: $customRepo.customEndFileName)
-                        .onChange(of: customRepo.customEndFileName) { _ in
-                            let filteredCustomEndFileName = customRepo.customEndFileName.replacingOccurrences(of: " ", with: "")
-                            customRepo.customEndFileName = filteredCustomEndFileName
+                    TextField("Build Flags", text: $repo.buildFlags)
+                    TextField("Exec File Name (Usually leave empty)", text: $repo.customEndFileName)
+                        .onChange(of: repo.customEndFileName) { _ in
+                            let filteredCustomEndFileName = repo.customEndFileName.replacingOccurrences(of: " ", with: "")
+                            repo.customEndFileName = filteredCustomEndFileName
                         }
-                    Toggle("Use OSX_BUILD=1 Build Flag", isOn: $customRepo.useOsxBuildFlag)
+                    Toggle("Use OSX_BUILD=1 Build Flag", isOn: $repo.useOsxBuildFlag)
                     if isArm() {
-                        Toggle("Uses x86_64 (Intel)", isOn: $customRepo.x86_64)
+                        Toggle("Uses x86_64 (Intel)", isOn: $repo.x86_64)
                     }
                     
                     Spacer()
@@ -70,9 +69,9 @@ struct CustomRepoView: View {
                 
                 Spacer()
                 
-                NavigationLink("Next", value: customRepo)
+                NavigationLink("Next", value: repo)
                     .buttonStyle(.borderedProminent)
-                    .disabled(!customRepo.cloneURL.hasSuffix(".git") || customRepo.name.isEmpty)
+                    .disabled(!repo.cloneURL.hasSuffix(".git") || repo.name.isEmpty)
             }
         }
         .padding([.horizontal, .bottom])

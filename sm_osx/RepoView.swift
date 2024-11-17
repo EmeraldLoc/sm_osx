@@ -7,7 +7,7 @@ struct RepoView: View {
     @AppStorage("devMode") var devMode = true
     @Binding var repoView: Bool
     @Binding var reloadMenuBarLauncher: Bool
-    @State var repo = Repo.none
+    @State var repo : Repo?
     
     var body: some View {
         NavigationStack {
@@ -20,39 +20,14 @@ struct RepoView: View {
                     VStack(alignment: .leading) {
                         HStack {
                             Picker("", selection: $repo) {
-                                Text("sm64ex")
-                                    .lineLimit(nil)
-                                    .tag(Repo.sm64ex)
-                                Text("sm64ex-alo")
-                                    .lineLimit(nil)
-                                    .tag(Repo.sm64ex_alo)
-                                
-                                Text("sm64ex-coop")
-                                    .lineLimit(nil)
-                                    .tag(Repo.sm64ex_coop)
-                                
-                                Text("sm64coopdx")
-                                    .lineLimit(nil)
-                                    .tag(Repo.sm64coopdx)
-                                
-                                if devMode {
-                                    Text("sm64ex-coop-dev (Only for devs)")
-                                        .lineLimit(nil)
-                                        .tag(Repo.sm64ex_coop_dev)
+                                ForEach(Array(builtinRepos.keys.sorted()), id: \.self) { key in
+                                    let repo = builtinRepos[key]
+                                    Text(repo?.name ?? "nil")
+                                        .tag(repo)
                                 }
                                 
-                                Text("Render96ex")
-                                    .lineLimit(nil)
-                                    .tag(Repo.render96ex)
-                                
-                                Text("Moonshine")
-                                    .lineLimit(nil)
-                                    .tag(Repo.moonshine)
-                                
                                 Text("Custom")
-                                    .lineLimit(nil)
-                                    .tag(Repo.custom)
-                                
+                                    .tag(Repo())
                             }.pickerStyle(.radioGroup).padding(.vertical, 5)
                             
                             Spacer()
@@ -84,17 +59,14 @@ struct RepoView: View {
             }
             .padding([.horizontal, .bottom])
             .navigationDestination(for: Repo.self) { repo in
-                if repo == .custom {
+                if repo == Repo() {
                     CustomRepoView(repo: repo, repoView: $repoView, reloadMenuBarLauncher: $reloadMenuBarLauncher)
                 } else {
                     PatchesView(repo: repo, repoView: $repoView, reloadMenuBarLauncher: $reloadMenuBarLauncher)
                 }
             }
-            .navigationDestination(for: [Patches].self) { patches in
-                RomView(patch: patches, repo: repo, repoView: $repoView, reloadMenuBarLauncher: $reloadMenuBarLauncher, customRepo: .constant(CustomRepo()))
-            }
-            .navigationDestination(for: CustomRepo.self) { customRepo in
-                RomView(patch: [Patches](), repo: repo, repoView: $repoView, reloadMenuBarLauncher: $reloadMenuBarLauncher, customRepo: .constant(customRepo))
+            .navigationDestination(for: [Patch].self) { patches in
+                RomView(patches: patches, repo: repo!, repoView: $repoView, reloadMenuBarLauncher: $reloadMenuBarLauncher)
             }
         }
         .transparentBackgroundStyle()
