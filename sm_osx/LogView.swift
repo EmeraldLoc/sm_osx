@@ -8,7 +8,6 @@ struct LogView: View {
     @State var launched = false
     @Environment(\.dismiss) var dismiss
     @FetchRequest(sortDescriptors:[SortDescriptor(\.title)]) var launcherRepos: FetchedResults<LauncherRepos>
-    @AppStorage("transparency") var transparency = TransparencyAppearence.normal
     let shell = Shell()
 
     var body: some View {
@@ -52,6 +51,6 @@ struct LogView: View {
                 
                 launched = true
             }
-        }.transparentBackgroundStyle()
+        }
     }
 }

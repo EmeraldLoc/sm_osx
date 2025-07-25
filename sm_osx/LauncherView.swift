@@ -95,7 +95,7 @@ struct LauncherView: View {
                         .multilineTextAlignment(.center)
                         .padding()
                 } else {
-                    Text("Please select your sm64 rom.")
+                    Text("Please select your Super Mario 64 rom")
                         .font(.title2)
                         .multilineTextAlignment(.center)
                         .padding()
@@ -128,7 +128,6 @@ struct LauncherView: View {
             ToolbarItem {
                 Menu {
                     Button(action: {
-                        
                         if !launcherRepos.isEmpty {
                             for i in 0...launcherRepos.count - 1 {
                                 launcherRepos[i].isEditing = false
@@ -141,7 +140,6 @@ struct LauncherView: View {
                     }.buttonStyle(.borderedProminent).disabled(!romInserted)
                     
                     Button("Add Existing Repo") {
-                        
                         if !launcherRepos.isEmpty {
                             for i in 0...launcherRepos.count - 1 {
                                 launcherRepos[i].isEditing = false
@@ -170,9 +168,9 @@ struct LauncherView: View {
                         }
                     }
                 } label: {
-                    Text("Repos")
-                        .frame(maxWidth: .infinity)
-                }.frame(width: 70)
+                    Label("Repo", systemImage: "plus")
+                }
+                .menuIndicator(.hidden)
             }
         }.onAppear {
             if FileManager.default.fileExists(atPath: "\(FileManager.default.homeDirectoryForCurrentUser.path())/SM64Repos/baserom.us.z64") {
@@ -243,6 +241,6 @@ struct LauncherView: View {
         }.sheet(isPresented: $repoView) {
             RepoView(repoView: $repoView, reloadMenuBarLauncher: $reloadMenuBarLauncher)
                 //.frame(minWidth: 650, idealWidth: 750, maxWidth: 850, minHeight: 400, idealHeight: 500, maxHeight: 550)
-        }.frame(minWidth: 300, minHeight: 250).transparentBackgroundStyle()
+        }.frame(minWidth: 300, minHeight: 250)
     }
 }

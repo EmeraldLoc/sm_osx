@@ -12,6 +12,7 @@ struct LauncherGridView: View {
     @State var removeEntireRepo = false
     @State var removeRepo = false
     @State var item: Int? = nil
+    @State var presentEditSheet = false
     let layout = [GridItem(.adaptive(minimum: 260))]
     
     func launcherShell(_ command: String) {
@@ -91,8 +92,7 @@ struct LauncherGridView: View {
                         Text(LauncherRepo.title ?? "Unknown Title")
                         
                         Menu {
-                            Button(action: {
-                                
+                            Button {
                                 if launcherRepos.isEmpty { return }
                                 
                                 for i in 0...launcherRepos.count - 1 {
@@ -102,21 +102,12 @@ struct LauncherGridView: View {
                                 openWindow(id: "regular-log", value: i)
                                 
                                 print(LauncherRepo.path ?? "")
-                            }) {
-                                Text("Log")
-                                
-                                Image(systemName: "play.fill")
+                            } label: {
+                                Label("Log", systemImage: "play.fill")
+                                    .labelStyle(.titleAndIcon)
                             }
                             
-                            Button(action: {
-                                item = i
-                                removeRepo = true
-                            }) {
-                                Text("Remove Repo")
-                            }
-                            
-                            Button(action: {
-                                
+                            Button {
                                 if launcherRepos.isEmpty { return }
                                 
                                 for iEdit in 0...launcherRepos.count - 1 {
@@ -124,10 +115,25 @@ struct LauncherGridView: View {
                                 }
                                 
                                 launcherRepos[i].isEditing = true
-                            }) {
-                                Text("Edit \(Image(systemName: "pencil"))")
+                                presentEditSheet = true
+                            } label: {
+                                Label("Edit", systemImage: "pencil")
+                                    .labelStyle(.titleAndIcon)
                             }
                             
+                            Button {
+                                if launcherRepos.isEmpty { return }
+                                
+                                for i in 0...launcherRepos.count - 1 {
+                                    launcherRepos[i].isEditing = false
+                                }
+                                
+                                item = i
+                                removeRepo = true
+                            } label: {
+                                Label("Remove Repo", systemImage: "trash")
+                                    .labelStyle(.titleAndIcon)
+                            }
                         } label: {
                             Image(systemName: "chevron.down")
                         }
@@ -138,7 +144,7 @@ struct LauncherGridView: View {
                     .padding(.bottom)
                     
                     Spacer()
-                }.sheet(isPresented: .constant(LauncherRepo.isEditing)) {
+                }.sheet(isPresented: $presentEditSheet) {
                     LauncherEditView(i: i, existingRepo: $existingRepo, reloadMenuBarLauncher: $reloadMenuBarLauncher)
                 }
             }
@@ -171,7 +177,6 @@ struct LauncherGridView: View {
         } message: {
             Text("Make sure there are no important files in that folder!")
         }
-        .padding(15)
         .alert("Remove Repo \(launcherRepos[item ?? 0].title ?? "")?", isPresented: $removeRepo) {
             Button("Remove Repo", role: .destructive) {
                 removeEntireRepo = true

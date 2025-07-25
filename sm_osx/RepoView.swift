@@ -1,5 +1,3 @@
-
-
 import SwiftUI
 
 struct RepoView: View {
@@ -61,15 +59,17 @@ struct RepoView: View {
             .navigationDestination(for: Repo.self) { repo in
                 if repo == Repo() {
                     CustomRepoView(repo: repo, repoView: $repoView, reloadMenuBarLauncher: $reloadMenuBarLauncher)
-                } else {
+                } else if builtinRepos.contains(where: { $0.value == repo }) {
                     PatchesView(repo: repo, repoView: $repoView, reloadMenuBarLauncher: $reloadMenuBarLauncher)
+                } else {
+                    RomView(patches: [Patch](), repo: repo, repoView: $repoView, reloadMenuBarLauncher: $reloadMenuBarLauncher)
                 }
             }
             .navigationDestination(for: [Patch].self) { patches in
                 RomView(patches: patches, repo: repo!, repoView: $repoView, reloadMenuBarLauncher: $reloadMenuBarLauncher)
             }
         }
-        .transparentBackgroundStyle()
         .frame(minWidth: 300, idealWidth: 300, maxWidth: 300, minHeight: 300, idealHeight: 300, maxHeight: 300)
     }
 }
+

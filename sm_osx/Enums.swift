@@ -25,7 +25,6 @@ public enum FirstLaunchStatus {
     case starting
     case launcherView
     case titleBarAppearence
-    case transparencyAppearence
     case checkingHomebrewInstallation
     case checkingIntelHomebrewInstallation
     case installingDeps
@@ -35,9 +34,4 @@ public enum FirstLaunchStatus {
 public enum TitlebarAppearence: Int {
     case normal = 0
     case unified = 1
-}
-
-public enum TransparencyAppearence:  String, CaseIterable {
-    case normal
-    case more
 }

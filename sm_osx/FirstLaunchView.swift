@@ -7,7 +7,6 @@ struct FirstLaunchView: View {
     @State var startingTimer = 0
     @State var showAppNotInApplicationsFolderAlert = false
     @AppStorage("transparentBar") var transparentBar = TitlebarAppearence.normal
-    @AppStorage("transparency") var transparency = TransparencyAppearence.normal
     @AppStorage("firstLaunch") var firstLaunch = true
     @AppStorage("isGrid") var isGrid = false
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
@@ -97,27 +96,6 @@ struct FirstLaunchView: View {
                     
                     Button("Continue") {
                         withAnimation {
-                            status = .transparencyAppearence
-                        }
-                    }
-                }
-            } else if status == .transparencyAppearence {
-                VStack {
-                    Text("Select Transparency Appearence")
-                    
-                    Text("This can be changed at anytime in Settings")
-                        .font(.caption)
-                    
-                    Picker("Transparency", selection: $transparency) {
-                        Text("Normal")
-                            .tag(TransparencyAppearence.normal)
-                        
-                        Text("More")
-                            .tag(TransparencyAppearence.more)
-                    }.frame(idealWidth: 200, maxWidth: 200)
-                    
-                    Button("Continue") {
-                        withAnimation {
                             status = .checkingHomebrewInstallation
                         }
                     }
@@ -196,9 +174,9 @@ struct FirstLaunchView: View {
                         var dependenciesCommand = ""
                         
                         if isArm() {
-                            dependenciesCommand = "brew install make mingw-w64 gcc sdl2 pkg-config glew glfw libusb audiofile coreutils wget; /usr/local/bin/brew install make mingw-w64 gcc sdl2 pkg-config glew glfw libusb audiofile coreutils wget; echo 'sm_osx: Finished Installing Deps'"
+                            dependenciesCommand = "brew install make mingw-w64 gcc sdl2 pkg-config glew glfw libusb coreutils wget; /usr/local/bin/brew install make mingw-w64 gcc sdl2 pkg-config glew glfw libusb coreutils wget; echo 'sm_osx: Finished Installing Deps'"
                         } else {
-                            dependenciesCommand = "brew install make mingw-w64 gcc sdl2 pkg-config glew glfw libusb audiofile coreutils wget; echo 'sm_osx: Finished Installing Deps'"
+                            dependenciesCommand = "brew install make mingw-w64 gcc sdl2 pkg-config glew glfw libusb coreutils wget; echo 'sm_osx: Finished Installing Deps'"
                         }
                         
                         let process = Process()

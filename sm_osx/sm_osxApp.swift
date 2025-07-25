@@ -13,7 +13,6 @@ struct sm_osxApp: App {
     @AppStorage("devMode") var devMode = false
     @AppStorage("firstLaunch") var firstLaunch = true
     @AppStorage("transparentBar") var transparentBar = TitlebarAppearence.normal
-    @AppStorage("transparency") var transparency = TransparencyAppearence.normal
     @State var window: NSWindow!
     @State var aboutWindow: NSWindow!
     @State var existingRepo = URL(string: "")
@@ -81,7 +80,7 @@ struct sm_osxApp: App {
             if firstLaunch {
                 CommandGroup(replacing: .appSettings) {
                     Text("Settings..")
-                        .keyboardShortcut(".")
+                        .keyboardShortcut(",")
                         .disabled(true)
                 }
                 
@@ -149,7 +148,7 @@ struct sm_osxApp: App {
                             }
                         }
                     }
-                }.transparentBackgroundStyle()
+                }
         }.commands {
             if firstLaunch {
                 CommandGroup(replacing: .appSettings) {

@@ -40,12 +40,12 @@ struct RomView: View {
     func compile() {
         //install dependencies
         if repo.x86_64 && isArm() {
-            commandsCompile = "echo 'sm_osx: Installing Deps'; brew uninstall --ignore-dependencies glew; brew uninstall --ignore-dependencies sdl2; arch -x86_64 /bin/zsh -cl '/usr/local/bin/brew install make mingw-w64 gcc gcc@9 sdl2 pkg-config glew glfw libusb audiofile coreutils wget'; brew install make mingw-w64 gcc pkg-config glfw libusb audiofile coreutils wget; "
-            recompileCommands = "echo 'sm_osx: Installing Deps'; brew uninstall --ignore-dependencies glew sdl2; arch -x86_64 /bin/zsh -cl '/usr/local/bin/brew install make mingw-w64 gcc gcc@9 sdl2 pkg-config glew glfw libusb audiofile coreutils wget'; brew install make mingw-w64 gcc pkg-config glfw libusb audiofile coreutils wget; "
+            commandsCompile = "echo 'sm_osx: Installing Deps'; brew uninstall --ignore-dependencies glew; brew uninstall --ignore-dependencies sdl2; arch -x86_64 /bin/zsh -cl '/usr/local/bin/brew install make mingw-w64 gcc gcc@9 sdl2 pkg-config glew glfw libusb coreutils wget'; brew install make mingw-w64 gcc pkg-config glfw libusb coreutils wget; "
+            recompileCommands = "echo 'sm_osx: Installing Deps'; brew uninstall --ignore-dependencies glew sdl2; arch -x86_64 /bin/zsh -cl '/usr/local/bin/brew install make mingw-w64 gcc gcc@9 sdl2 pkg-config glew glfw libusb coreutils wget'; brew install make mingw-w64 gcc pkg-config glfw libusb coreutils wget; "
         }
         else {
-            commandsCompile = "echo 'sm_osx: Installing Deps' && brew install make mingw-w64 gcc sdl2 pkg-config glew glfw libusb audiofile coreutils wget; "
-            recompileCommands = "echo 'sm_osx: Installing Deps' && brew install make mingw-w64 gcc sdl2 pkg-config glew glfw libusb audiofile coreutils wget; "
+            commandsCompile = "echo 'sm_osx: Installing Deps' && brew install make mingw-w64 gcc sdl2 pkg-config glew glfw libusb coreutils wget; "
+            recompileCommands = "echo 'sm_osx: Installing Deps' && brew install make mingw-w64 gcc sdl2 pkg-config glew glfw libusb coreutils wget; "
         }
         
         //clone the repo
@@ -166,8 +166,6 @@ struct RomView: View {
                                 Text("Speed")
                                     .lineLimit(nil)
                             }
-                            .padding(.leading, 3)
-                            .frame(idealWidth: 200, maxWidth: 200)
                             
                             if compSpeed == .fastest {
                                 Button {
@@ -183,7 +181,7 @@ struct RomView: View {
                         }
                         
                         Spacer()
-                    }.padding(5)
+                    }
                     
                     Spacer()
                 }.frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -210,11 +208,10 @@ struct RomView: View {
                 
                 Button(developmentEnvironment ? "Next" : "Compile") {
                     
-                    let customRepoFilePath = developmentEnvironment ? "\(FileManager.default.homeDirectoryForCurrentUser.path())SM64Repos/\(repo.name)" : "\(FileManager.default.homeDirectoryForCurrentUser.path())SM64Repos/\(repo.name)-build"
-                    let repoFilePath = developmentEnvironment ? "\(FileManager.default.homeDirectoryForCurrentUser.path())SM64Repos/\(repo)" : "\(FileManager.default.homeDirectoryForCurrentUser.path())SM64Repos/\(repo)-build"
+                    let repoFilePath = developmentEnvironment ? "\(FileManager.default.homeDirectoryForCurrentUser.path())SM64Repos/\(repo.name)" : "\(FileManager.default.homeDirectoryForCurrentUser.path())SM64Repos/\(repo.name)-build"
                     
                     if !doKeepRepo {
-                        if FileManager.default.fileExists(atPath: customRepoFilePath) {
+                        if FileManager.default.fileExists(atPath: repoFilePath) {
                             showWarningAlert = true
                             
                             return
@@ -244,10 +241,9 @@ struct RomView: View {
                     
                     Button(role: .destructive) {
                         if developmentEnvironment {
-                            let customRepoFilePath = developmentEnvironment ? "\(FileManager.default.homeDirectoryForCurrentUser.path())SM64Repos/\(repo.name)" : "\(FileManager.default.homeDirectoryForCurrentUser.path())SM64Repos/\(repo.name)-build"
-                            let repoFilePath = developmentEnvironment ? "\(FileManager.default.homeDirectoryForCurrentUser.path())SM64Repos/\(repo)" : "\(FileManager.default.homeDirectoryForCurrentUser.path())SM64Repos/\(repo)-build"
+                            let repoFilePath = developmentEnvironment ? "\(FileManager.default.homeDirectoryForCurrentUser.path())SM64Repos/\(repo.name)" : "\(FileManager.default.homeDirectoryForCurrentUser.path())SM64Repos/\(repo.name)-build"
                             
-                            try? FileManager.default.removeItem(atPath: customRepoFilePath)
+                            try? FileManager.default.removeItem(atPath: repoFilePath)
                             
                             developmentAlreadyCompiled = false
                         }
@@ -268,6 +264,5 @@ struct RomView: View {
         }
         .padding([.horizontal, .bottom])
         .navigationBarBackButtonHidden(true)
-        .transparentBackgroundStyle()
     }
 }

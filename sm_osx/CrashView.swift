@@ -20,6 +20,6 @@ struct CrashView: View {
             Button("Close") {
                 dismiss()
             }.padding(.bottom)
-        }.transparentBackgroundStyle()
+        }
     }
 }

@@ -76,7 +76,6 @@ struct PatchesView: View {
                     .buttonStyle(.borderedProminent)
             }
         }
-        .transparentBackgroundStyle()
         .padding([.horizontal, .bottom])
         .navigationBarBackButtonHidden(true)
     }

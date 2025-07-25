@@ -10,7 +10,6 @@ public struct Patch: Hashable {
 public var builtinPatches = [
     "highfps": Patch(name: "60 FPS", repoCompatibility: ["sm64ex"], patchInstallationCommand: "git apply ./enhancements/60fps_ex.patch --ignore-whitespace --reject", buildFlags: ""),
     "highfpsalo": Patch(name: "60 FPS", repoCompatibility: ["sm64ex_alo"], patchInstallationCommand: "", buildFlags: "HIGH_FPS_PC=1"),
-    "debug": Patch(name: "Debug", repoCompatibility: ["sm64coopdx"], patchInstallationCommand: "", buildFlags: "DEBUG=1"),
     "betterCam": Patch(name: "Better Camera (Puppycam)", repoCompatibility: ["sm64ex", "sm64ex_alo", "render96ex"], patchInstallationCommand: "", buildFlags: "BETTERCAMERA=1"),
     "noDrawDist": Patch(name: "No Draw Distance", repoCompatibility: ["sm64ex", "sm64ex_alo", "render96ex"], patchInstallationCommand: "", buildFlags: "NODRAWDISTANCE=1"),
     "extData": Patch(name: "External Data", repoCompatibility: ["sm64ex", "sm64ex_alo", "render96ex"], patchInstallationCommand: "", buildFlags: "EXTERNAL_DATA=1"),

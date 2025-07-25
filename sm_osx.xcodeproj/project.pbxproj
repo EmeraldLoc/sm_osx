@@ -12,7 +12,6 @@
 		960A559729B29DC600F5CC37 /* PlayHover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 960A559629B29DC600F5CC37 /* PlayHover.swift */; };
 		960A559929B2A50100F5CC37 /* LauncherEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 960A559829B2A50100F5CC37 /* LauncherEditView.swift */; };
 		961C0A5129E9C6E000D50A80 /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 961C0A5029E9C6E000D50A80 /* Enums.swift */; };
-		961C0A5329E9D29C00D50A80 /* AppearenceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 961C0A5229E9D29C00D50A80 /* AppearenceView.swift */; };
 		9621F4DB29E4A441007BE51D /* FirstLaunchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9621F4DA29E4A441007BE51D /* FirstLaunchView.swift */; };
 		9621F4ED29E4C33F007BE51D /* HomebrewInstaller.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 9621F4EC29E4C33F007BE51D /* HomebrewInstaller.scpt */; };
 		9621F4EF29E4CCBC007BE51D /* IntelHomebrewInstaller.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 9621F4EE29E4CCBC007BE51D /* IntelHomebrewInstaller.scpt */; };
@@ -33,8 +32,6 @@
 		96A3D83A29B52328007AF78A /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96A3D83929B52328007AF78A /* ImagePicker.swift */; };
 		96AC85B1286670B800CCFF58 /* MenuCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AC85B0286670B800CCFF58 /* MenuCommands.swift */; };
 		96BB22E327E274F700057915 /* RepoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96BB22E227E274F700057915 /* RepoView.swift */; };
-		96BDA2F3283D216500A4DFF3 /* GeneralView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96BDA2F2283D216500A4DFF3 /* GeneralView.swift */; };
-		96BDA2F5283D221700A4DFF3 /* DeveloperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96BDA2F4283D221700A4DFF3 /* DeveloperView.swift */; };
 		96BDA2F7283D283200A4DFF3 /* CrashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96BDA2F6283D283200A4DFF3 /* CrashView.swift */; };
 		96BDA2F9283D29E300A4DFF3 /* LogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96BDA2F8283D29E300A4DFF3 /* LogView.swift */; };
 		96BEADAE2839986200FF72E3 /* CompilationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96BEADAD2839986200FF72E3 /* CompilationView.swift */; };
@@ -43,7 +40,6 @@
 		96CCFB7729E7158B00BE8CC7 /* LaunchScriptCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96CCFB7629E7158B00BE8CC7 /* LaunchScriptCommand.swift */; };
 		96DE71D327EB9C170090E7A0 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96DE71D227EB9C170090E7A0 /* SettingsView.swift */; };
 		96E529D729C511F000E8E14D /* InternetChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96E529D629C511F000E8E14D /* InternetChecker.swift */; };
-		96EBED1329BA51970033771E /* UpdatesSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96EBED1229BA51970033771E /* UpdatesSettingsView.swift */; };
 		96F79CC62AC622CE009FC622 /* CustomRepoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F79CC52AC622CE009FC622 /* CustomRepoView.swift */; };
 		96F79CC82AC6388F009FC622 /* Repos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F79CC72AC6388F009FC622 /* Repos.swift */; };
 		96FA91072CE80449004BFD60 /* Patches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96FA91062CE80446004BFD60 /* Patches.swift */; };
@@ -67,7 +63,6 @@
 		960A559629B29DC600F5CC37 /* PlayHover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayHover.swift; sourceTree = "<group>"; };
 		960A559829B2A50100F5CC37 /* LauncherEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LauncherEditView.swift; sourceTree = "<group>"; };
 		961C0A5029E9C6E000D50A80 /* Enums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
-		961C0A5229E9D29C00D50A80 /* AppearenceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearenceView.swift; sourceTree = "<group>"; };
 		9621F4DA29E4A441007BE51D /* FirstLaunchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstLaunchView.swift; sourceTree = "<group>"; };
 		9621F4EC29E4C33F007BE51D /* HomebrewInstaller.scpt */ = {isa = PBXFileReference; lastKnownFileType = file; path = HomebrewInstaller.scpt; sourceTree = "<group>"; };
 		9621F4EE29E4CCBC007BE51D /* IntelHomebrewInstaller.scpt */ = {isa = PBXFileReference; lastKnownFileType = file; path = IntelHomebrewInstaller.scpt; sourceTree = "<group>"; };
@@ -92,8 +87,6 @@
 		96A3D83929B52328007AF78A /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		96AC85B0286670B800CCFF58 /* MenuCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuCommands.swift; sourceTree = "<group>"; };
 		96BB22E227E274F700057915 /* RepoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoView.swift; sourceTree = "<group>"; };
-		96BDA2F2283D216500A4DFF3 /* GeneralView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralView.swift; sourceTree = "<group>"; };
-		96BDA2F4283D221700A4DFF3 /* DeveloperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeveloperView.swift; sourceTree = "<group>"; };
 		96BDA2F6283D283200A4DFF3 /* CrashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrashView.swift; sourceTree = "<group>"; };
 		96BDA2F8283D29E300A4DFF3 /* LogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogView.swift; sourceTree = "<group>"; };
 		96BEADAD2839986200FF72E3 /* CompilationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompilationView.swift; sourceTree = "<group>"; };
@@ -103,7 +96,6 @@
 		96DE71D227EB9C170090E7A0 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		96DE71D427EB9C7D0090E7A0 /* sm-osx-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "sm-osx-Info.plist"; sourceTree = SOURCE_ROOT; };
 		96E529D629C511F000E8E14D /* InternetChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetChecker.swift; sourceTree = "<group>"; };
-		96EBED1229BA51970033771E /* UpdatesSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdatesSettingsView.swift; sourceTree = "<group>"; };
 		96F79CC52AC622CE009FC622 /* CustomRepoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRepoView.swift; sourceTree = "<group>"; };
 		96F79CC72AC6388F009FC622 /* Repos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Repos.swift; sourceTree = "<group>"; };
 		96FA91062CE80446004BFD60 /* Patches.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Patches.swift; sourceTree = "<group>"; };
@@ -157,18 +149,14 @@
 				96DE71D427EB9C7D0090E7A0 /* sm-osx-Info.plist */,
 				9669DC6427D5565100DE5FAB /* sm_osx.entitlements */,
 				9669DC5B27D5565000DE5FAB /* sm_osxApp.swift */,
-				96AC85B0286670B800CCFF58 /* MenuCommands.swift */,
-				96DE71D227EB9C170090E7A0 /* SettingsView.swift */,
-				96BDA2F2283D216500A4DFF3 /* GeneralView.swift */,
-				961C0A5229E9D29C00D50A80 /* AppearenceView.swift */,
-				96EBED1229BA51970033771E /* UpdatesSettingsView.swift */,
-				96BDA2F4283D221700A4DFF3 /* DeveloperView.swift */,
-				963F238227F8B211004E010E /* LauncherView.swift */,
-				96BB22E227E274F700057915 /* RepoView.swift */,
-				96F79CC52AC622CE009FC622 /* CustomRepoView.swift */,
-				9669DC6E27D55D5300DE5FAB /* PatchesView.swift */,
-				9669DC7027D55F4700DE5FAB /* RomView.swift */,
 				96BEADAD2839986200FF72E3 /* CompilationView.swift */,
+				96F79CC52AC622CE009FC622 /* CustomRepoView.swift */,
+				963F238227F8B211004E010E /* LauncherView.swift */,
+				9669DC6E27D55D5300DE5FAB /* PatchesView.swift */,
+				96BB22E227E274F700057915 /* RepoView.swift */,
+				9669DC7027D55F4700DE5FAB /* RomView.swift */,
+				96DE71D227EB9C170090E7A0 /* SettingsView.swift */,
+				96AC85B0286670B800CCFF58 /* MenuCommands.swift */,
 				966A0E8C2ACF4A8C00199378 /* DevelopmentEnvironment.swift */,
 				96BDA2F6283D283200A4DFF3 /* CrashView.swift */,
 				96BDA2F8283D29E300A4DFF3 /* LogView.swift */,
@@ -291,14 +279,11 @@
 				9669DC7127D55F4700DE5FAB /* RomView.swift in Sources */,
 				966A0E8D2ACF4A8C00199378 /* DevelopmentEnvironment.swift in Sources */,
 				96F79CC82AC6388F009FC622 /* Repos.swift in Sources */,
-				96BDA2F3283D216500A4DFF3 /* GeneralView.swift in Sources */,
 				96DE71D327EB9C170090E7A0 /* SettingsView.swift in Sources */,
 				96C54E6D285930D7003B4A2D /* GlobalFunctions.swift in Sources */,
-				96EBED1329BA51970033771E /* UpdatesSettingsView.swift in Sources */,
 				960A559729B29DC600F5CC37 /* PlayHover.swift in Sources */,
 				96BDA2F7283D283200A4DFF3 /* CrashView.swift in Sources */,
 				960A559929B2A50100F5CC37 /* LauncherEditView.swift in Sources */,
-				961C0A5329E9D29C00D50A80 /* AppearenceView.swift in Sources */,
 				96E529D729C511F000E8E14D /* InternetChecker.swift in Sources */,
 				9601BB1C29CB82240060BD24 /* UpdaterView.swift in Sources */,
 				9669DC6F27D55D5300DE5FAB /* PatchesView.swift in Sources */,
@@ -308,7 +293,6 @@
 				9669DC5C27D5565000DE5FAB /* sm_osxApp.swift in Sources */,
 				96FA91072CE80449004BFD60 /* Patches.swift in Sources */,
 				96CCFB7729E7158B00BE8CC7 /* LaunchScriptCommand.swift in Sources */,
-				96BDA2F5283D221700A4DFF3 /* DeveloperView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -445,9 +429,10 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = sm_osx/sm_osx.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 19;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"sm_osx/Preview Content\"";
 				DEVELOPMENT_TEAM = 6K864V7HLM;
@@ -463,7 +448,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 1.3.5;
+				MARKETING_VERSION = 1.3.6;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.CubingStudios.sm-osx";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -481,9 +466,10 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = sm_osx/sm_osx.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 19;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"sm_osx/Preview Content\"";
 				DEVELOPMENT_TEAM = 6K864V7HLM;
@@ -499,7 +485,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 1.3.5;
+				MARKETING_VERSION = 1.3.6;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.CubingStudios.sm-osx";
 				PRODUCT_NAME = "$(TARGET_NAME)";
