@@ -2,7 +2,6 @@ import SwiftUI
 
 struct RepoView: View {
     
-    @AppStorage("devMode") var devMode = true
     @Binding var repoView: Bool
     @Binding var reloadMenuBarLauncher: Bool
     @State var repo : Repo?

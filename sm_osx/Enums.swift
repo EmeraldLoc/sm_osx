@@ -24,11 +24,10 @@ public enum FirstLaunchStatus {
     case none
     case starting
     case launcherView
-    case titleBarAppearence
     case checkingHomebrewInstallation
-    case checkingIntelHomebrewInstallation
     case installingDeps
     case finishingUp
+    case restarting
 }
 
 public enum TitlebarAppearence: Int {

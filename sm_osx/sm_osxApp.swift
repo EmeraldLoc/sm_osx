@@ -10,9 +10,7 @@ struct sm_osxApp: App {
     @StateObject private var networkMonitor = NetworkMonitor()
     @StateObject private var dataController = DataController()
     @AppStorage("keepInMenuBar") var keepInMenuBar = true
-    @AppStorage("devMode") var devMode = false
     @AppStorage("firstLaunch") var firstLaunch = true
-    @AppStorage("transparentBar") var transparentBar = TitlebarAppearence.normal
     @State var window: NSWindow!
     @State var aboutWindow: NSWindow!
     @State var existingRepo = URL(string: "")

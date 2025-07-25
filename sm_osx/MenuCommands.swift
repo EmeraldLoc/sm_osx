@@ -28,47 +28,7 @@ struct MenuCommands: Commands {
         return objects ?? []
     }
     
-    func launcherShell(_ command: String) {
-        
-        let process = Process()
-        var output = ""
-        process.launchPath = "/bin/zsh"
-        process.arguments = ["-cl", "\(command)"]
-        
-        let pipe = Pipe()
-        process.standardOutput = pipe
-        process.standardError = pipe
-        let outHandle = pipe.fileHandleForReading
-        
-        outHandle.readabilityHandler = { pipe in
-            if let line = String(data: pipe.availableData, encoding: String.Encoding.utf8) {
-                output.append(line)
-            } else {
-                print("Error decoding data. why do I program...: \(pipe.availableData)")
-            }
-            
-            outHandle.stopReadingIfPassedEOF()
-        }
-        
-        var observer : NSObjectProtocol?
-        observer = NotificationCenter.default.addObserver(forName: Process.didTerminateNotification, object: process, queue: nil) { [observer] _ in
-            if process.terminationStatus != 0 {
-                
-                if NSApp.activationPolicy() == .prohibited {
-                    showApp()
-                }
-                
-                openWindow(id: "crash-log", value: output)
-            }
-            
-            NotificationCenter.default.removeObserver(observer as Any)
-        }
-        
-        try? process.run()
-    }
-    
     var body: some Commands {
-        
         CommandMenu("Launch") {
             if !launcherRepos.isEmpty {
                 ForEach(launcherRepos) { LauncherRepo in
@@ -77,25 +37,30 @@ struct MenuCommands: Commands {
                             launcherRepos[iE].isEditing = false
                         }
                         
-                        launcherShell("\(LauncherRepo.path ?? "its broken") \(LauncherRepo.args ?? "")")
+                        Task {
+                            let (success, logs) = await Shell().shellAsync("\(LauncherRepo.path ?? "its broken") \(LauncherRepo.args ?? "")")
+                            
+                            if !success {
+                                if NSApp.activationPolicy() == .prohibited {
+                                    showApp()
+                                }
+                                
+                                openWindow(id: "crash-log", value: logs)
+                            }
+                        }
                     }
                 }.onChange(of: reloadMenuBarLauncher) { _ in
-                    
                     launcherRepos = fetchLaunchers()
-                    
                     reloadMenuBarLauncher = false
                 }
             } else {
                 Text("No Repos")
                     .onAppear {
                         launcherRepos = fetchLaunchers()
-                        
                         reloadMenuBarLauncher = false
                     }
                     .onChange(of: reloadMenuBarLauncher) { _ in
-                        
                         launcherRepos = fetchLaunchers()
-                        
                         reloadMenuBarLauncher = false
                     }
             }
@@ -148,7 +113,6 @@ struct menuExtras: Scene {
     @Binding var showAddRepos: Bool
     @Binding var reloadMenuBarLauncher: Bool
     @AppStorage("firstLaunch") var firstLaunch = true
-    @AppStorage("transparentBar") var transparentBar = TitlebarAppearence.normal
     @StateObject var networkMonitor = NetworkMonitor()
     @ObservedObject var addingRepo = AddingRepo.shared
     @ObservedObject var launchRepoAppleScript = LaunchRepoAppleScript.shared
@@ -166,56 +130,26 @@ struct menuExtras: Scene {
         return objects ?? []
     }
     
-    func launcherShell(_ command: String) {
-        
-        let process = Process()
-        var output = ""
-        process.launchPath = "/bin/zsh"
-        process.arguments = ["-cl", "\(command)"]
-        
-        let pipe = Pipe()
-        process.standardOutput = pipe
-        process.standardError = pipe
-        let outHandle = pipe.fileHandleForReading
-        
-        outHandle.readabilityHandler = { pipe in
-            if let line = String(data: pipe.availableData, encoding: String.Encoding.utf8) {
-                output.append(line)
-            } else {
-                print("Error decoding data. why do I program...: \(pipe.availableData)")
-            }
-            
-            outHandle.stopReadingIfPassedEOF()
-        }
-        
-        var observer : NSObjectProtocol?
-        observer = NotificationCenter.default.addObserver(forName: Process.didTerminateNotification, object: process, queue: nil) { [observer] _ in
-            if process.terminationStatus != 0 {
-                
-                if NSApp.activationPolicy() == .prohibited {
-                    showApp()
-                }
-                
-                openWindow(id: "crash-log", value: output)
-            }
-            
-            NotificationCenter.default.removeObserver(observer as Any)
-        }
-        
-        try? process.run()
-    }
-    
     var body: some Scene {
         MenuBarExtra() {
             Section {
                 ForEach(launcherRepos) { Launcher in
                     Button(Launcher.title ?? "") {
-                        
                         for i in 0...launcherRepos.count - 1 {
                             launcherRepos[i].isEditing = false
                         }
                         
-                        launcherShell("\(Launcher.path ?? "its broken") \(Launcher.args ?? "")")
+                        Task {
+                            let (success, logs) = await Shell().shellAsync("\(Launcher.path ?? "its broken") \(Launcher.args ?? "")")
+                            
+                            if !success {
+                                if NSApp.activationPolicy() == .prohibited {
+                                    showApp()
+                                }
+                                
+                                openWindow(id: "crash-log", value: logs)
+                            }
+                        }
                     }
                 }
             }
@@ -260,51 +194,33 @@ struct menuExtras: Scene {
                         launcherRepos = fetchLaunchers()
                         
                         reloadMenuBarLauncher = false
-                        
-                        if transparentBar == TitlebarAppearence.unified {
-                            for window in NSApplication.shared.windows {
-                                window.titlebarAppearsTransparent = true
-                            }
-                        } else if transparentBar == TitlebarAppearence.normal {
-                            for window in NSApplication.shared.windows {
-                                window.titlebarAppearsTransparent = false
-                            }
-                        }
                     }.onChange(of: reloadMenuBarLauncher) { _ in
                         launcherRepos = fetchLaunchers()
                         
                         reloadMenuBarLauncher = false
                     }.onChange(of: launchRepoAppleScript.repoID) { repoID in
-                        for i in 0...launcherRepos.count - 1 {
-                            if launcherRepos[i].id?.uuidString == repoID {
-                                launcherShell("\(launcherRepos[i].path ?? "its broken") \(launcherRepos[i].args ?? "")")
-                                
-                                launchRepoAppleScript.repoID = ""
+                        if !launcherRepos.isEmpty {
+                            for i in 0...launcherRepos.count - 1 {
+                                if launcherRepos[i].id?.uuidString == repoID {
+                                    Task {
+                                        let (success, logs) = await Shell().shellAsync("\(launcherRepos[i].path ?? "its broken") \(launcherRepos[i].args ?? "")")
+                                        
+                                        if !success {
+                                            if NSApp.activationPolicy() == .prohibited {
+                                                showApp()
+                                            }
+                                            
+                                            openWindow(id: "crash-log", value: logs)
+                                        }
+                                    }
+                                    
+                                    launchRepoAppleScript.repoID = ""
+                                }
                             }
                         }
                     }.onChange(of: launchRepoAppleScript.didOpenApp) { didOpenApp in
                         if didOpenApp {
                             NSApp.setActivationPolicy(.prohibited)
-                        }
-                    }.onChange(of: transparentBar) { _ in
-                        if transparentBar == TitlebarAppearence.unified {
-                            for window in NSApplication.shared.windows {
-                                window.titlebarAppearsTransparent = true
-                            }
-                        } else if transparentBar == TitlebarAppearence.normal {
-                            for window in NSApplication.shared.windows {
-                                window.titlebarAppearsTransparent = false
-                            }
-                        }
-                    }.onReceive(NotificationCenter.default.publisher(for: NSWindow.didBecomeKeyNotification)) { _ in
-                        if transparentBar == TitlebarAppearence.unified {
-                            for window in NSApplication.shared.windows {
-                                window.titlebarAppearsTransparent = true
-                            }
-                        } else if transparentBar == TitlebarAppearence.normal {
-                            for window in NSApplication.shared.windows {
-                                window.titlebarAppearsTransparent = false
-                            }
                         }
                     }
             } else {

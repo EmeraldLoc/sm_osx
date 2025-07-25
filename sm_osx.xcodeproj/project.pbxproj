@@ -15,6 +15,7 @@
 		9621F4DB29E4A441007BE51D /* FirstLaunchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9621F4DA29E4A441007BE51D /* FirstLaunchView.swift */; };
 		9621F4ED29E4C33F007BE51D /* HomebrewInstaller.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 9621F4EC29E4C33F007BE51D /* HomebrewInstaller.scpt */; };
 		9621F4EF29E4CCBC007BE51D /* IntelHomebrewInstaller.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 9621F4EE29E4CCBC007BE51D /* IntelHomebrewInstaller.scpt */; };
+		9629DF952E33F9D60014B78F /* sm_osx_app_icon.icon in Resources */ = {isa = PBXBuildFile; fileRef = 9629DF942E33F9D60014B78F /* sm_osx_app_icon.icon */; };
 		963074FA29DF28AA00234B23 /* Shell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963074F929DF28AA00234B23 /* Shell.swift */; };
 		9639868129EB011A00E6218B /* ViewModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9639868029EB011A00E6218B /* ViewModifiers.swift */; };
 		963F238327F8B211004E010E /* LauncherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963F238227F8B211004E010E /* LauncherView.swift */; };
@@ -66,6 +67,7 @@
 		9621F4DA29E4A441007BE51D /* FirstLaunchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstLaunchView.swift; sourceTree = "<group>"; };
 		9621F4EC29E4C33F007BE51D /* HomebrewInstaller.scpt */ = {isa = PBXFileReference; lastKnownFileType = file; path = HomebrewInstaller.scpt; sourceTree = "<group>"; };
 		9621F4EE29E4CCBC007BE51D /* IntelHomebrewInstaller.scpt */ = {isa = PBXFileReference; lastKnownFileType = file; path = IntelHomebrewInstaller.scpt; sourceTree = "<group>"; };
+		9629DF942E33F9D60014B78F /* sm_osx_app_icon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = sm_osx_app_icon.icon; sourceTree = "<group>"; };
 		963074F929DF28AA00234B23 /* Shell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shell.swift; sourceTree = "<group>"; };
 		9639868029EB011A00E6218B /* ViewModifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModifiers.swift; sourceTree = "<group>"; };
 		963F238227F8B211004E010E /* LauncherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LauncherView.swift; sourceTree = "<group>"; };
@@ -148,6 +150,7 @@
 				963F238427F8B942004E010E /* DataStore.xcdatamodeld */,
 				96DE71D427EB9C7D0090E7A0 /* sm-osx-Info.plist */,
 				9669DC6427D5565100DE5FAB /* sm_osx.entitlements */,
+				9629DF942E33F9D60014B78F /* sm_osx_app_icon.icon */,
 				9669DC5B27D5565000DE5FAB /* sm_osxApp.swift */,
 				96BEADAD2839986200FF72E3 /* CompilationView.swift */,
 				96F79CC52AC622CE009FC622 /* CustomRepoView.swift */,
@@ -250,6 +253,7 @@
 			files = (
 				96CCFB7529E7152100BE8CC7 /* LauncherScript.sdef in Resources */,
 				9621F4ED29E4C33F007BE51D /* HomebrewInstaller.scpt in Resources */,
+				9629DF952E33F9D60014B78F /* sm_osx_app_icon.icon in Resources */,
 				9621F4EF29E4CCBC007BE51D /* IntelHomebrewInstaller.scpt in Resources */,
 				9669DC6027D5565100DE5FAB /* Assets.xcassets in Resources */,
 			);
@@ -425,14 +429,14 @@
 		9669DC6827D5565100DE5FAB /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = sm_osx_app_icon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = sm_osx/sm_osx.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 20;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"sm_osx/Preview Content\"";
 				DEVELOPMENT_TEAM = 6K864V7HLM;
@@ -448,7 +452,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 1.3.6;
+				MARKETING_VERSION = 1.3.7;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.CubingStudios.sm-osx";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -462,14 +466,14 @@
 		9669DC6927D5565100DE5FAB /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = sm_osx_app_icon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = sm_osx/sm_osx.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 20;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"sm_osx/Preview Content\"";
 				DEVELOPMENT_TEAM = 6K864V7HLM;
@@ -485,7 +489,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 1.3.6;
+				MARKETING_VERSION = 1.3.7;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.CubingStudios.sm-osx";
 				PRODUCT_NAME = "$(TARGET_NAME)";
