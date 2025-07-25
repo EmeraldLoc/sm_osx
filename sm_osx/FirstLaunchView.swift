@@ -4,9 +4,10 @@ import SwiftUI
 struct FirstLaunchView: View {
     
     @State var status = FirstLaunchStatus.none
-    @State var startingTimer = 0
     @State var showAppNotInApplicationsFolderAlert = false
-    @AppStorage("transparentBar") var transparentBar = TitlebarAppearence.normal
+    @State var homebrewInstallAlert = false
+    @State var installHomebrew = false
+    @State var homebrewLog = ""
     @AppStorage("firstLaunch") var firstLaunch = true
     @AppStorage("isGrid") var isGrid = false
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
@@ -26,6 +27,10 @@ struct FirstLaunchView: View {
                         let path = "/Applications/sm_osx.app"
                         if !FileManager.default.fileExists(atPath: path) {
                             showAppNotInApplicationsFolderAlert = true
+                        } else {
+                            withAnimation {
+                                status = .launcherView
+                            }
                         }
                     }.alert("sm_osx is not in the Applications Folder, would you like to quit the app to move it?", isPresented: $showAppNotInApplicationsFolderAlert) {
                         Button(role: .cancel) {
@@ -43,21 +48,7 @@ struct FirstLaunchView: View {
                         }.keyboardShortcut(.defaultAction)
                     } message: {
                         Text("It's recommended that you move the app to the Applications Folder.")
-                    }.onReceive(timer, perform: { _ in
-                        //some people hate this timer, but if you make a pr, im not accepting it, because I like it :)
-                        
-                        if !showAppNotInApplicationsFolderAlert {
-                            startingTimer += 1
-                            
-                            if startingTimer >= 2 {
-                                withAnimation {
-                                    startingTimer = 0
-                                    
-                                    status = .launcherView
-                                }
-                            }
-                        }
-                    })
+                    }
             } else if status == .launcherView {
                 VStack {
                     Text("Select Launcher Appearence")
@@ -75,27 +66,6 @@ struct FirstLaunchView: View {
                     
                     Button("Continue") {
                         withAnimation {
-                            status = .titleBarAppearence
-                        }
-                    }
-                }
-            } else if status == .titleBarAppearence {
-                VStack {
-                    Text("Select Titlebar Appearence")
-                    
-                    Text("This can be changed at anytime in Settings")
-                        .font(.caption)
-                    
-                    Picker("Title Bar", selection: $transparentBar) {
-                        Text("Normal")
-                            .tag(TitlebarAppearence.normal)
-                        
-                        Text("Unified")
-                            .tag(TitlebarAppearence.unified)
-                    }.frame(idealWidth: 200, maxWidth: 200)
-                    
-                    Button("Continue") {
-                        withAnimation {
                             status = .checkingHomebrewInstallation
                         }
                     }
@@ -103,69 +73,76 @@ struct FirstLaunchView: View {
             } else if status == .checkingHomebrewInstallation {
                 Text("Checking Homebrew Installation...")
                     .onAppear {
+                        var searchPath = "/usr/local/bin/brew"
                         if isArm() {
-                            if !FileManager.default.fileExists(atPath: "/opt/homebrew/bin/brew") {
-                                
-                                let task = Process()
-                                task.launchPath = "/usr/bin/osascript"
-                                task.arguments = [Bundle.main.path(forResource: "HomebrewInstaller", ofType: "scpt") ?? "echo 'Failed to run applescript file'"]
-                                
-                                do {
-                                    try task.run()
-                                } catch {
-                                    print("Failed to run applescript file: \(error)")
-                                }
-                            }
-                        } else {
-                            if !FileManager.default.fileExists(atPath: "/usr/local/bin/brew") {
-                                
-                                let task = Process()
-                                task.launchPath = "/usr/bin/osascript"
-                                task.arguments = [Bundle.main.path(forResource: "HomebrewInstaller", ofType: "scpt") ?? "echo 'Failed to run applescript file'"]
-                                
-                                do {
-                                    try task.run()
-                                } catch {
-                                    print("Failed to run applescript file: \(error)")
-                                }
-                            }
+                            searchPath = "/opt/homebrew/bin/brew"
+                        }
+                        searchPath = "/nonesense/gasg"
+                        
+                        if !FileManager.default.fileExists(atPath: searchPath) {
+                            homebrewInstallAlert = true
                         }
                     }.onReceive(timer) { _ in
+                        var searchPath = "/usr/local/bin/brew"
                         if isArm() {
-                            if FileManager.default.fileExists(atPath: "/opt/homebrew/bin/brew") {
-                                withAnimation {
-                                    status = .checkingIntelHomebrewInstallation
-                                }
-                            }
-                        } else {
-                            if FileManager.default.fileExists(atPath: "/usr/local/bin/brew") {
-                                withAnimation {
-                                    status = .installingDeps
-                                }
-                            }
+                            searchPath = "/opt/homebrew/bin/brew"
                         }
-                    }
-            } else if status == .checkingIntelHomebrewInstallation {
-                Text("Checking Intel Homebrew Installation...")
-                    .onAppear {
-                        if !FileManager.default.fileExists(atPath: "/usr/local/bin/brew") {
+                        searchPath = "/nonesense/gasg"
+                        
+                        if FileManager.default.fileExists(atPath: searchPath) && !installHomebrew {
+                            status = .installingDeps
+                        } else if !FileManager.default.fileExists(atPath: searchPath) && !installHomebrew {
+                            homebrewInstallAlert = true
+                        }
+                    }.alert("Homebrew is not installed", isPresented: $homebrewInstallAlert) {
+                        Button("Download") {
+                            installHomebrew = true
+                        }
+                        
+                        Button("Skip") {
+                            status = .finishingUp
+                        }
+                    } message: {
+                        Text("This app won't function properly without homebrew. It is recommend to install it. This will open up a terminal window which will prompt you with instructions to install homebrew.")
+                    }.sheet(isPresented: $installHomebrew) {
+                        VStack {
+                            Text("Installing Homebrew...")
+                                .padding(.top)
+                                .font(.title3)
                             
-                            let task = Process()
-                            task.launchPath = "/usr/bin/osascript"
-                            task.arguments = [Bundle.main.path(forResource: "IntelHomebrewInstaller", ofType: "scpt") ?? "echo 'Failed to run applescript file'"]
+                            GroupBox {
+                                VStack {
+                                    BetterTextEditor(text: $homebrewLog, isEditable: false, autoScroll: true)
+                                }
+                            }.padding([.horizontal, .bottom])
+                        }
+                        .task {
+                            let askpassPath = "/tmp/askpass.sh"
+                            let askpassScript = """
+                            #!/bin/bash
+                            osascript -e 'Tell application "System Events" to display dialog "Your password is needed to install Homebrew." default answer "" with hidden answer buttons {"OK"} default button 1 with icon caution' -e 'text returned of result'
+                            """
                             
                             do {
-                                try task.run()
+                                try askpassScript.write(toFile: askpassPath, atomically: true, encoding: .utf8)
+                                try FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: askpassPath)
                             } catch {
-                                print("Failed to run applescript file: \(error)")
+                                print("Failed to create askpass script")
+                                return
                             }
-                        }
-                    }.onReceive(timer) { _ in
-                        if FileManager.default.fileExists(atPath: "/usr/local/bin/brew") {
-                            withAnimation(.linear(duration: 0.4)) {
-                                status = .installingDeps
+                            
+                            let command = """
+                                export SUDO_ASKPASS="\(askpassPath)" && \
+                                NONINTERACTIVE=1 /usr/bin/script -q /dev/null /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+                                """
+
+                            await Shell().shellAsync(command) { output in
+                                homebrewLog += output + "\n"
                             }
+                            installHomebrew = false
                         }
+                        .frame(minWidth: 500, minHeight: 500)
+                        .interactiveDismissDisabled()
                     }
             } else if status == .installingDeps {
                 Text("Installing Dependencies...")
@@ -174,7 +151,7 @@ struct FirstLaunchView: View {
                         var dependenciesCommand = ""
                         
                         if isArm() {
-                            dependenciesCommand = "brew install make mingw-w64 gcc sdl2 pkg-config glew glfw libusb coreutils wget; /usr/local/bin/brew install make mingw-w64 gcc sdl2 pkg-config glew glfw libusb coreutils wget; echo 'sm_osx: Finished Installing Deps'"
+                            dependenciesCommand = "brew install make mingw-w64 gcc sdl2 pkg-config glew glfw libusb coreutils wget; echo 'sm_osx: Finished Installing Deps'"
                         } else {
                             dependenciesCommand = "brew install make mingw-w64 gcc sdl2 pkg-config glew glfw libusb coreutils wget; echo 'sm_osx: Finished Installing Deps'"
                         }
@@ -210,28 +187,36 @@ struct FirstLaunchView: View {
                     .padding(.horizontal)
                     .frame(width: 300)
             } else if status == .finishingUp {
-                Text("Finishing Up...").onAppear {
-                    if !FileManager.default.fileExists(atPath: "\(FileManager.default.homeDirectoryForCurrentUser.path())/SM64Repos") {
-                        do {
-                            try FileManager.default.createDirectory(atPath: "\(FileManager.default.homeDirectoryForCurrentUser.path())/SM64Repos", withIntermediateDirectories: true)
-                            print("Created Folder SM64Repos in the home folder.")
-                        } catch {
-                            print("Error, could not create folder (this is probably ok), error: \(error)")
+                Text("Finishing Up...")
+                    .onAppear {
+                        if !FileManager.default.fileExists(atPath: "\(FileManager.default.homeDirectoryForCurrentUser.path())/SM64Repos") {
+                            do {
+                                try FileManager.default.createDirectory(atPath: "\(FileManager.default.homeDirectoryForCurrentUser.path())/SM64Repos", withIntermediateDirectories: true)
+                                print("Created Folder SM64Repos in the home folder.")
+                            } catch {
+                                print("Error, could not create folder (this is probably ok), error: \(error)")
+                            }
                         }
-                    }
-                    
-                }.onReceive(timer, perform: { _ in
-                    startingTimer += 1
-                    
-                    if startingTimer >= 2 {
+                        
+                        do {
+                            try FileManager.default.removeItem(atPath: "/tmp/askpass.sh")
+                        } catch {
+                            print("Failed to remove file, probably doesn't exist.")
+                        }
+                        
                         withAnimation {
                             firstLaunch = false
-                            
-                            restart()
+                            if !restartApp() {
+                                status = .restarting
+                            }
                         }
                     }
-                    
-                })
+            } else if status == .restarting {
+                Text("Restarting the app failed for some reason. Close the app and boot it up manually")
+                
+                Button("Close") {
+                    exit(0)
+                }
             }
             
         }.onAppear {

@@ -1,64 +1,18 @@
-
 import SwiftUI
 import Sparkle
 import UserNotifications
 
 struct SettingsView: View {    
     @AppStorage("isGrid") var isGrid = false
-    @AppStorage("transparentBar") var transparentBar = TitlebarAppearence.normal
     @FetchRequest(sortDescriptors:[SortDescriptor(\.title)]) var launcherRepos: FetchedResults<LauncherRepos>
     @EnvironmentObject var network: NetworkMonitor
     @AppStorage("launchEntry") var launchEntry = true
     @AppStorage("compilationSpeed") var compilationSpeed: Speed = .normal
     @AppStorage("keepRepo") var keepRepo = false
     @AppStorage("keepInMenuBar") var keepInMenuBar = true
-    @AppStorage("devMode") var devMode = true
     @State var isInstallingDeps = false
-
-    public func depsShell(_ command: String, _ waitTillExit: Bool = false) {
-        let task = Process()
-        
-        task.executableURL = URL(fileURLWithPath: "/bin/zsh")
-        task.arguments = ["-cl", command]
-        
-        let pipe = Pipe()
-        task.standardOutput = pipe
-        task.standardError = pipe
-        let outHandle = pipe.fileHandleForReading
-        
-        outHandle.readabilityHandler = { pipe in
-            if pipe.availableData.count > 0 {
-                if let line = String(data: pipe.availableData, encoding: String.Encoding.utf8) {
-                    if line.contains("Finished installing deps") {
-                        
-                        withAnimation() {
-                            isInstallingDeps = false
-                        }
-                        
-                        let content = UNMutableNotificationContent()
-                        content.title = "Finished installing dependencies"
-                        content.subtitle = "Dependencies are now installed."
-                        content.sound = UNNotificationSound.default
-                        
-                        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.0001, repeats: false)
-                        
-                        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-                        
-                        UNUserNotificationCenter.current().add(request)
-                    }
-                } else {
-                    print("Error decoding data. why do I program...: \(pipe.availableData)")
-                }
-            } else {
-                outHandle.readabilityHandler = nil
-            }
-        }
-        
-        try? task.run()
-        if waitTillExit {
-            task.waitUntilExit()
-        }
-    }
+    @State var failedInstallingDependencies = ""
+    @State var showFailedInstallSheet = false
     
     private let updater: SPUUpdater
     
@@ -100,37 +54,7 @@ struct SettingsView: View {
                         .tag(Speed.fastest)
                 }
             }
-            
-            Section("Homebrew") {
-                HStack {
-                    Button(action:{
-                        if !launcherRepos.isEmpty {
-                            for i in 0...launcherRepos.count - 1 {
-                                launcherRepos[i].isEditing = false
-                            }
-                        }
-                        
-                        withAnimation() {
-                            isInstallingDeps = true
-                        }
-                        
-                        if isArm() {
-                            depsShell("/usr/local/bin/brew install gcc gcc@9 sdl2 pkg-config glew glfw3 libusb coreutils; brew install make mingw-w64 gcc sdl2 pkg-config glew glfw3 libusb coreutils; echo 'Finished installing deps'")
-                        } else {
-                            depsShell("/usr/local/bin/brew install gcc gcc@9 sdl2 pkg-config glew glfw3 libusb coreutils; echo 'Finished installing deps'")
-                        }
-                    }) {
-                        Text("Install Dependencies")
-                    }.disabled(!network.isConnected || isInstallingDeps)
-                    
-                    if isInstallingDeps {
-                        ProgressView()
-                            .progressViewStyle(.linear)
-                            .transition(.scale)
-                    }
-                }
-            }
-            
+
             Section("Appearance") {
                 Picker("Launcher appearance", selection: $isGrid.animation()) {
                     Text("Grid")
@@ -138,14 +62,6 @@ struct SettingsView: View {
                     
                     Text("List")
                         .tag(false)
-                }
-                
-                Picker("Title bar", selection: $transparentBar.animation()) {
-                    Text("Normal")
-                        .tag(TitlebarAppearence.normal)
-                    
-                    Text("Unified")
-                        .tag(TitlebarAppearence.unified)
                 }
             }
             
@@ -161,6 +77,41 @@ struct SettingsView: View {
                         updater.automaticallyDownloadsUpdates = newValue
                     }
                 
+                HStack {
+                    Button("Update Dependencies For Compilation") {
+                        withAnimation() {
+                            isInstallingDeps = true
+                        }
+                        
+                        let command = isArm() ? "/usr/local/bin/brew install gcc gcc@9 sdl2 pkg-config glew glfw3 libusb coreutils; brew install make mingw-w64 gcc sdl2 pkg-config glew glfw3 libusb coreutils && brew upgrade make mingw-w64 gcc sdl2 pkg-config glew glfw3 libusb coreutils" : "brew install gcc gcc@9 sdl2 pkg-config glew glfw3 libusb coreutils && brew upgrade gcc gcc@9 sdl2 pkg-config glew glfw3 libusb coreutils"
+                        
+                        Task {
+                            let (succeeded, logs) = await Shell().shellAsync(command)
+                            withAnimation {
+                                isInstallingDeps = false
+                                failedInstallingDependencies = succeeded ? "" : logs
+                            }
+                        }
+                    }.disabled(!network.isConnected || isInstallingDeps)
+                    
+                    if isInstallingDeps {
+                        ProgressView()
+                            .progressViewStyle(.linear)
+                            .transition(.scale)
+                    } else if !failedInstallingDependencies.isEmpty {
+                        Spacer()
+                        
+                        Button("Failed updating dependencies", systemImage: "info.circle") {
+                            showFailedInstallSheet = !showFailedInstallSheet
+                        }
+                        .foregroundStyle(.red)
+                        .popover(isPresented: $showFailedInstallSheet) {
+                            BetterTextEditor(text: $failedInstallingDependencies, isEditable: false, autoScroll: true)
+                                .presentationDetents([.large])
+                        }
+                    }
+                }
+                
                 CheckForUpdatesView(updater: updater)
                 
                 Button(action: {
@@ -168,12 +119,6 @@ struct SettingsView: View {
                     NSWorkspace.shared.open(URL(string:"https://github.com/EmeraldLoc/sm_osx/releases/latest")!)
                 }) {
                     Text("Check Latest Changelog")
-                }
-            }
-            
-            Section("Developer") {
-                Toggle(isOn: $devMode.animation()) {
-                    Text("See experimental repos")
                 }
             }
         }.formStyle(.grouped)

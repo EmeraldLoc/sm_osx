@@ -20,7 +20,6 @@ struct PatchesView: View {
     @Binding var repoView: Bool
     @Binding var reloadMenuBarLauncher: Bool
     @State var patches = [Patch]()
-    @AppStorage("devMode") var devMode = true
     @Environment(\.dismiss) var dismiss
     
     var body: some View {

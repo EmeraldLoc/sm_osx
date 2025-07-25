@@ -18,45 +18,6 @@ struct DevelopmentEnvironment: View {
     @State var arguments = ""
     @Environment(\.openWindow) var openWindow
     
-    func launcherShell(_ command: String) {
-        
-        let process = Process()
-        var output = ""
-        process.launchPath = "/bin/zsh"
-        process.arguments = ["-cl", "\(command)"]
-        
-        let pipe = Pipe()
-        process.standardOutput = pipe
-        process.standardError = pipe
-        let outHandle = pipe.fileHandleForReading
-        
-        outHandle.readabilityHandler = { pipe in
-            if let line = String(data: pipe.availableData, encoding: String.Encoding.utf8) {
-                output.append(line)
-            } else {
-                print("Error decoding data. why do I program...: \(pipe.availableData)")
-            }
-            
-            outHandle.stopReadingIfPassedEOF()
-        }
-        
-        var observer : NSObjectProtocol?
-        observer = NotificationCenter.default.addObserver(forName: Process.didTerminateNotification, object: process, queue: nil) { [observer] _ in
-            if process.terminationStatus != 0 {
-                
-                if NSApp.activationPolicy() == .prohibited {
-                    showApp()
-                }
-                
-                openWindow(id: "crash-log", value: output)
-            }
-            
-            NotificationCenter.default.removeObserver(observer as Any)
-        }
-        
-        try? process.run()
-    }
-    
     var body: some View {
         VStack {
             Text("Development Environment")
@@ -70,7 +31,17 @@ struct DevelopmentEnvironment: View {
                         .disabled(!alreadyCompiled)
                     
                     Button("Launch") {
-                        launcherShell("\(fullExecPath) \(arguments)")
+                        Task {
+                            let (success, logs) = await Shell().shellAsync("\(fullExecPath) \(arguments)")
+                            
+                            if !success {
+                                if NSApp.activationPolicy() == .prohibited {
+                                    showApp()
+                                }
+                                
+                                openWindow(id: "crash-log", value: logs)
+                            }
+                        }
                     }
                     .buttonStyle(.borderedProminent)
                     .disabled(!alreadyCompiled)

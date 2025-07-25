@@ -142,8 +142,8 @@ struct CompilationView: View {
                         self.pipe.fileHandleForReading.readabilityHandler = nil
                         
                         if !developmentEnvironment {
-                            shell.shell("cd ~/SM64Repos && rm -rf \(execPath)", false)
-                            shell.shell("cd ~/SM64Repos && rm -rf \(repo.name)", false)
+                            shell.shell("cd ~/SM64Repos && rm -rf \(execPath)")
+                            shell.shell("cd ~/SM64Repos && rm -rf \(repo.name)")
                         }
                         
                         dismiss()
@@ -231,8 +231,8 @@ struct CompilationView: View {
                             height = 575
                             
                             if !developmentEnvironment {
-                                shell.shell("cd ~/SM64Repos && rm -rf \(execPath)", false)
-                                shell.shell("cd ~/SM64Repos && rm -rf \(repo)", false)
+                                shell.shell("cd ~/SM64Repos && rm -rf \(execPath)")
+                                shell.shell("cd ~/SM64Repos && rm -rf \(repo)")
                             }
                         }
                         

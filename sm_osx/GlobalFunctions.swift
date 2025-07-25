@@ -1,4 +1,3 @@
-
 import UniformTypeIdentifiers
 import AppKit
 
@@ -36,12 +35,26 @@ public func showApp() {
     }
 }
 
-func restart() {
-    let path = Bundle.main.bundlePath
+func restartApp() -> Bool {
+    let bundlePath = Bundle.main.bundlePath
+    let command = "echo Restarting; sleep 1; open \"\(bundlePath)\""
+
     let process = Process()
-    process.launchPath = "/usr/bin/open"
-    process.arguments = [path]
-    process.launch()
+    process.executableURL = URL(fileURLWithPath: "/bin/bash")
+    process.arguments = ["-c", command]
+
+    let outputPipe = Pipe()
+    let errorPipe = Pipe()
+    process.standardOutput = outputPipe
+    process.standardError = errorPipe
+
+    do {
+        try process.run()
+    } catch {
+        print("Error restarting app:", error)
+        return false
+    }
+    
     exit(0)
 }
 
