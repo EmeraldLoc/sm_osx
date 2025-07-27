@@ -4,13 +4,9 @@
 <dict>
 	<key>files</key>
 	<dict>
-		<key>Resources/AppIcon.icns</key>
-		<data>
-		v7jF87YdBWOeXAPDHUKVIl02h6Y=
-		</data>
 		<key>Resources/Assets.car</key>
 		<data>
-		C4J/wHw/lMkA/RzsCevXh3389OI=
+		K7Q2GiRWoVjbctimj2iXP/+KzvE=
 		</data>
 		<key>Resources/DataStore.momd/DataStore.mom</key>
 		<data>
@@ -32,6 +28,10 @@
 		<data>
 		VtHbN7jbT8moZozUCCdCxjb5SZw=
 		</data>
+		<key>Resources/sm_osx_app_icon.icns</key>
+		<data>
+		fc8V0zS7Lx6hl0V138rcoBW6ioQ=
+		</data>
 	</dict>
 	<key>files2</key>
 	<dict>
@@ -44,18 +44,11 @@
 			<key>requirement</key>
 			<string>identifier "org.sparkle-project.Sparkle" and anchor apple generic and certificate leaf[subject.CN] = "Apple Development: calebelm@icloud.com (VZ9N8YGDP3)" and certificate 1[field.1.2.840.113635.100.6.2.1] /* exists */</string>
 		</dict>
-		<key>Resources/AppIcon.icns</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			NkU/u/Ff0XPzXD0WyK27VoIjOsFLnoxLU9i3v67AOzg=
-			</data>
-		</dict>
 		<key>Resources/Assets.car</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			IHCxc+i59hUXeUrofZ4vh9OndiiKp7PP3xMxNKIObHc=
+			RIN4Mmc5Xr80oCniFb0Pj4n6GVkkoeY6lU9kzIWpzbc=
 			</data>
 		</dict>
 		<key>Resources/DataStore.momd/DataStore.mom</key>
@@ -91,6 +84,13 @@
 			<key>hash2</key>
 			<data>
 			5o39Auhz1MlCpg4+AiVdh8IVOUyBMkkyUM7/0rwh0jI=
+			</data>
+		</dict>
+		<key>Resources/sm_osx_app_icon.icns</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			xu3xtPqGuItjkLA2cXm5so8rHKx7X36r60dAa/cQ8w0=
 			</data>
 		</dict>
 	</dict>
