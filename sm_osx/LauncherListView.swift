@@ -13,6 +13,7 @@ struct LauncherListView: View {
     @State var removeRepo = false
     @State var item: Int? = nil
     @State var presentEditSheet = false
+    @State var presentEditItem = 0
     
     var body: some View {
         VStack {
@@ -51,6 +52,7 @@ struct LauncherListView: View {
                                 
                                 launcherRepos[i].isEditing = true
                                 presentEditSheet = true
+                                presentEditItem = i
                             } label: {
                                 Label("Edit", systemImage: "pencil")
                                     .labelStyle(.titleAndIcon)
@@ -95,11 +97,13 @@ struct LauncherListView: View {
                             Label("Play", systemImage: "play.fill")
                                 .labelStyle(.titleAndIcon)
                         }
-                    }.sheet(isPresented: $presentEditSheet) {
-                        LauncherEditView(i: i, existingRepo: $existingRepo, reloadMenuBarLauncher: $reloadMenuBarLauncher)
                     }
                 }
-            }.alert("Are You Sure You Want to Remove the Repo?", isPresented: $removeEntireRepo) {
+            }
+            .sheet(isPresented: $presentEditSheet) {
+                LauncherEditView(i: presentEditItem, existingRepo: $existingRepo, reloadMenuBarLauncher: $reloadMenuBarLauncher)
+            }
+            .alert("Are You Sure You Want to Remove the Repo?", isPresented: $removeEntireRepo) {
                 Button("Yes", role: .destructive) {
                     if launcherRepos.isEmpty { return }
                     

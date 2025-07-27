@@ -13,6 +13,7 @@ struct LauncherGridView: View {
     @State var removeRepo = false
     @State var item: Int? = nil
     @State var presentEditSheet = false
+    @State var presentEditItem = 0
     let layout = [GridItem(.adaptive(minimum: 260))]
     
     var body: some View {
@@ -84,6 +85,7 @@ struct LauncherGridView: View {
                                 
                                 launcherRepos[i].isEditing = true
                                 presentEditSheet = true
+                                presentEditItem = i
                             } label: {
                                 Label("Edit", systemImage: "pencil")
                                     .labelStyle(.titleAndIcon)
@@ -112,11 +114,13 @@ struct LauncherGridView: View {
                     .padding(.bottom)
                     
                     Spacer()
-                }.sheet(isPresented: $presentEditSheet) {
-                    LauncherEditView(i: i, existingRepo: $existingRepo, reloadMenuBarLauncher: $reloadMenuBarLauncher)
                 }
             }
-        }.alert("Are You Sure You Want to Remove the Repo?", isPresented: $removeEntireRepo) {
+        }
+        .sheet(isPresented: $presentEditSheet) {
+            LauncherEditView(i: presentEditItem, existingRepo: $existingRepo, reloadMenuBarLauncher: $reloadMenuBarLauncher)
+        }
+        .alert("Are You Sure You Want to Remove the Repo?", isPresented: $removeEntireRepo) {
             Button("Yes", role: .destructive) {
                 
                 if launcherRepos.isEmpty { return }
