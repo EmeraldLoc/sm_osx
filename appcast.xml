@@ -3,6 +3,30 @@
     <channel>
         <title>sm_osx</title>
         <item>
+            <title>1.3.71</title>
+            <pubDate>Sat, 26 Jul 2025 20:49:11 -0500</pubDate>
+            <sparkle:version>21</sparkle:version>
+            <sparkle:shortVersionString>1.3.71</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/EmeraldLoc/sm_osx/releases/latest/download/sm_osx.zip" length="2426455" type="application/octet-stream" sparkle:edSignature="Ym0Uu1Niu8YpSIMq65Yl63CYEDJANWJphnmKEBGSqrku2tvTZv/nN5gBlrQp1+cfCfhHm0mW9vr3+dPJej+KCQ=="/>
+        </item>
+        <item>
+            <title>1.3.7</title>
+            <pubDate>Fri, 25 Jul 2025 16:55:45 -0500</pubDate>
+            <sparkle:version>20</sparkle:version>
+            <sparkle:shortVersionString>1.3.7</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/EmeraldLoc/sm_osx/releases/latest/download/sm_osx.zip" length="2426372" type="application/octet-stream" sparkle:edSignature="wl6Wc+4/FVIBctwMpOyosr1IASDRx0lCaDQEfFqbtceY8SKFiBWozynwkriWtPj0GrjuudFeu+97K2p88xBzDQ=="/>
+        </item>
+        <item>
+            <title>1.3.6</title>
+            <pubDate>Thu, 24 Jul 2025 20:23:49 -0500</pubDate>
+            <sparkle:version>19</sparkle:version>
+            <sparkle:shortVersionString>1.3.6</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/EmeraldLoc/sm_osx/releases/latest/download/sm_osx.zip" length="1972019" type="application/octet-stream" sparkle:edSignature="gxD9pGZ5zz2BlFeGueaMDnvXhTU8YkNTrpYjajcmhwYVLsLMgvewniNnRHYyZTrW1QxuNsrMAlv09Rzx/N4aBg=="/>
+        </item>
+        <item>
             <title>1.3.5</title>
             <pubDate>Mon, 01 Jan 2024 19:11:44 -0600</pubDate>
             <sparkle:version>18</sparkle:version>
